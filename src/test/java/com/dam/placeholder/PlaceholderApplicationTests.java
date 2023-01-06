@@ -1,5 +1,7 @@
 package com.dam.placeholder;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 
@@ -8,6 +10,8 @@ class PlaceholderApplicationTests {
 
 	@Test
 	void contextLoads() {
+		int x = 2;
+		assertEquals(x, 2);
 	}
 
 }
