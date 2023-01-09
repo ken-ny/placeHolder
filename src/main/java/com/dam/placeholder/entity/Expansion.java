@@ -9,8 +9,8 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToMany;
 import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import jakarta.persistence.Temporal;
 import jakarta.persistence.TemporalType;
@@ -41,8 +41,8 @@ public class Expansion {
 	@JoinColumn(name = "GAME_ID")
 	Game game;
 
-	@ManyToMany
-	List<Product> productId;
+	@OneToMany(mappedBy = "expansionId")
+	List<ProductSales> productSales;
 
 	public Integer getId() {
 		return id;
@@ -92,12 +92,12 @@ public class Expansion {
 		this.game = game;
 	}
 
-	public List<Product> getProductId() {
-		return productId;
+	public List<ProductSales> getProductSales() {
+		return productSales;
 	}
 
-	public void setProductId(List<Product> productId) {
-		this.productId = productId;
+	public void setProductSales(List<ProductSales> productSales) {
+		this.productSales = productSales;
 	}
 
 }

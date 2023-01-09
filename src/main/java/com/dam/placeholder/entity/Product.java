@@ -5,9 +5,7 @@ import java.util.List;
 import jakarta.persistence.Column;
 import jakarta.persistence.EmbeddedId;
 import jakarta.persistence.Entity;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.JoinTable;
-import jakarta.persistence.ManyToMany;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 
 @Entity
@@ -20,9 +18,9 @@ public class Product {
 	Integer quantity;
 	@Column(name = "IMAGE")
 	Long image;
-	@ManyToMany
-	@JoinTable(name = "product_expansion", joinColumns = @JoinColumn(name = "PRODUCT_ID"), inverseJoinColumns = @JoinColumn(name = "EXPANSION_ID"))
-	List<Expansion> expansionId;
+
+	@OneToMany(mappedBy = "productId")
+	List<ProductSales> productSales;
 
 	public ProductKey getProductId() {
 		return productId;
@@ -48,12 +46,12 @@ public class Product {
 		this.image = image;
 	}
 
-	public List<Expansion> getExpansionId() {
-		return expansionId;
+	public List<ProductSales> getProductSales() {
+		return productSales;
 	}
 
-	public void setExpansionId(List<Expansion> expansionId) {
-		this.expansionId = expansionId;
+	public void setProductSales(List<ProductSales> productSales) {
+		this.productSales = productSales;
 	}
 
 }

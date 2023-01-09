@@ -1,17 +1,32 @@
 package com.dam.placeholder;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.MockitoAnnotations;
 import org.springframework.boot.test.context.SpringBootTest;
+
+import com.dam.placeholder.repo.ProductRepository;
 
 @SpringBootTest
 class PlaceholderApplicationTests {
 
-	@Test
-	void contextLoads() {
-		int x = 2;
-		assertEquals(x, 2);
+	@InjectMocks
+	RestApiController controller;
+
+	@Mock
+	ProductRepository repository;
+
+	@BeforeEach
+	void beforeEach() {
+		controller = new RestApiController();
+		MockitoAnnotations.initMocks(this);
+
 	}
 
+	@Test
+	void shouldReturnAProductOnDay14062022at10forProduct55245() {
+
+	}
 }
