@@ -20,6 +20,9 @@ public class Product {
 	Long image;
 
 	@OneToMany(mappedBy = "productId")
+	List<ProductExpansion> expansion;
+
+	@OneToMany(mappedBy = "productId")
 	List<ProductSales> productSales;
 
 	public ProductKey getProductId() {
@@ -52,6 +55,14 @@ public class Product {
 
 	public void setProductSales(List<ProductSales> productSales) {
 		this.productSales = productSales;
+	}
+
+	public List<ProductExpansion> getExpansion() {
+		return expansion;
+	}
+
+	public void setExpansion(List<ProductExpansion> expansion) {
+		this.expansion = expansion;
 	}
 
 }
