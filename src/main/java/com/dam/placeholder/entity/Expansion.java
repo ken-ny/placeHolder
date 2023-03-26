@@ -45,7 +45,7 @@ public class Expansion {
 	List<ProductExpansion> productExpansion;
 
 	@OneToMany(mappedBy = "expansionId")
-	List<ProductSales> productSales;
+	List<Sales> productSales;
 
 	public Integer getId() {
 		return id;
@@ -95,11 +95,11 @@ public class Expansion {
 		this.game = game;
 	}
 
-	public List<ProductSales> getProductSales() {
+	public List<Sales> getProductSales() {
 		return productSales;
 	}
 
-	public void setProductSales(List<ProductSales> productSales) {
+	public void setProductSales(List<Sales> productSales) {
 		this.productSales = productSales;
 	}
 

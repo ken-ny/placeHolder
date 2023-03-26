@@ -23,7 +23,7 @@ public class Product {
 	List<ProductExpansion> expansion;
 
 	@OneToMany(mappedBy = "productId")
-	List<ProductSales> productSales;
+	List<Sales> productSales;
 
 	public ProductKey getProductId() {
 		return productId;
@@ -49,11 +49,11 @@ public class Product {
 		this.image = image;
 	}
 
-	public List<ProductSales> getProductSales() {
+	public List<Sales> getProductSales() {
 		return productSales;
 	}
 
-	public void setProductSales(List<ProductSales> productSales) {
+	public void setProductSales(List<Sales> productSales) {
 		this.productSales = productSales;
 	}
 

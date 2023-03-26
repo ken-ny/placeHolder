@@ -13,8 +13,8 @@ import jakarta.persistence.Temporal;
 import jakarta.persistence.TemporalType;
 
 @Entity
-@Table(name = "PRODUCT_SALES")
-public class ProductSales {
+@Table(name = "SALES")
+public class Sales {
 
 	@ManyToOne
 	@JoinColumns({ @JoinColumn(name = "PRODUCT_ID", referencedColumnName = "id"),
