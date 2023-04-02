@@ -1,6 +1,7 @@
 package com.dam.placeholder.entity;
 
 import java.io.Serializable;
+import java.util.Objects;
 
 import jakarta.persistence.Embeddable;
 
@@ -16,6 +17,27 @@ public class ProductKey implements Serializable {
 		this.id = id;
 		this.name = name;
 		this.rarity = rarity;
+	}
+
+	public ProductKey() {
+		super();
+	}
+
+	@Override
+	public int hashCode() {
+		return Objects.hash(id, name, rarity);
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		ProductKey other = (ProductKey) obj;
+		return Objects.equals(id, other.id) && Objects.equals(name, other.name) && Objects.equals(rarity, other.rarity);
 	}
 
 	public Integer getId() {

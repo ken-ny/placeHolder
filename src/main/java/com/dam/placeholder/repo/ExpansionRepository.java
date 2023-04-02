@@ -4,6 +4,6 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 import com.dam.placeholder.entity.Expansion;
 
-public interface ExpansionRepository extends JpaRepository<Expansion, Long> {
+public interface ExpansionRepository extends JpaRepository<Expansion, Integer> {
 
 }
