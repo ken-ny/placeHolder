@@ -5,6 +5,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,6 +24,7 @@ import com.dam.placeholder.entity.Product;
 import com.dam.placeholder.repo.ExpansionRepository;
 import com.dam.placeholder.repo.GameRepository;
 import com.dam.placeholder.repo.ProductRepository;
+import com.dam.placeholder.response.GameResponse;
 
 @RestController
 @RequestMapping("/placeHolder")
@@ -103,13 +105,17 @@ public class RestApiController {
 		}
 	}
 
-	@GetMapping("/getAllGames")
-	public ResponseEntity<List<Game>> getAllGames() {
+	// funciona
+	@GetMapping(value = "/getAllGames", produces = "application/json;charset=UTF-8")
+	public ResponseEntity<List<GameResponse>> getAllGames() {
 		try {
 
 			List<Game> saveProduct = gameRepo.findAll();
 
-			return new ResponseEntity<>(saveProduct, HttpStatus.OK);
+			List<GameResponse> response = new ArrayList<>();
+			saveProduct.stream().filter(Objects::nonNull).forEach(game -> response.add(new GameResponse(game)));
+
+			return new ResponseEntity<>(response, HttpStatus.OK);
 		} catch (Exception e) {
 			return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
 		}

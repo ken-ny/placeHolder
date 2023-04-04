@@ -22,7 +22,7 @@ public class Game {
 	String name;
 	@Column(name = "ABBREVIATION")
 	String abbreviation;
-	@OneToMany
+	@OneToMany(mappedBy = "game")
 	List<Expansion> expansions;
 
 	public Integer getId() {
