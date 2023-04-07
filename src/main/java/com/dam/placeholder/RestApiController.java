@@ -1,9 +1,6 @@
 package com.dam.placeholder;
 
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
@@ -24,7 +21,9 @@ import com.dam.placeholder.entity.Product;
 import com.dam.placeholder.repo.ExpansionRepository;
 import com.dam.placeholder.repo.GameRepository;
 import com.dam.placeholder.repo.ProductRepository;
+import com.dam.placeholder.response.ExpansionResponse;
 import com.dam.placeholder.response.GameResponse;
+import com.dam.placeholder.response.ProductResponse;
 
 @RestController
 @RequestMapping("/placeHolder")
@@ -81,31 +80,38 @@ public class RestApiController {
 		}
 	}
 
-	@GetMapping("/getExpansion/{id}")
-	public ResponseEntity<Expansion> getExpansion(@PathVariable Integer expansionId) {
+	// GET ENDPOINTS
+
+	@GetMapping("/getExpansion/{expansionId}")
+	public ResponseEntity<ExpansionResponse> getExpansion(@PathVariable Integer expansionId) {
 		try {
 
 			Optional<Expansion> saveProduct = expansionRepo.findById(expansionId);
 
-			return new ResponseEntity<>(saveProduct.get(), HttpStatus.OK);
+			ExpansionResponse response = new ExpansionResponse(saveProduct.get());
+
+			return new ResponseEntity<>(response, HttpStatus.OK);
 		} catch (Exception e) {
 			return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
 		}
 	}
 
 	@GetMapping("/getAllExpansions")
-	public ResponseEntity<List<Expansion>> getAllExpansion() {
+	public ResponseEntity<List<ExpansionResponse>> getAllExpansion() {
 		try {
 
-			List<Expansion> saveProduct = expansionRepo.findAll();
+			List<Expansion> retrievedExpansions = expansionRepo.findAll();
 
-			return new ResponseEntity<>(saveProduct, HttpStatus.OK);
+			List<ExpansionResponse> response = new ArrayList<>();
+			retrievedExpansions.stream().filter(Objects::nonNull)
+					.forEach(expansion -> response.add(new ExpansionResponse(expansion)));
+
+			return new ResponseEntity<>(response, HttpStatus.OK);
 		} catch (Exception e) {
 			return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
 		}
 	}
 
-	// funciona
 	@GetMapping(value = "/getAllGames", produces = "application/json;charset=UTF-8")
 	public ResponseEntity<List<GameResponse>> getAllGames() {
 		try {
@@ -121,13 +127,19 @@ public class RestApiController {
 		}
 	}
 
-	private Date convertDate(String date) {
-		SimpleDateFormat formatter = new SimpleDateFormat("dd-MM-yyyy HH:mm");
-
+	@GetMapping(value = "/getAllProducts", produces = "application/json;charset=UTF-8")
+	public ResponseEntity<List<ProductResponse>> getAllProducts() {
 		try {
-			return formatter.parse(date);
-		} catch (ParseException e) {
-			return null;
+
+			List<Product> saveProduct = productRepo.findAll();
+
+			List<ProductResponse> response = new ArrayList<>();
+			saveProduct.stream().filter(Objects::nonNull)
+					.forEach(product -> response.add(new ProductResponse(product)));
+
+			return new ResponseEntity<>(response, HttpStatus.OK);
+		} catch (Exception e) {
+			return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
 		}
 	}
 
