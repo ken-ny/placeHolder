@@ -38,6 +38,8 @@ public class RestApiController {
 	@Autowired
 	GameRepository gameRepo;
 
+	// POST ENDPOINTS
+
 	@PostMapping("/createProduct")
 	public ResponseEntity<List<Product>> postCreateProduct(@RequestBody Product prod) {
 		try {
@@ -53,14 +55,11 @@ public class RestApiController {
 	}
 
 	@PostMapping("/createGame")
-	public ResponseEntity<List<Game>> postCreateGame(@RequestBody Game prod) {
+	public ResponseEntity<Game> postCreateGame(@RequestBody Game prod) {
 		try {
-
 			Game saveGame = gameRepo.save(prod);
 
-			List<Game> listGame = new ArrayList<Game>();
-			listGame.add(saveGame);
-			return new ResponseEntity<>(listGame, HttpStatus.OK);
+			return new ResponseEntity<>(saveGame, HttpStatus.OK);
 		} catch (Exception e) {
 			return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
 		}

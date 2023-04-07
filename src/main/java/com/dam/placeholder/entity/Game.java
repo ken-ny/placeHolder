@@ -15,7 +15,7 @@ import jakarta.persistence.Table;
 public class Game {
 
 	@Id
-	@Column
+	@Column(name = "ID")
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	Integer id;
 	@Column(name = "NAME")
