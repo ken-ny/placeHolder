@@ -1,13 +1,14 @@
 package com.dam.placeholder.response;
 
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
 
 import com.dam.placeholder.entity.Game;
+import com.dam.placeholder.response.utils.ResponseUtils;
+import com.dam.placeholder.serializer.ExpansionSerializer;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 @JsonInclude(JsonInclude.Include.NON_NULL)
@@ -19,8 +20,8 @@ public class GameResponse {
 	private String name;
 	@JsonProperty
 	private String abbreviation;
-//	@JsonProperty
-//	private List<ExpansionResponse> expansions;
+	@JsonSerialize(using = ExpansionSerializer.class)
+	private List<ExpansionResponse> expansions;
 
 	public Integer getId() {
 		return id;
@@ -46,20 +47,20 @@ public class GameResponse {
 		this.abbreviation = abbreviation;
 	}
 
-//	public List<ExpansionResponse> getExpansions() {
-//		return expansions;
-//	}
-//
-//	public void setExpansions(List<ExpansionResponse> expansions) {
-//		this.expansions = expansions;
-//	}
+	public List<ExpansionResponse> getExpansions() {
+		return expansions;
+	}
+
+	public void setExpansions(List<ExpansionResponse> expansions) {
+		this.expansions = expansions;
+	}
 
 	public GameResponse(Integer id, String name, String abbreviation, List<ExpansionResponse> expansions) {
 		super();
 		this.id = id;
 		this.name = name;
 		this.abbreviation = abbreviation;
-//		this.expansions = expansions;
+		this.expansions = expansions;
 	}
 
 	public GameResponse() {
@@ -71,12 +72,7 @@ public class GameResponse {
 		this.abbreviation = game.getAbbreviation();
 		this.name = game.getName();
 
-		game.getExpansions().get(0);
-
-		List<ExpansionResponse> exResponse = new ArrayList<>();
-		game.getExpansions().stream().filter(Objects::nonNull).forEach(ex -> exResponse.add(new ExpansionResponse(ex)));
-
-//		this.expansions = exResponse;
+		this.expansions = ResponseUtils.mapperExpansionToResponse(game.getExpansions());
 	}
 
 }
