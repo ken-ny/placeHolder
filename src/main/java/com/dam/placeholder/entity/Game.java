@@ -15,8 +15,7 @@ import jakarta.persistence.Table;
 public class Game {
 
 	@Id
-	@Column(name = "ID")
-	@GeneratedValue(strategy = GenerationType.AUTO)
+	@GeneratedValue(strategy = GenerationType.TABLE)
 	Integer id;
 	@Column(name = "NAME")
 	String name;
@@ -55,6 +54,26 @@ public class Game {
 
 	public void setExpansions(List<Expansion> expansions) {
 		this.expansions = expansions;
+	}
+
+	public Game(Integer id, String name, String abbreviation, List<Expansion> expansions) {
+		super();
+		this.id = id;
+		this.name = name;
+		this.abbreviation = abbreviation;
+		this.expansions = expansions;
+	}
+
+	public Game() {
+		super();
+	}
+
+	public Game(Game game) {
+
+		this.abbreviation = game.getAbbreviation();
+		this.expansions = game.getExpansions();
+		this.name = game.getName();
+
 	}
 
 }

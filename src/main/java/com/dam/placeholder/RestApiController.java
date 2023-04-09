@@ -57,6 +57,10 @@ public class RestApiController {
 	@PostMapping("/createGame")
 	public ResponseEntity<Game> postCreateGame(@RequestBody Game prod) {
 		try {
+
+			Game lastGame = gameRepo.findTopByOrderByIdDesc();
+			prod.setId(lastGame.getId() + 1);
+			Boolean bol = gameRepo.existsById(prod.getId());
 			Game saveGame = gameRepo.save(prod);
 
 			return new ResponseEntity<>(saveGame, HttpStatus.OK);

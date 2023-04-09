@@ -6,4 +6,6 @@ import com.dam.placeholder.entity.Game;
 
 public interface GameRepository extends JpaRepository<Game, Integer> {
 
+	Game findTopByOrderByIdDesc();
+
 }
