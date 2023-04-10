@@ -3,10 +3,11 @@ package com.dam.placeholder.entity;
 import java.util.Date;
 import java.util.List;
 
+import com.dam.placeholder.request.ExpansionRequest;
+import com.dam.placeholder.response.utils.ResponseUtils;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
@@ -21,7 +22,6 @@ public class Expansion {
 
 	@Id
 	@Column(name = "ID")
-	@GeneratedValue(strategy = GenerationType.AUTO)
 	Integer id;
 
 	@Column(name = "NAME")
@@ -46,6 +46,31 @@ public class Expansion {
 
 	@OneToMany(mappedBy = "expansionId")
 	List<Sales> productSales;
+
+	public Expansion(ExpansionRequest prod) {
+		this.abbreviation = prod.getAbbreviation();
+		this.id = prod.getId();
+		this.is_released = prod.getIs_released();
+		this.name = prod.getName();
+		this.release_date = ResponseUtils.convertStringToDate(prod.getRelease_date());
+	}
+
+	public Expansion() {
+		super();
+	}
+
+	public Expansion(Integer id, String name, String abbreviation, Date release_date, Boolean is_released, Game game,
+			List<ProductExpansion> productExpansion, List<Sales> productSales) {
+		super();
+		this.id = id;
+		this.name = name;
+		this.abbreviation = abbreviation;
+		this.release_date = release_date;
+		this.is_released = is_released;
+		this.game = game;
+		this.productExpansion = productExpansion;
+		this.productSales = productSales;
+	}
 
 	public Integer getId() {
 		return id;

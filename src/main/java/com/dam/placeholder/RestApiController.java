@@ -21,6 +21,8 @@ import com.dam.placeholder.entity.Product;
 import com.dam.placeholder.repo.ExpansionRepository;
 import com.dam.placeholder.repo.GameRepository;
 import com.dam.placeholder.repo.ProductRepository;
+import com.dam.placeholder.request.ExpansionRequest;
+import com.dam.placeholder.request.ProductRequest;
 import com.dam.placeholder.response.ExpansionResponse;
 import com.dam.placeholder.response.GameResponse;
 import com.dam.placeholder.response.ProductResponse;
@@ -28,6 +30,12 @@ import com.dam.placeholder.response.ProductResponse;
 @RestController
 @RequestMapping("/placeHolder")
 public class RestApiController {
+
+	private static final String EXPANSION = "E";
+
+	private static final String PRODUCT = "P";
+
+	private static final String GAME = "G";
 
 	@Autowired
 	ProductRepository productRepo;
@@ -41,14 +49,14 @@ public class RestApiController {
 	// POST ENDPOINTS
 
 	@PostMapping("/createProduct")
-	public ResponseEntity<List<Product>> postCreateProduct(@RequestBody Product prod) {
+	public ResponseEntity<Product> postCreateProduct(@RequestBody ProductRequest prod) {
 		try {
 
-			Product saveProduct = productRepo.save(prod);
+			prod.setId(findNextAvailableId(PRODUCT));
 
-			List<Product> listProducts = new ArrayList<Product>();
-			listProducts.add(saveProduct);
-			return new ResponseEntity<>(listProducts, HttpStatus.OK);
+			Product saveProduct = productRepo.save(new Product(prod));
+
+			return new ResponseEntity<>(saveProduct, HttpStatus.OK);
 		} catch (Exception e) {
 			return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
 		}
@@ -58,9 +66,7 @@ public class RestApiController {
 	public ResponseEntity<Game> postCreateGame(@RequestBody Game prod) {
 		try {
 
-			Game lastGame = gameRepo.findTopByOrderByIdDesc();
-			prod.setId(lastGame.getId() + 1);
-			Boolean bol = gameRepo.existsById(prod.getId());
+			prod.setId(findNextAvailableId(GAME));
 			Game saveGame = gameRepo.save(prod);
 
 			return new ResponseEntity<>(saveGame, HttpStatus.OK);
@@ -70,14 +76,16 @@ public class RestApiController {
 	}
 
 	@PostMapping("/createExpansion")
-	public ResponseEntity<List<Expansion>> postCreateExpansion(@RequestBody Expansion prod) {
+	public ResponseEntity<Expansion> postCreateExpansion(@RequestBody ExpansionRequest prod) {
 		try {
 
-			Expansion saveProduct = expansionRepo.save(prod);
+			prod.setId(findNextAvailableId(EXPANSION));
 
-			List<Expansion> listExpansion = new ArrayList<Expansion>();
-			listExpansion.add(saveProduct);
-			return new ResponseEntity<>(listExpansion, HttpStatus.OK);
+			Expansion newExpansion = new Expansion(prod);
+
+			Expansion saveProduct = expansionRepo.save(newExpansion);
+
+			return new ResponseEntity<>(saveProduct, HttpStatus.OK);
 		} catch (Exception e) {
 			return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
 		}
@@ -144,6 +152,24 @@ public class RestApiController {
 		} catch (Exception e) {
 			return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
 		}
+	}
+
+	private Integer findNextAvailableId(String table) {
+
+		switch (table) {
+		case GAME:
+			Game g = gameRepo.findTopByOrderByIdDesc();
+			return g.getId() + 1;
+		case PRODUCT:
+			Product p = productRepo.findTopByOrderByProductIdIdDesc();
+			return p.getProductId().getId() + 1;
+		case EXPANSION:
+			Expansion e = expansionRepo.findTopByOrderByIdDesc();
+			return e.getId() + 1;
+		}
+
+		return null;
+
 	}
 
 }

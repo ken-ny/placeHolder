@@ -2,6 +2,8 @@ package com.dam.placeholder.entity;
 
 import java.util.List;
 
+import com.dam.placeholder.request.ProductRequest;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.EmbeddedId;
 import jakarta.persistence.Entity;
@@ -17,7 +19,7 @@ public class Product {
 	@Column(name = "QUANTITY")
 	Integer quantity;
 	@Column(name = "IMAGE")
-	Long image;
+	String image;
 
 	@OneToMany(mappedBy = "productId")
 	List<ProductExpansion> expansion;
@@ -41,11 +43,11 @@ public class Product {
 		this.quantity = quantity;
 	}
 
-	public Long getImage() {
+	public String getImage() {
 		return image;
 	}
 
-	public void setImage(Long image) {
+	public void setImage(String image) {
 		this.image = image;
 	}
 
@@ -63,6 +65,27 @@ public class Product {
 
 	public void setExpansion(List<ProductExpansion> expansion) {
 		this.expansion = expansion;
+	}
+
+	public Product(ProductRequest prod) {
+		this.productId = new ProductKey(prod.getId(), prod.getName(), prod.getRarity());
+		this.image = prod.getImage();
+		this.quantity = prod.getQuantity();
+
+	}
+
+	public Product(ProductKey productId, Integer quantity, String image, List<ProductExpansion> expansion,
+			List<Sales> productSales) {
+		super();
+		this.productId = productId;
+		this.quantity = quantity;
+		this.image = image;
+		this.expansion = expansion;
+		this.productSales = productSales;
+	}
+
+	public Product() {
+		super();
 	}
 
 }

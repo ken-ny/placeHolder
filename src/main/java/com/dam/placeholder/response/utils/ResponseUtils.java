@@ -1,6 +1,9 @@
 package com.dam.placeholder.response.utils;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Objects;
 
@@ -27,6 +30,15 @@ public class ResponseUtils {
 
 		return exResponse;
 
+	}
+
+	public static Date convertStringToDate(String release_date) {
+		SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy");
+		try {
+			return formatter.parse(release_date);
+		} catch (ParseException e) {
+			return null;
+		}
 	}
 
 }

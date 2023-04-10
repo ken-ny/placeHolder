@@ -22,7 +22,7 @@ public class ProductResponse {
 	@JsonProperty
 	Integer quantity;
 	@JsonProperty
-	Long image;
+	String image;
 	@JsonSerialize(using = ExpansionSerializer.class)
 	List<ExpansionResponse> expansion;
 
@@ -58,11 +58,11 @@ public class ProductResponse {
 		this.quantity = quantity;
 	}
 
-	public Long getImage() {
+	public String getImage() {
 		return image;
 	}
 
-	public void setImage(Long image) {
+	public void setImage(String image) {
 		this.image = image;
 	}
 
@@ -74,7 +74,7 @@ public class ProductResponse {
 		this.expansion = expansion;
 	}
 
-	public ProductResponse(Integer id, String name, String rarity, Integer quantity, Long image,
+	public ProductResponse(Integer id, String name, String rarity, Integer quantity, String image,
 			List<ExpansionResponse> expansion) {
 		super();
 		this.id = id;
