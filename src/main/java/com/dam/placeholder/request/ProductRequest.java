@@ -10,7 +10,7 @@ public class ProductRequest {
 	private String rarity;
 	private Integer quantity;
 	private String image;
-	private List<Expansion> expansion;
+	private List<Expansion> expansions;
 
 	public Integer getId() {
 		return id;
@@ -52,12 +52,12 @@ public class ProductRequest {
 		this.image = image;
 	}
 
-	public List<Expansion> getExpansion() {
-		return expansion;
+	public List<Expansion> getExpansions() {
+		return expansions;
 	}
 
-	public void setExpansion(List<Expansion> expansion) {
-		this.expansion = expansion;
+	public void setExpansions(List<Expansion> expansions) {
+		this.expansions = expansions;
 	}
 
 }

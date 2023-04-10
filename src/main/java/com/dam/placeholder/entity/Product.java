@@ -1,6 +1,8 @@
 package com.dam.placeholder.entity;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 import com.dam.placeholder.request.ProductRequest;
 
@@ -72,6 +74,10 @@ public class Product {
 		this.image = prod.getImage();
 		this.quantity = prod.getQuantity();
 
+		List<ProductExpansion> producExpansionList = new ArrayList<>();
+		prod.getExpansions().stream().filter(Objects::nonNull)
+				.forEach(ex -> producExpansionList.add(new ProductExpansion(ex, this)));
+		this.expansion = producExpansionList;
 	}
 
 	public Product(ProductKey productId, Integer quantity, String image, List<ProductExpansion> expansion,

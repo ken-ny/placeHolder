@@ -75,4 +75,11 @@ public class GameResponse {
 		this.expansions = ResponseUtils.mapperExpansionToResponse(game.getExpansions());
 	}
 
+	public GameResponse(Integer id, String name, String abbreviation) {
+		super();
+		this.id = id;
+		this.name = name;
+		this.abbreviation = abbreviation;
+	}
+
 }

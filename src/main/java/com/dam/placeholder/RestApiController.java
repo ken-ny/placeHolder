@@ -22,6 +22,7 @@ import com.dam.placeholder.repo.ExpansionRepository;
 import com.dam.placeholder.repo.GameRepository;
 import com.dam.placeholder.repo.ProductRepository;
 import com.dam.placeholder.request.ExpansionRequest;
+import com.dam.placeholder.request.GameRequest;
 import com.dam.placeholder.request.ProductRequest;
 import com.dam.placeholder.response.ExpansionResponse;
 import com.dam.placeholder.response.GameResponse;
@@ -49,43 +50,40 @@ public class RestApiController {
 	// POST ENDPOINTS
 
 	@PostMapping("/createProduct")
-	public ResponseEntity<Product> postCreateProduct(@RequestBody ProductRequest prod) {
+	public ResponseEntity<ProductResponse> postCreateProduct(@RequestBody ProductRequest prod) {
 		try {
 
 			prod.setId(findNextAvailableId(PRODUCT));
 
 			Product saveProduct = productRepo.save(new Product(prod));
 
-			return new ResponseEntity<>(saveProduct, HttpStatus.OK);
+			return new ResponseEntity<>(new ProductResponse(saveProduct), HttpStatus.OK);
 		} catch (Exception e) {
 			return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
 		}
 	}
 
 	@PostMapping("/createGame")
-	public ResponseEntity<Game> postCreateGame(@RequestBody Game prod) {
+	public ResponseEntity<GameResponse> postCreateGame(@RequestBody GameRequest prod) {
 		try {
 
 			prod.setId(findNextAvailableId(GAME));
-			Game saveGame = gameRepo.save(prod);
+			Game saveGame = gameRepo.save(new Game(prod));
 
-			return new ResponseEntity<>(saveGame, HttpStatus.OK);
+			return new ResponseEntity<>(new GameResponse(saveGame), HttpStatus.OK);
 		} catch (Exception e) {
 			return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
 		}
 	}
 
 	@PostMapping("/createExpansion")
-	public ResponseEntity<Expansion> postCreateExpansion(@RequestBody ExpansionRequest prod) {
+	public ResponseEntity<ExpansionResponse> postCreateExpansion(@RequestBody ExpansionRequest prod) {
 		try {
 
 			prod.setId(findNextAvailableId(EXPANSION));
+			Expansion saveProduct = expansionRepo.save(new Expansion(prod));
 
-			Expansion newExpansion = new Expansion(prod);
-
-			Expansion saveProduct = expansionRepo.save(newExpansion);
-
-			return new ResponseEntity<>(saveProduct, HttpStatus.OK);
+			return new ResponseEntity<>(new ExpansionResponse(saveProduct), HttpStatus.OK);
 		} catch (Exception e) {
 			return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
 		}

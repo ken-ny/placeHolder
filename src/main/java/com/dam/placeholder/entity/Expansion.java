@@ -53,6 +53,7 @@ public class Expansion {
 		this.is_released = prod.getIs_released();
 		this.name = prod.getName();
 		this.release_date = ResponseUtils.convertStringToDate(prod.getRelease_date());
+		this.game = prod.getGame();
 	}
 
 	public Expansion() {
