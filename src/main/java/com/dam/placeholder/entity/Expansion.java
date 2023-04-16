@@ -10,6 +10,7 @@ import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToMany;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
@@ -41,10 +42,10 @@ public class Expansion {
 	@JoinColumn(name = "GAME_ID")
 	Game game;
 
-	@OneToMany(mappedBy = "expansionId")
-	List<ProductExpansion> productExpansion;
+	@ManyToMany(mappedBy = "expansion")
+	List<Product> productExpansion;
 
-	@OneToMany(mappedBy = "expansionId")
+	@OneToMany(mappedBy = "details.expansion")
 	List<Sales> productSales;
 
 	public Expansion(ExpansionRequest prod) {
@@ -61,7 +62,7 @@ public class Expansion {
 	}
 
 	public Expansion(Integer id, String name, String abbreviation, Date release_date, Boolean is_released, Game game,
-			List<ProductExpansion> productExpansion, List<Sales> productSales) {
+			List<Product> productExpansion, List<Sales> productSales) {
 		super();
 		this.id = id;
 		this.name = name;
@@ -129,11 +130,11 @@ public class Expansion {
 		this.productSales = productSales;
 	}
 
-	public List<ProductExpansion> getProductExpansion() {
+	public List<Product> getProductExpansion() {
 		return productExpansion;
 	}
 
-	public void setProductExpansion(List<ProductExpansion> productExpansion) {
+	public void setProductExpansion(List<Product> productExpansion) {
 		this.productExpansion = productExpansion;
 	}
 

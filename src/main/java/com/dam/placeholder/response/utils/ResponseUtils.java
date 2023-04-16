@@ -8,8 +8,9 @@ import java.util.List;
 import java.util.Objects;
 
 import com.dam.placeholder.entity.Expansion;
-import com.dam.placeholder.entity.ProductExpansion;
+import com.dam.placeholder.entity.SaleDetails;
 import com.dam.placeholder.response.ExpansionResponse;
+import com.dam.placeholder.response.SaleDetailsResponse;
 
 public class ResponseUtils {
 
@@ -22,16 +23,6 @@ public class ResponseUtils {
 
 	}
 
-	public static List<ExpansionResponse> mapperProductExpansionToResponse(List<ProductExpansion> listExpansions) {
-
-		List<ExpansionResponse> exResponse = new ArrayList<>();
-		listExpansions.stream().filter(Objects::nonNull)
-				.forEach(ex -> exResponse.add(new ExpansionResponse(ex.getExpansionId())));
-
-		return exResponse;
-
-	}
-
 	public static Date convertStringToDate(String release_date) {
 		SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy");
 		try {
@@ -39,6 +30,14 @@ public class ResponseUtils {
 		} catch (ParseException e) {
 			return null;
 		}
+	}
+
+	public static List<SaleDetailsResponse> mapperDetailsToResponse(List<SaleDetails> listDetails) {
+		List<SaleDetailsResponse> response = new ArrayList<>();
+
+		listDetails.stream().filter(Objects::nonNull).forEach(ex -> response.add(new SaleDetailsResponse(ex)));
+
+		return response;
 	}
 
 }

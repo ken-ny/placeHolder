@@ -1,13 +1,14 @@
 package com.dam.placeholder.entity;
 
 import java.util.Date;
+import java.util.List;
+
+import com.dam.placeholder.request.SalesRequest;
 
 import jakarta.persistence.Column;
+import jakarta.persistence.Embedded;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.JoinColumns;
-import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 import jakarta.persistence.Temporal;
 import jakarta.persistence.TemporalType;
@@ -15,16 +16,6 @@ import jakarta.persistence.TemporalType;
 @Entity
 @Table(name = "SALES")
 public class Sales {
-
-	@ManyToOne
-	@JoinColumns({ @JoinColumn(name = "PRODUCT_ID", referencedColumnName = "id"),
-			@JoinColumn(name = "PRODUCT_NAME", referencedColumnName = "name"),
-			@JoinColumn(name = "PRODUCT_RARITY", referencedColumnName = "rarity") })
-	Product productId;
-
-	@ManyToOne
-	@JoinColumn(name = "EXPANSION_ID")
-	Expansion expansionId;
 
 	@Id
 	@Temporal(TemporalType.TIMESTAMP)
@@ -34,20 +25,15 @@ public class Sales {
 	@Column(name = "SALE_PRICE")
 	Double salePrice;
 
-	public Product getProductId() {
-		return productId;
+	@Embedded
+	List<SaleDetails> details;
+
+	public List<SaleDetails> getDetails() {
+		return details;
 	}
 
-	public void setProductId(Product productId) {
-		this.productId = productId;
-	}
-
-	public Expansion getExpansionId() {
-		return expansionId;
-	}
-
-	public void setExpansionId(Expansion expansionId) {
-		this.expansionId = expansionId;
+	public void setDetails(List<SaleDetails> details) {
+		this.details = details;
 	}
 
 	public Date getSale_date() {
@@ -64,6 +50,23 @@ public class Sales {
 
 	public void setSalePrice(Double salePrice) {
 		this.salePrice = salePrice;
+	}
+
+	public Sales(Date sale_date, Double salePrice, List<SaleDetails> details) {
+		super();
+		this.sale_date = sale_date;
+		this.salePrice = salePrice;
+		this.details = details;
+	}
+
+	public Sales() {
+		super();
+	}
+
+	public Sales(SalesRequest request) {
+		this.details = request.getDetails();
+		this.sale_date = request.getSale_date();
+		this.salePrice = request.getSalePrice();
 	}
 
 }

@@ -18,15 +18,19 @@ import org.springframework.web.bind.annotation.RestController;
 import com.dam.placeholder.entity.Expansion;
 import com.dam.placeholder.entity.Game;
 import com.dam.placeholder.entity.Product;
+import com.dam.placeholder.entity.Sales;
 import com.dam.placeholder.repo.ExpansionRepository;
 import com.dam.placeholder.repo.GameRepository;
 import com.dam.placeholder.repo.ProductRepository;
+import com.dam.placeholder.repo.SalesRepository;
 import com.dam.placeholder.request.ExpansionRequest;
 import com.dam.placeholder.request.GameRequest;
 import com.dam.placeholder.request.ProductRequest;
+import com.dam.placeholder.request.SalesRequest;
 import com.dam.placeholder.response.ExpansionResponse;
 import com.dam.placeholder.response.GameResponse;
 import com.dam.placeholder.response.ProductResponse;
+import com.dam.placeholder.response.SalesResponse;
 
 @RestController
 @RequestMapping("/placeHolder")
@@ -47,13 +51,22 @@ public class RestApiController {
 	@Autowired
 	GameRepository gameRepo;
 
+	@Autowired
+	SalesRepository salesRepo;
+
 	// POST ENDPOINTS
 
 	@PostMapping("/createProduct")
 	public ResponseEntity<ProductResponse> postCreateProduct(@RequestBody ProductRequest prod) {
 		try {
 
-			prod.setId(findNextAvailableId(PRODUCT));
+			Product o = productRepo.findByNameAndRarity(prod.getName(), prod.getRarity());
+
+			if (Objects.nonNull(o)) {
+				prod.setId(o.getId());
+			} else {
+				prod.setId(findNextAvailableId(PRODUCT));
+			}
 
 			Product saveProduct = productRepo.save(new Product(prod));
 
@@ -84,6 +97,18 @@ public class RestApiController {
 			Expansion saveProduct = expansionRepo.save(new Expansion(prod));
 
 			return new ResponseEntity<>(new ExpansionResponse(saveProduct), HttpStatus.OK);
+		} catch (Exception e) {
+			return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
+		}
+	}
+
+	@PostMapping("/createSale")
+	public ResponseEntity<SalesResponse> postCreateExpansion(@RequestBody SalesRequest sale) {
+		try {
+
+			Sales saveSale = salesRepo.save(new Sales(sale));
+
+			return new ResponseEntity<>(new SalesResponse(saveSale), HttpStatus.OK);
 		} catch (Exception e) {
 			return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
 		}
@@ -152,6 +177,21 @@ public class RestApiController {
 		}
 	}
 
+	@GetMapping(value = "/getAllSales", produces = "application/json;charset=UTF-8")
+	public ResponseEntity<List<SalesResponse>> getAllSales() {
+		try {
+
+			List<Sales> saveProduct = salesRepo.findAll();
+
+			List<SalesResponse> response = new ArrayList<>();
+			saveProduct.stream().filter(Objects::nonNull).forEach(product -> response.add(new SalesResponse(product)));
+
+			return new ResponseEntity<>(response, HttpStatus.OK);
+		} catch (Exception e) {
+			return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
+		}
+	}
+
 	private Integer findNextAvailableId(String table) {
 
 		switch (table) {
@@ -159,8 +199,8 @@ public class RestApiController {
 			Game g = gameRepo.findTopByOrderByIdDesc();
 			return g.getId() + 1;
 		case PRODUCT:
-			Product p = productRepo.findTopByOrderByProductIdIdDesc();
-			return p.getProductId().getId() + 1;
+			Product p = productRepo.findTopByOrderByIdDesc();
+			return p.getId() + 1;
 		case EXPANSION:
 			Expansion e = expansionRepo.findTopByOrderByIdDesc();
 			return e.getId() + 1;

@@ -4,10 +4,11 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Service;
 
 import com.dam.placeholder.entity.Product;
-import com.dam.placeholder.entity.ProductKey;
 
 @Service
-public interface ProductRepository extends JpaRepository<Product, ProductKey> {
+public interface ProductRepository extends JpaRepository<Product, Integer> {
 
-	Product findTopByOrderByProductIdIdDesc();
+	Product findTopByOrderByIdDesc();
+
+	Product findByNameAndRarity(String name, String rarity);
 }

@@ -1,7 +1,9 @@
 package com.dam.placeholder.response;
 
+import java.util.ArrayList;
 import java.util.List;
 
+import com.dam.placeholder.entity.Expansion;
 import com.dam.placeholder.entity.Product;
 import com.dam.placeholder.response.utils.ResponseUtils;
 import com.dam.placeholder.serializer.ExpansionSerializer;
@@ -91,12 +93,13 @@ public class ProductResponse {
 
 	public ProductResponse(Product product) {
 
-		this.id = product.getProductId().getId();
+		this.id = product.getId();
 		this.image = product.getImage();
-		this.name = product.getProductId().getName();
-		this.rarity = product.getProductId().getRarity();
+		this.name = product.getName();
+		this.rarity = product.getRarity();
 		this.quantity = product.getQuantity();
-		this.expansion = ResponseUtils.mapperProductExpansionToResponse(product.getExpansion());
+		List<Expansion> ex = new ArrayList<>(product.getExpansion());
+		this.expansion = ResponseUtils.mapperExpansionToResponse(ex);
 
 	}
 
