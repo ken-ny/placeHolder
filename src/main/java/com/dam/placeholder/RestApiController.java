@@ -18,14 +18,17 @@ import org.springframework.web.bind.annotation.RestController;
 import com.dam.placeholder.entity.Expansion;
 import com.dam.placeholder.entity.Game;
 import com.dam.placeholder.entity.Product;
+import com.dam.placeholder.entity.SaleDetails;
 import com.dam.placeholder.entity.Sales;
 import com.dam.placeholder.repo.ExpansionRepository;
 import com.dam.placeholder.repo.GameRepository;
 import com.dam.placeholder.repo.ProductRepository;
+import com.dam.placeholder.repo.SaleDetailsRepository;
 import com.dam.placeholder.repo.SalesRepository;
 import com.dam.placeholder.request.ExpansionRequest;
 import com.dam.placeholder.request.GameRequest;
 import com.dam.placeholder.request.ProductRequest;
+import com.dam.placeholder.request.SaleDetailsRequest;
 import com.dam.placeholder.request.SalesRequest;
 import com.dam.placeholder.response.ExpansionResponse;
 import com.dam.placeholder.response.GameResponse;
@@ -42,6 +45,10 @@ public class RestApiController {
 
 	private static final String GAME = "G";
 
+	private static final String SALES = "S";
+
+	private static final String SALE_DETAILS = "SD";
+
 	@Autowired
 	ProductRepository productRepo;
 
@@ -53,6 +60,9 @@ public class RestApiController {
 
 	@Autowired
 	SalesRepository salesRepo;
+
+	@Autowired
+	SaleDetailsRepository detailsRepo;
 
 	// POST ENDPOINTS
 
@@ -105,13 +115,34 @@ public class RestApiController {
 	@PostMapping("/createSale")
 	public ResponseEntity<SalesResponse> postCreateExpansion(@RequestBody SalesRequest sale) {
 		try {
+			sale.setId(findNextAvailableId(SALES));
+			// crea el objeto sales sin relaciones
+			Sales newSale = salesRepo.save(new Sales(sale));
+			// crea las relaciones y las enlaza con el objeto sale
+			sale.getDetails().stream().filter(Objects::nonNull).forEach(sd -> saveDetail(sd, newSale));
 
-			Sales saveSale = salesRepo.save(new Sales(sale));
+			// actualiza el Sale con las nuevas relaciones
+			Sales savedSale = salesRepo.save(newSale);
 
-			return new ResponseEntity<>(new SalesResponse(saveSale), HttpStatus.OK);
+			return new ResponseEntity<>(new SalesResponse(savedSale), HttpStatus.OK);
 		} catch (Exception e) {
 			return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
 		}
+	}
+
+	/**
+	 * Guarda cada detalle de la entrada relacionándolo con el objeto sales que se
+	 * le pasa. Después añade el nuevo detail al objeto Sales
+	 * 
+	 * @param sd
+	 * @param newSale
+	 */
+	private void saveDetail(SaleDetailsRequest sd, Sales newSale) {
+		sd.setId(findNextAvailableId(SALE_DETAILS));
+		sd.setSale(newSale);
+		SaleDetails newDetail = detailsRepo.save(new SaleDetails(sd));
+
+		newSale.addDetail(newDetail);
 	}
 
 	// GET ENDPOINTS
@@ -192,18 +223,32 @@ public class RestApiController {
 		}
 	}
 
+	/**
+	 * Devuelve el siguiente id disponible para cada tabla. En caso de que la tabla
+	 * esté vacía, devuelve 1 como primer id
+	 * 
+	 * @param table
+	 * @return
+	 */
 	private Integer findNextAvailableId(String table) {
 
 		switch (table) {
 		case GAME:
 			Game g = gameRepo.findTopByOrderByIdDesc();
-			return g.getId() + 1;
+			return (Objects.isNull(g)) ? 1 : g.getId() + 1;
 		case PRODUCT:
 			Product p = productRepo.findTopByOrderByIdDesc();
-			return p.getId() + 1;
+			return (Objects.isNull(p)) ? 1 : p.getId() + 1;
 		case EXPANSION:
 			Expansion e = expansionRepo.findTopByOrderByIdDesc();
-			return e.getId() + 1;
+			return (Objects.isNull(e)) ? 1 : e.getId() + 1;
+		case SALES:
+			Sales s = salesRepo.findTopByOrderByIdDesc();
+			return (Objects.isNull(s)) ? 1 : s.getId() + 1;
+		case SALE_DETAILS:
+			SaleDetails sd = detailsRepo.findTopByOrderByIdDesc();
+			return (Objects.isNull(sd)) ? 1 : sd.getId() + 1;
+
 		}
 
 		return null;

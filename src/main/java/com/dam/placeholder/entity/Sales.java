@@ -1,14 +1,17 @@
 package com.dam.placeholder.entity;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+
+import org.springframework.util.CollectionUtils;
 
 import com.dam.placeholder.request.SalesRequest;
 
 import jakarta.persistence.Column;
-import jakarta.persistence.Embedded;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import jakarta.persistence.Temporal;
 import jakarta.persistence.TemporalType;
@@ -18,6 +21,9 @@ import jakarta.persistence.TemporalType;
 public class Sales {
 
 	@Id
+	@Column(name = "ID")
+	Integer id;
+
 	@Temporal(TemporalType.TIMESTAMP)
 	@Column(name = "SALE_DATE")
 	Date sale_date;
@@ -25,7 +31,7 @@ public class Sales {
 	@Column(name = "SALE_PRICE")
 	Double salePrice;
 
-	@Embedded
+	@OneToMany(mappedBy = "sale")
 	List<SaleDetails> details;
 
 	public List<SaleDetails> getDetails() {
@@ -52,8 +58,24 @@ public class Sales {
 		this.salePrice = salePrice;
 	}
 
-	public Sales(Date sale_date, Double salePrice, List<SaleDetails> details) {
+	public Integer getId() {
+		return id;
+	}
+
+	public void setId(Integer id) {
+		this.id = id;
+	}
+
+	public void addDetail(SaleDetails detail) {
+		if (CollectionUtils.isEmpty(this.details)) {
+			this.details = new ArrayList<>();
+		}
+		this.details.add(detail);
+	}
+
+	public Sales(Integer id, Date sale_date, Double salePrice, List<SaleDetails> details) {
 		super();
+		this.id = id;
 		this.sale_date = sale_date;
 		this.salePrice = salePrice;
 		this.details = details;
@@ -64,8 +86,9 @@ public class Sales {
 	}
 
 	public Sales(SalesRequest request) {
-		this.details = request.getDetails();
-		this.sale_date = request.getSale_date();
+		this.id = request.getId();
+		this.details = new ArrayList<>();
+		this.sale_date = request.getSaleDate();
 		this.salePrice = request.getSalePrice();
 	}
 

@@ -34,7 +34,7 @@ public class Product {
 	@JoinTable(name = "PRODUCT_EXPANSION", joinColumns = @JoinColumn(name = "product_id"), inverseJoinColumns = @JoinColumn(name = "expansion_id"))
 	Set<Expansion> expansion;
 
-	@OneToMany(mappedBy = "details.product")
+	@OneToMany(mappedBy = "product", targetEntity = SaleDetails.class)
 	List<Sales> productSales;
 
 	public Integer getId() {

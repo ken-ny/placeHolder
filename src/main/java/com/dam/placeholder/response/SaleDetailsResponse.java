@@ -1,40 +1,20 @@
 package com.dam.placeholder.response;
 
-import com.dam.placeholder.entity.Expansion;
-import com.dam.placeholder.entity.Product;
 import com.dam.placeholder.entity.SaleDetails;
-import com.dam.placeholder.serializer.ExpansionSerializer;
-import com.dam.placeholder.serializer.ProductSerializer;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 
-import jakarta.persistence.Embeddable;
-
-@Embeddable
+@JsonIgnoreProperties(ignoreUnknown = true)
+@JsonInclude(JsonInclude.Include.NON_EMPTY)
 public class SaleDetailsResponse {
+	@JsonProperty
+	ProductResponse product;
+	@JsonProperty
+	ExpansionResponse expansion;
 
-	@JsonSerialize(using = ProductSerializer.class)
-	Product product;
-	@JsonSerialize(using = ExpansionSerializer.class)
-	Expansion expansion;
 	@JsonProperty
 	Integer quantity;
-
-	public Product getProductId() {
-		return product;
-	}
-
-	public void setProductId(Product productId) {
-		this.product = productId;
-	}
-
-	public Expansion getExpansionId() {
-		return expansion;
-	}
-
-	public void setExpansionId(Expansion expansionId) {
-		this.expansion = expansionId;
-	}
 
 	public Integer getQuantity() {
 		return quantity;
@@ -44,10 +24,26 @@ public class SaleDetailsResponse {
 		this.quantity = quantity;
 	}
 
-	public SaleDetailsResponse(Product productId, Expansion expansionId, Integer quantity) {
+	public ProductResponse getProduct() {
+		return product;
+	}
+
+	public void setProduct(ProductResponse product) {
+		this.product = product;
+	}
+
+	public ExpansionResponse getExpansion() {
+		return expansion;
+	}
+
+	public void setExpansion(ExpansionResponse expansion) {
+		this.expansion = expansion;
+	}
+
+	public SaleDetailsResponse(ProductResponse product, ExpansionResponse expansion, Integer quantity) {
 		super();
-		this.product = productId;
-		this.expansion = expansionId;
+		this.product = product;
+		this.expansion = expansion;
 		this.quantity = quantity;
 	}
 
@@ -56,8 +52,8 @@ public class SaleDetailsResponse {
 	}
 
 	public SaleDetailsResponse(SaleDetails ex) {
-		this.expansion = ex.getExpansionId();
-		this.product = ex.getProductId();
+		this.expansion = new ExpansionResponse(ex.getExpansion());
+		this.product = new ProductResponse(ex.getProduct());
 		this.quantity = ex.getQuantity();
 	}
 

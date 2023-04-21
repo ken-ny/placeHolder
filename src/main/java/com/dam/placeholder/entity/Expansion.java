@@ -45,7 +45,7 @@ public class Expansion {
 	@ManyToMany(mappedBy = "expansion")
 	List<Product> productExpansion;
 
-	@OneToMany(mappedBy = "details.expansion")
+	@OneToMany(mappedBy = "expansion", targetEntity = SaleDetails.class)
 	List<Sales> productSales;
 
 	public Expansion(ExpansionRequest prod) {

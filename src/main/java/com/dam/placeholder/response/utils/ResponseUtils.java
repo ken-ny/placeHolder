@@ -40,4 +40,9 @@ public class ResponseUtils {
 		return response;
 	}
 
+	public static ExpansionResponse mapperExpansionToResponse(Expansion expansion) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
 }

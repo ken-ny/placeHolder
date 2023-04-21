@@ -1,11 +1,17 @@
 package com.dam.placeholder.entity;
 
-import jakarta.persistence.Embeddable;
+import com.dam.placeholder.request.SaleDetailsRequest;
+
+import jakarta.persistence.Entity;
+import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 
-@Embeddable
+@Entity
 public class SaleDetails {
+
+	@Id
+	Integer id;
 
 	@ManyToOne
 	@JoinColumn(name = "PRODUCT_ID")
@@ -14,6 +20,10 @@ public class SaleDetails {
 	@ManyToOne
 	@JoinColumn(name = "EXPANSION_ID")
 	Expansion expansion;
+
+	@ManyToOne
+	@JoinColumn(name = "SALE_ID")
+	Sales sale;
 
 	Integer quantity;
 
@@ -41,15 +51,57 @@ public class SaleDetails {
 		this.quantity = quantity;
 	}
 
-	public SaleDetails(Product productId, Expansion expansionId, Integer quantity) {
+	public Integer getId() {
+		return id;
+	}
+
+	public void setId(Integer id) {
+		this.id = id;
+	}
+
+	public Product getProduct() {
+		return product;
+	}
+
+	public void setProduct(Product product) {
+		this.product = product;
+	}
+
+	public Expansion getExpansion() {
+		return expansion;
+	}
+
+	public void setExpansion(Expansion expansion) {
+		this.expansion = expansion;
+	}
+
+	public Sales getSale() {
+		return sale;
+	}
+
+	public void setSale(Sales sale) {
+		this.sale = sale;
+	}
+
+	public SaleDetails(Integer id, Product product, Expansion expansion, Sales sale, Integer quantity) {
 		super();
-		this.product = productId;
-		this.expansion = expansionId;
+		this.id = id;
+		this.product = product;
+		this.expansion = expansion;
+		this.sale = sale;
 		this.quantity = quantity;
 	}
 
 	public SaleDetails() {
 		super();
+	}
+
+	public SaleDetails(SaleDetailsRequest details) {
+		this.id = details.getId();
+		this.product = details.getProduct();
+		this.expansion = details.getExpansion();
+		this.sale = details.getSale();
+		this.quantity = details.getQuantity();
 	}
 
 }

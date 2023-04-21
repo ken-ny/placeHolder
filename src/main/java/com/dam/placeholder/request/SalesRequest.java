@@ -3,20 +3,19 @@ package com.dam.placeholder.request;
 import java.util.Date;
 import java.util.List;
 
-import com.dam.placeholder.entity.SaleDetails;
-
 public class SalesRequest {
 
-	Date sale_date;
+	Integer id;
+	Date saleDate;
 	Double salePrice;
-	List<SaleDetails> details;
+	List<SaleDetailsRequest> details;
 
-	public Date getSale_date() {
-		return sale_date;
+	public Date getSaleDate() {
+		return saleDate;
 	}
 
-	public void setSale_date(Date sale_date) {
-		this.sale_date = sale_date;
+	public void setSaleDate(Date saleDate) {
+		this.saleDate = saleDate;
 	}
 
 	public Double getSalePrice() {
@@ -27,12 +26,20 @@ public class SalesRequest {
 		this.salePrice = salePrice;
 	}
 
-	public List<SaleDetails> getDetails() {
+	public List<SaleDetailsRequest> getDetails() {
 		return details;
 	}
 
-	public void setDetails(List<SaleDetails> details) {
+	public void setDetails(List<SaleDetailsRequest> details) {
 		this.details = details;
+	}
+
+	public Integer getId() {
+		return id;
+	}
+
+	public void setId(Integer id) {
+		this.id = id;
 	}
 
 }
