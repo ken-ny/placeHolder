@@ -4,12 +4,14 @@ import java.util.Date;
 
 import com.dam.placeholder.entity.Expansion;
 import com.dam.placeholder.entity.Game;
+import com.dam.placeholder.serializer.GameSerializer;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
-@JsonInclude(JsonInclude.Include.NON_NULL)
+@JsonInclude(JsonInclude.Include.NON_EMPTY)
 public class ExpansionResponse {
 
 	@JsonProperty
@@ -26,6 +28,9 @@ public class ExpansionResponse {
 
 	@JsonProperty
 	private Boolean is_released;
+
+	@JsonSerialize(using = GameSerializer.class)
+	private GameResponse game;
 
 	public Integer getId() {
 		return id;
@@ -67,6 +72,14 @@ public class ExpansionResponse {
 		this.is_released = is_released;
 	}
 
+	public GameResponse getGame() {
+		return game;
+	}
+
+	public void setGame(GameResponse game) {
+		this.game = game;
+	}
+
 	public ExpansionResponse(Expansion expansion) {
 
 		this.abbreviation = expansion.getAbbreviation();
@@ -74,6 +87,8 @@ public class ExpansionResponse {
 		this.is_released = expansion.getIs_released();
 		this.name = expansion.getName();
 		this.release_date = expansion.getRelease_date();
+		this.game = new GameResponse(expansion.getGame().getId(), expansion.getGame().getName(),
+				expansion.getGame().getAbbreviation());
 	}
 
 	public ExpansionResponse(Integer id, String name, String abbreviation, Date release_date, Boolean is_released,
@@ -84,6 +99,7 @@ public class ExpansionResponse {
 		this.abbreviation = abbreviation;
 		this.release_date = release_date;
 		this.is_released = is_released;
+		this.game = new GameResponse(game.getId(), game.getName(), game.getAbbreviation());
 	}
 
 	public ExpansionResponse() {

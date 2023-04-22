@@ -6,4 +6,8 @@ import com.dam.placeholder.entity.Expansion;
 
 public interface ExpansionRepository extends JpaRepository<Expansion, Integer> {
 
+	Expansion findTopByOrderByIdDesc();
+
+	Expansion findByNameAndAbbreviation(String name, String abbreviation);
+
 }

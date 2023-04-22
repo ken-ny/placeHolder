@@ -3,12 +3,15 @@ package com.dam.placeholder.entity;
 import java.util.Date;
 import java.util.List;
 
+import com.dam.placeholder.request.ExpansionRequest;
+import com.dam.placeholder.response.utils.ResponseUtils;
+
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToMany;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
@@ -21,31 +24,56 @@ public class Expansion {
 
 	@Id
 	@Column(name = "ID")
-	@GeneratedValue(strategy = GenerationType.AUTO)
-	Integer id;
+	private Integer id;
 
 	@Column(name = "NAME")
-	String name;
+	private String name;
 
 	@Column(name = "ABBREVIATION")
-	String abbreviation;
+	private String abbreviation;
 
 	@Temporal(TemporalType.TIMESTAMP)
 	@Column(name = "RELEASE_DATE")
-	Date release_date;
+	private Date release_date;
 
 	@Column(name = "RELEASED")
-	Boolean is_released;
+	private Boolean is_released;
 
 	@ManyToOne
 	@JoinColumn(name = "GAME_ID")
-	Game game;
+	private Game game;
 
-	@OneToMany(mappedBy = "expansionId")
-	List<ProductExpansion> productExpansion;
+	@ManyToMany(mappedBy = "expansion", cascade = CascadeType.REMOVE)
+	private List<Product> productExpansion;
 
-	@OneToMany(mappedBy = "expansionId")
-	List<Sales> productSales;
+	@OneToMany(mappedBy = "expansion", targetEntity = SaleDetails.class, cascade = CascadeType.REMOVE, orphanRemoval = true)
+	private List<Sales> productSales;
+
+	public Expansion(ExpansionRequest prod) {
+		this.abbreviation = prod.getAbbreviation();
+		this.id = prod.getId();
+		this.is_released = prod.getIs_released();
+		this.name = prod.getName();
+		this.release_date = ResponseUtils.convertStringToDate(prod.getRelease_date());
+		this.game = prod.getGame();
+	}
+
+	public Expansion() {
+		super();
+	}
+
+	public Expansion(Integer id, String name, String abbreviation, Date release_date, Boolean is_released, Game game,
+			List<Product> productExpansion, List<Sales> productSales) {
+		super();
+		this.id = id;
+		this.name = name;
+		this.abbreviation = abbreviation;
+		this.release_date = release_date;
+		this.is_released = is_released;
+		this.game = game;
+		this.productExpansion = productExpansion;
+		this.productSales = productSales;
+	}
 
 	public Integer getId() {
 		return id;
@@ -103,11 +131,11 @@ public class Expansion {
 		this.productSales = productSales;
 	}
 
-	public List<ProductExpansion> getProductExpansion() {
+	public List<Product> getProductExpansion() {
 		return productExpansion;
 	}
 
-	public void setProductExpansion(List<ProductExpansion> productExpansion) {
+	public void setProductExpansion(List<Product> productExpansion) {
 		this.productExpansion = productExpansion;
 	}
 

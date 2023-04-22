@@ -1,7 +1,9 @@
 package com.dam.placeholder.response;
 
+import java.util.ArrayList;
 import java.util.List;
 
+import com.dam.placeholder.entity.Expansion;
 import com.dam.placeholder.entity.Product;
 import com.dam.placeholder.response.utils.ResponseUtils;
 import com.dam.placeholder.serializer.ExpansionSerializer;
@@ -11,7 +13,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
-@JsonInclude(JsonInclude.Include.NON_NULL)
+@JsonInclude(JsonInclude.Include.NON_EMPTY)
 public class ProductResponse {
 	@JsonProperty
 	private Integer id;
@@ -20,11 +22,11 @@ public class ProductResponse {
 	@JsonProperty
 	private String rarity;
 	@JsonProperty
-	Integer quantity;
+	private Integer quantity;
 	@JsonProperty
-	Long image;
+	private String image;
 	@JsonSerialize(using = ExpansionSerializer.class)
-	List<ExpansionResponse> expansion;
+	private List<ExpansionResponse> expansion;
 
 	public Integer getId() {
 		return id;
@@ -58,11 +60,11 @@ public class ProductResponse {
 		this.quantity = quantity;
 	}
 
-	public Long getImage() {
+	public String getImage() {
 		return image;
 	}
 
-	public void setImage(Long image) {
+	public void setImage(String image) {
 		this.image = image;
 	}
 
@@ -74,7 +76,7 @@ public class ProductResponse {
 		this.expansion = expansion;
 	}
 
-	public ProductResponse(Integer id, String name, String rarity, Integer quantity, Long image,
+	public ProductResponse(Integer id, String name, String rarity, Integer quantity, String image,
 			List<ExpansionResponse> expansion) {
 		super();
 		this.id = id;
@@ -91,12 +93,13 @@ public class ProductResponse {
 
 	public ProductResponse(Product product) {
 
-		this.id = product.getProductId().getId();
+		this.id = product.getId();
 		this.image = product.getImage();
-		this.name = product.getProductId().getName();
-		this.rarity = product.getProductId().getRarity();
+		this.name = product.getName();
+		this.rarity = product.getRarity();
 		this.quantity = product.getQuantity();
-		this.expansion = ResponseUtils.mapperProductExpansionToResponse(product.getExpansion());
+		List<Expansion> ex = new ArrayList<>(product.getExpansion());
+		this.expansion = ResponseUtils.mapperExpansionToResponse(ex);
 
 	}
 

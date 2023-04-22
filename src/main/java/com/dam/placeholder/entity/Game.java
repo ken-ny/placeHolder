@@ -2,10 +2,11 @@ package com.dam.placeholder.entity;
 
 import java.util.List;
 
+import com.dam.placeholder.request.GameRequest;
+
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
@@ -15,15 +16,13 @@ import jakarta.persistence.Table;
 public class Game {
 
 	@Id
-	@Column
-	@GeneratedValue(strategy = GenerationType.AUTO)
-	Integer id;
+	private Integer id;
 	@Column(name = "NAME")
-	String name;
+	private String name;
 	@Column(name = "ABBREVIATION")
-	String abbreviation;
-	@OneToMany(mappedBy = "game")
-	List<Expansion> expansions;
+	private String abbreviation;
+	@OneToMany(mappedBy = "game", cascade = CascadeType.REMOVE, orphanRemoval = true)
+	private List<Expansion> expansions;
 
 	public Integer getId() {
 		return id;
@@ -55,6 +54,33 @@ public class Game {
 
 	public void setExpansions(List<Expansion> expansions) {
 		this.expansions = expansions;
+	}
+
+	public Game(Integer id, String name, String abbreviation, List<Expansion> expansions) {
+		super();
+		this.id = id;
+		this.name = name;
+		this.abbreviation = abbreviation;
+		this.expansions = expansions;
+	}
+
+	public Game() {
+		super();
+	}
+
+	public Game(Game game) {
+
+		this.abbreviation = game.getAbbreviation();
+		this.expansions = game.getExpansions();
+		this.name = game.getName();
+	}
+
+	public Game(GameRequest game) {
+		this.abbreviation = game.getAbbreviation();
+		this.expansions = game.getExpansions();
+		this.id = game.getId();
+		this.name = game.getName();
+
 	}
 
 }

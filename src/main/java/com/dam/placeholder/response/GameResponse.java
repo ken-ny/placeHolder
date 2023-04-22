@@ -11,7 +11,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
-@JsonInclude(JsonInclude.Include.NON_NULL)
+@JsonInclude(JsonInclude.Include.NON_EMPTY)
 public class GameResponse {
 
 	@JsonProperty
@@ -73,6 +73,13 @@ public class GameResponse {
 		this.name = game.getName();
 
 		this.expansions = ResponseUtils.mapperExpansionToResponse(game.getExpansions());
+	}
+
+	public GameResponse(Integer id, String name, String abbreviation) {
+		super();
+		this.id = id;
+		this.name = name;
+		this.abbreviation = abbreviation;
 	}
 
 }

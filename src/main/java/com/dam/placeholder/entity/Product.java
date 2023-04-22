@@ -1,10 +1,18 @@
 package com.dam.placeholder.entity;
 
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
+import com.dam.placeholder.request.ProductRequest;
+
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
-import jakarta.persistence.EmbeddedId;
 import jakarta.persistence.Entity;
+import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.JoinTable;
+import jakarta.persistence.ManyToMany;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 
@@ -12,25 +20,46 @@ import jakarta.persistence.Table;
 @Table(name = "PRODUCT")
 public class Product {
 
-	@EmbeddedId
-	ProductKey productId;
+	@Id
+	private Integer id;
+	@Column(name = "NAME")
+	private String name;
+	@Column(name = "RARITY")
+	private String rarity;
 	@Column(name = "QUANTITY")
-	Integer quantity;
+	private Integer quantity;
 	@Column(name = "IMAGE")
-	Long image;
+	private String image;
 
-	@OneToMany(mappedBy = "productId")
-	List<ProductExpansion> expansion;
+	@ManyToMany
+	@JoinTable(name = "PRODUCT_EXPANSION", joinColumns = @JoinColumn(name = "product_id"), inverseJoinColumns = @JoinColumn(name = "expansion_id"))
+	Set<Expansion> expansion;
 
-	@OneToMany(mappedBy = "productId")
+	@OneToMany(mappedBy = "product", targetEntity = SaleDetails.class, cascade = CascadeType.REMOVE, orphanRemoval = true)
 	List<Sales> productSales;
 
-	public ProductKey getProductId() {
-		return productId;
+	public Integer getId() {
+		return id;
 	}
 
-	public void setProductId(ProductKey productId) {
-		this.productId = productId;
+	public void setId(Integer id) {
+		this.id = id;
+	}
+
+	public String getName() {
+		return name;
+	}
+
+	public void setName(String name) {
+		this.name = name;
+	}
+
+	public String getRarity() {
+		return rarity;
+	}
+
+	public void setRarity(String rarity) {
+		this.rarity = rarity;
 	}
 
 	public Integer getQuantity() {
@@ -41,11 +70,11 @@ public class Product {
 		this.quantity = quantity;
 	}
 
-	public Long getImage() {
+	public String getImage() {
 		return image;
 	}
 
-	public void setImage(Long image) {
+	public void setImage(String image) {
 		this.image = image;
 	}
 
@@ -57,12 +86,40 @@ public class Product {
 		this.productSales = productSales;
 	}
 
-	public List<ProductExpansion> getExpansion() {
+	public Set<Expansion> getExpansion() {
 		return expansion;
 	}
 
-	public void setExpansion(List<ProductExpansion> expansion) {
+	public void setExpansion(Set<Expansion> expansion) {
 		this.expansion = expansion;
+	}
+
+	public Product(ProductRequest prod) {
+		this.id = prod.getId();
+		this.name = prod.getName();
+		this.rarity = prod.getRarity();
+		this.image = prod.getImage();
+		this.quantity = prod.getQuantity();
+
+		Set<Expansion> producExpansionList = new HashSet();
+		producExpansionList.addAll(prod.getExpansions());
+		this.expansion = producExpansionList;
+	}
+
+	public Product(Integer id, String name, String rarity, Integer quantity, String image, Set<Expansion> expansion,
+			List<Sales> productSales) {
+		super();
+		this.id = id;
+		this.name = name;
+		this.rarity = rarity;
+		this.quantity = quantity;
+		this.image = image;
+		this.expansion = expansion;
+		this.productSales = productSales;
+	}
+
+	public Product() {
+		super();
 	}
 
 }

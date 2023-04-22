@@ -1,13 +1,18 @@
 package com.dam.placeholder.entity;
 
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
+import org.springframework.util.CollectionUtils;
+
+import com.dam.placeholder.request.SalesRequest;
+
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.JoinColumns;
-import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import jakarta.persistence.Temporal;
 import jakarta.persistence.TemporalType;
@@ -16,46 +21,34 @@ import jakarta.persistence.TemporalType;
 @Table(name = "SALES")
 public class Sales {
 
-	@ManyToOne
-	@JoinColumns({ @JoinColumn(name = "PRODUCT_ID", referencedColumnName = "id"),
-			@JoinColumn(name = "PRODUCT_NAME", referencedColumnName = "name"),
-			@JoinColumn(name = "PRODUCT_RARITY", referencedColumnName = "rarity") })
-	Product productId;
-
-	@ManyToOne
-	@JoinColumn(name = "EXPANSION_ID")
-	Expansion expansionId;
-
 	@Id
+	@Column(name = "ID")
+	private Integer id;
+
 	@Temporal(TemporalType.TIMESTAMP)
 	@Column(name = "SALE_DATE")
-	Date sale_date;
+	private Date saleDate;
 
 	@Column(name = "SALE_PRICE")
-	Double salePrice;
+	private Double salePrice;
 
-	public Product getProductId() {
-		return productId;
+	@OneToMany(mappedBy = "sale", cascade = CascadeType.REMOVE)
+	private List<SaleDetails> details;
+
+	public List<SaleDetails> getDetails() {
+		return details;
 	}
 
-	public void setProductId(Product productId) {
-		this.productId = productId;
+	public void setDetails(List<SaleDetails> details) {
+		this.details = details;
 	}
 
-	public Expansion getExpansionId() {
-		return expansionId;
+	public Date getSaleDate() {
+		return saleDate;
 	}
 
-	public void setExpansionId(Expansion expansionId) {
-		this.expansionId = expansionId;
-	}
-
-	public Date getSale_date() {
-		return sale_date;
-	}
-
-	public void setSale_date(Date sale_date) {
-		this.sale_date = sale_date;
+	public void setSaleDate(Date sale_date) {
+		this.saleDate = sale_date;
 	}
 
 	public Double getSalePrice() {
@@ -64,6 +57,44 @@ public class Sales {
 
 	public void setSalePrice(Double salePrice) {
 		this.salePrice = salePrice;
+	}
+
+	public Integer getId() {
+		return id;
+	}
+
+	public void setId(Integer id) {
+		this.id = id;
+	}
+
+	public void removeDetail(SaleDetails detail) {
+		this.details.remove(detail);
+	}
+
+	public void addDetail(SaleDetails detail) {
+		if (CollectionUtils.isEmpty(this.details)) {
+			this.details = new ArrayList<>();
+		}
+		this.details.add(detail);
+	}
+
+	public Sales(Integer id, Date saleDate, Double salePrice, List<SaleDetails> details) {
+		super();
+		this.id = id;
+		this.saleDate = saleDate;
+		this.salePrice = salePrice;
+		this.details = details;
+	}
+
+	public Sales() {
+		super();
+	}
+
+	public Sales(SalesRequest request) {
+		this.id = request.getId();
+		this.details = new ArrayList<>();
+		this.saleDate = request.getSaleDate();
+		this.salePrice = request.getSalePrice();
 	}
 
 }

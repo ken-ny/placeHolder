@@ -6,5 +6,9 @@ import org.springframework.stereotype.Service;
 import com.dam.placeholder.entity.Product;
 
 @Service
-public interface ProductRepository extends JpaRepository<Product, Long> {
+public interface ProductRepository extends JpaRepository<Product, Integer> {
+
+	Product findTopByOrderByIdDesc();
+
+	Product findByNameAndRarity(String name, String rarity);
 }
