@@ -11,21 +11,23 @@ import jakarta.persistence.ManyToOne;
 public class SaleDetails {
 
 	@Id
-	Integer id;
+	private Integer id;
 
 	@ManyToOne
 	@JoinColumn(name = "PRODUCT_ID")
-	Product product;
+	private Product product;
 
 	@ManyToOne
 	@JoinColumn(name = "EXPANSION_ID")
-	Expansion expansion;
+	private Expansion expansion;
 
 	@ManyToOne
 	@JoinColumn(name = "SALE_ID")
-	Sales sale;
+	private Sales sale;
 
-	Integer quantity;
+	private Integer quantity;
+
+	private Double unitaryPrice;
 
 	public Product getProductId() {
 		return product;
@@ -83,13 +85,23 @@ public class SaleDetails {
 		this.sale = sale;
 	}
 
-	public SaleDetails(Integer id, Product product, Expansion expansion, Sales sale, Integer quantity) {
+	public Double getUnitaryPrice() {
+		return unitaryPrice;
+	}
+
+	public void setUnitaryPrice(Double unitaryPrice) {
+		this.unitaryPrice = unitaryPrice;
+	}
+
+	public SaleDetails(Integer id, Product product, Expansion expansion, Sales sale, Integer quantity,
+			Double unitaryPrice) {
 		super();
 		this.id = id;
 		this.product = product;
 		this.expansion = expansion;
 		this.sale = sale;
 		this.quantity = quantity;
+		this.unitaryPrice = unitaryPrice;
 	}
 
 	public SaleDetails() {
@@ -102,6 +114,7 @@ public class SaleDetails {
 		this.expansion = details.getExpansion();
 		this.sale = details.getSale();
 		this.quantity = details.getQuantity();
+		this.unitaryPrice = details.getUnitaryPrice();
 	}
 
 }

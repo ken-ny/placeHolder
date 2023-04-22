@@ -9,12 +9,12 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 @JsonInclude(JsonInclude.Include.NON_EMPTY)
 public class SaleDetailsResponse {
 	@JsonProperty
-	ProductResponse product;
+	private ProductResponse product;
 	@JsonProperty
-	ExpansionResponse expansion;
+	private ExpansionResponse expansion;
 
 	@JsonProperty
-	Integer quantity;
+	private Integer quantity;
 
 	public Integer getQuantity() {
 		return quantity;

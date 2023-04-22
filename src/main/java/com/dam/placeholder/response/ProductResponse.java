@@ -22,11 +22,11 @@ public class ProductResponse {
 	@JsonProperty
 	private String rarity;
 	@JsonProperty
-	Integer quantity;
+	private Integer quantity;
 	@JsonProperty
-	String image;
+	private String image;
 	@JsonSerialize(using = ExpansionSerializer.class)
-	List<ExpansionResponse> expansion;
+	private List<ExpansionResponse> expansion;
 
 	public Integer getId() {
 		return id;

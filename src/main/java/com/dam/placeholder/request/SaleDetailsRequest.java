@@ -6,11 +6,20 @@ import com.dam.placeholder.entity.Sales;
 
 public class SaleDetailsRequest {
 
-	Integer id;
-	Product product;
-	Expansion expansion;
-	Integer quantity;
-	Sales sale;
+	private Integer id;
+	private Product product;
+	private Expansion expansion;
+	private Integer quantity;
+	private Sales sale;
+	private Double unitaryPrice;
+
+	public Double getUnitaryPrice() {
+		return unitaryPrice;
+	}
+
+	public void setUnitaryPrice(Double unitaryPrice) {
+		this.unitaryPrice = unitaryPrice;
+	}
 
 	public Product getProduct() {
 		return product;

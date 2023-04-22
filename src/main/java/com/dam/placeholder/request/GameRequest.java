@@ -6,10 +6,10 @@ import com.dam.placeholder.entity.Expansion;
 
 public class GameRequest {
 
-	Integer id;
-	String name;
-	String abbreviation;
-	List<Expansion> expansions;
+	private Integer id;
+	private String name;
+	private String abbreviation;
+	private List<Expansion> expansions;
 
 	public Integer getId() {
 		return id;

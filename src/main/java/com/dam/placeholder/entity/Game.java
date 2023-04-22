@@ -4,6 +4,7 @@ import java.util.List;
 
 import com.dam.placeholder.request.GameRequest;
 
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
@@ -15,13 +16,13 @@ import jakarta.persistence.Table;
 public class Game {
 
 	@Id
-	Integer id;
+	private Integer id;
 	@Column(name = "NAME")
-	String name;
+	private String name;
 	@Column(name = "ABBREVIATION")
-	String abbreviation;
-	@OneToMany(mappedBy = "game")
-	List<Expansion> expansions;
+	private String abbreviation;
+	@OneToMany(mappedBy = "game", cascade = CascadeType.REMOVE, orphanRemoval = true)
+	private List<Expansion> expansions;
 
 	public Integer getId() {
 		return id;

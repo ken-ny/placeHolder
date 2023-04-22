@@ -6,6 +6,7 @@ import java.util.Set;
 
 import com.dam.placeholder.request.ProductRequest;
 
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
@@ -26,15 +27,15 @@ public class Product {
 	@Column(name = "RARITY")
 	private String rarity;
 	@Column(name = "QUANTITY")
-	Integer quantity;
+	private Integer quantity;
 	@Column(name = "IMAGE")
-	String image;
+	private String image;
 
 	@ManyToMany
 	@JoinTable(name = "PRODUCT_EXPANSION", joinColumns = @JoinColumn(name = "product_id"), inverseJoinColumns = @JoinColumn(name = "expansion_id"))
 	Set<Expansion> expansion;
 
-	@OneToMany(mappedBy = "product", targetEntity = SaleDetails.class)
+	@OneToMany(mappedBy = "product", targetEntity = SaleDetails.class, cascade = CascadeType.REMOVE, orphanRemoval = true)
 	List<Sales> productSales;
 
 	public Integer getId() {

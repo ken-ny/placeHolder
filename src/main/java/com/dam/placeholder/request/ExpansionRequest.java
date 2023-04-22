@@ -4,12 +4,12 @@ import com.dam.placeholder.entity.Game;
 
 public class ExpansionRequest {
 
-	Integer id;
-	String name;
-	String abbreviation;
-	String release_date;
-	Boolean is_released;
-	Game game;
+	private Integer id;
+	private String name;
+	private String abbreviation;
+	private String release_date;
+	private Boolean is_released;
+	private Game game;
 
 	public String getName() {
 		return name;

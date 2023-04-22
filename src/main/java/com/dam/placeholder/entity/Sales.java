@@ -8,6 +8,7 @@ import org.springframework.util.CollectionUtils;
 
 import com.dam.placeholder.request.SalesRequest;
 
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
@@ -22,17 +23,17 @@ public class Sales {
 
 	@Id
 	@Column(name = "ID")
-	Integer id;
+	private Integer id;
 
 	@Temporal(TemporalType.TIMESTAMP)
 	@Column(name = "SALE_DATE")
-	Date sale_date;
+	private Date saleDate;
 
 	@Column(name = "SALE_PRICE")
-	Double salePrice;
+	private Double salePrice;
 
-	@OneToMany(mappedBy = "sale")
-	List<SaleDetails> details;
+	@OneToMany(mappedBy = "sale", cascade = CascadeType.REMOVE)
+	private List<SaleDetails> details;
 
 	public List<SaleDetails> getDetails() {
 		return details;
@@ -42,12 +43,12 @@ public class Sales {
 		this.details = details;
 	}
 
-	public Date getSale_date() {
-		return sale_date;
+	public Date getSaleDate() {
+		return saleDate;
 	}
 
-	public void setSale_date(Date sale_date) {
-		this.sale_date = sale_date;
+	public void setSaleDate(Date sale_date) {
+		this.saleDate = sale_date;
 	}
 
 	public Double getSalePrice() {
@@ -66,6 +67,10 @@ public class Sales {
 		this.id = id;
 	}
 
+	public void removeDetail(SaleDetails detail) {
+		this.details.remove(detail);
+	}
+
 	public void addDetail(SaleDetails detail) {
 		if (CollectionUtils.isEmpty(this.details)) {
 			this.details = new ArrayList<>();
@@ -73,10 +78,10 @@ public class Sales {
 		this.details.add(detail);
 	}
 
-	public Sales(Integer id, Date sale_date, Double salePrice, List<SaleDetails> details) {
+	public Sales(Integer id, Date saleDate, Double salePrice, List<SaleDetails> details) {
 		super();
 		this.id = id;
-		this.sale_date = sale_date;
+		this.saleDate = saleDate;
 		this.salePrice = salePrice;
 		this.details = details;
 	}
@@ -88,7 +93,7 @@ public class Sales {
 	public Sales(SalesRequest request) {
 		this.id = request.getId();
 		this.details = new ArrayList<>();
-		this.sale_date = request.getSaleDate();
+		this.saleDate = request.getSaleDate();
 		this.salePrice = request.getSalePrice();
 	}
 

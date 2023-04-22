@@ -8,4 +8,6 @@ public interface GameRepository extends JpaRepository<Game, Integer> {
 
 	Game findTopByOrderByIdDesc();
 
+	Game findByNameAndAbbreviation(String name, String abbreviation);
+
 }

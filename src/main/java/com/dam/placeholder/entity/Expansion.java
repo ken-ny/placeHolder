@@ -6,6 +6,7 @@ import java.util.List;
 import com.dam.placeholder.request.ExpansionRequest;
 import com.dam.placeholder.response.utils.ResponseUtils;
 
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
@@ -23,30 +24,30 @@ public class Expansion {
 
 	@Id
 	@Column(name = "ID")
-	Integer id;
+	private Integer id;
 
 	@Column(name = "NAME")
-	String name;
+	private String name;
 
 	@Column(name = "ABBREVIATION")
-	String abbreviation;
+	private String abbreviation;
 
 	@Temporal(TemporalType.TIMESTAMP)
 	@Column(name = "RELEASE_DATE")
-	Date release_date;
+	private Date release_date;
 
 	@Column(name = "RELEASED")
-	Boolean is_released;
+	private Boolean is_released;
 
 	@ManyToOne
 	@JoinColumn(name = "GAME_ID")
-	Game game;
+	private Game game;
 
-	@ManyToMany(mappedBy = "expansion")
-	List<Product> productExpansion;
+	@ManyToMany(mappedBy = "expansion", cascade = CascadeType.REMOVE)
+	private List<Product> productExpansion;
 
-	@OneToMany(mappedBy = "expansion", targetEntity = SaleDetails.class)
-	List<Sales> productSales;
+	@OneToMany(mappedBy = "expansion", targetEntity = SaleDetails.class, cascade = CascadeType.REMOVE, orphanRemoval = true)
+	private List<Sales> productSales;
 
 	public Expansion(ExpansionRequest prod) {
 		this.abbreviation = prod.getAbbreviation();

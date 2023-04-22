@@ -5,10 +5,10 @@ import java.util.List;
 
 public class SalesRequest {
 
-	Integer id;
-	Date saleDate;
-	Double salePrice;
-	List<SaleDetailsRequest> details;
+	private Integer id;
+	private Date saleDate;
+	private Double salePrice;
+	private List<SaleDetailsRequest> details;
 
 	public Date getSaleDate() {
 		return saleDate;
