@@ -38,6 +38,9 @@ public class Product {
 	@OneToMany(mappedBy = "product", targetEntity = SaleDetails.class, cascade = CascadeType.REMOVE, orphanRemoval = true)
 	List<Sales> productSales;
 
+	@OneToMany(mappedBy = "product", cascade = CascadeType.REMOVE, orphanRemoval = true)
+	List<Offers> offers;
+
 	public Integer getId() {
 		return id;
 	}
@@ -94,6 +97,14 @@ public class Product {
 		this.expansion = expansion;
 	}
 
+	public List<Offers> getOffers() {
+		return offers;
+	}
+
+	public void setOffers(List<Offers> offers) {
+		this.offers = offers;
+	}
+
 	public Product(ProductRequest prod) {
 		this.id = prod.getId();
 		this.name = prod.getName();
@@ -107,7 +118,7 @@ public class Product {
 	}
 
 	public Product(Integer id, String name, String rarity, Integer quantity, String image, Set<Expansion> expansion,
-			List<Sales> productSales) {
+			List<Sales> productSales, List<Offers> offers) {
 		super();
 		this.id = id;
 		this.name = name;
@@ -116,6 +127,7 @@ public class Product {
 		this.image = image;
 		this.expansion = expansion;
 		this.productSales = productSales;
+		this.offers = offers;
 	}
 
 	public Product() {

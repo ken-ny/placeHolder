@@ -49,6 +49,9 @@ public class Expansion {
 	@OneToMany(mappedBy = "expansion", targetEntity = SaleDetails.class, cascade = CascadeType.REMOVE, orphanRemoval = true)
 	private List<Sales> productSales;
 
+	@OneToMany(mappedBy = "expansion", cascade = CascadeType.REMOVE, orphanRemoval = true)
+	private List<Offers> offers;
+
 	public Expansion(ExpansionRequest prod) {
 		this.abbreviation = prod.getAbbreviation();
 		this.id = prod.getId();
@@ -63,7 +66,7 @@ public class Expansion {
 	}
 
 	public Expansion(Integer id, String name, String abbreviation, Date release_date, Boolean is_released, Game game,
-			List<Product> productExpansion, List<Sales> productSales) {
+			List<Product> productExpansion, List<Sales> productSales, List<Offers> offers) {
 		super();
 		this.id = id;
 		this.name = name;
@@ -73,6 +76,15 @@ public class Expansion {
 		this.game = game;
 		this.productExpansion = productExpansion;
 		this.productSales = productSales;
+		this.offers = offers;
+	}
+
+	public List<Offers> getOffers() {
+		return offers;
+	}
+
+	public void setOffers(List<Offers> offers) {
+		this.offers = offers;
 	}
 
 	public Integer getId() {

@@ -32,6 +32,17 @@ public class ExpansionResponse {
 	@JsonSerialize(using = GameSerializer.class)
 	private GameResponse game;
 
+	@JsonProperty
+	private Error error;
+
+	public Error getError() {
+		return error;
+	}
+
+	public void setError(Error error) {
+		this.error = error;
+	}
+
 	public Integer getId() {
 		return id;
 	}
@@ -104,6 +115,11 @@ public class ExpansionResponse {
 
 	public ExpansionResponse() {
 		super();
+	}
+
+	public ExpansionResponse(Error error) {
+		super();
+		this.error = error;
 	}
 
 }

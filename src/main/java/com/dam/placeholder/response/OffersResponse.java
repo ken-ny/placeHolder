@@ -1,23 +1,27 @@
 package com.dam.placeholder.response;
 
-import com.dam.placeholder.entity.SaleDetails;
+import com.dam.placeholder.entity.Offers;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 @JsonInclude(JsonInclude.Include.NON_EMPTY)
-public class SaleDetailsResponse {
+public class OffersResponse {
 
 	@JsonProperty
 	private Integer id;
+
+	@JsonProperty
+	private Integer quantity;
+
+	@JsonProperty
+	private Double unitaryPrice;
+
 	@JsonProperty
 	private ProductResponse product;
 	@JsonProperty
 	private ExpansionResponse expansion;
-
-	@JsonProperty
-	private Integer quantity;
 
 	@JsonProperty
 	private Error error;
@@ -62,26 +66,37 @@ public class SaleDetailsResponse {
 		this.expansion = expansion;
 	}
 
-	public SaleDetailsResponse(Integer id, ProductResponse product, ExpansionResponse expansion, Integer quantity) {
+	public Double getUnitaryPrice() {
+		return unitaryPrice;
+	}
+
+	public void setUnitaryPrice(Double unitaryPrice) {
+		this.unitaryPrice = unitaryPrice;
+	}
+
+	public OffersResponse(Integer id, Integer quantity, Double unitaryPrice, ProductResponse product,
+			ExpansionResponse expansion) {
 		super();
 		this.id = id;
+		this.quantity = quantity;
+		this.unitaryPrice = unitaryPrice;
 		this.product = product;
 		this.expansion = expansion;
-		this.quantity = quantity;
 	}
 
-	public SaleDetailsResponse() {
+	public OffersResponse() {
 		super();
 	}
 
-	public SaleDetailsResponse(SaleDetails ex) {
+	public OffersResponse(Offers ex) {
 		this.expansion = new ExpansionResponse(ex.getExpansion());
 		this.product = new ProductResponse(ex.getProduct());
 		this.quantity = ex.getQuantity();
+		this.unitaryPrice = ex.getUnitaryPrice();
 		this.id = ex.getId();
 	}
 
-	public SaleDetailsResponse(Error error) {
+	public OffersResponse(Error error) {
 		super();
 		this.error = error;
 	}

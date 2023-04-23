@@ -23,6 +23,17 @@ public class GameResponse {
 	@JsonSerialize(using = ExpansionSerializer.class)
 	private List<ExpansionResponse> expansions;
 
+	@JsonProperty
+	private Error error;
+
+	public Error getError() {
+		return error;
+	}
+
+	public void setError(Error error) {
+		this.error = error;
+	}
+
 	public Integer getId() {
 		return id;
 	}
@@ -80,6 +91,11 @@ public class GameResponse {
 		this.id = id;
 		this.name = name;
 		this.abbreviation = abbreviation;
+	}
+
+	public GameResponse(Error error) {
+		super();
+		this.error = error;
 	}
 
 }

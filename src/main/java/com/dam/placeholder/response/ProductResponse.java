@@ -28,6 +28,18 @@ public class ProductResponse {
 	@JsonSerialize(using = ExpansionSerializer.class)
 	private List<ExpansionResponse> expansion;
 
+	@JsonProperty
+	private Error error;
+
+	public ProductResponse(Error error) {
+		super();
+		this.error = error;
+	}
+
+	public void setError(Error error) {
+		this.error = error;
+	}
+
 	public Integer getId() {
 		return id;
 	}
@@ -101,6 +113,10 @@ public class ProductResponse {
 		List<Expansion> ex = new ArrayList<>(product.getExpansion());
 		this.expansion = ResponseUtils.mapperExpansionToResponse(ex);
 
+	}
+
+	public Error getError() {
+		return error;
 	}
 
 }

@@ -16,11 +16,32 @@ import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 public class SalesResponse {
 
 	@JsonProperty
+	private Integer id;
+	@JsonProperty
 	private Date saleDate;
 	@JsonProperty
 	private Double salePrice;
 	@JsonSerialize(using = DetailsSerializer.class)
 	private List<SaleDetailsResponse> details;
+
+	@JsonProperty
+	private Error error;
+
+	public Error getError() {
+		return error;
+	}
+
+	public void setError(Error error) {
+		this.error = error;
+	}
+
+	public Integer getId() {
+		return id;
+	}
+
+	public void setId(Integer id) {
+		this.id = id;
+	}
 
 	public Date getSaleDate() {
 		return saleDate;
@@ -46,9 +67,10 @@ public class SalesResponse {
 		this.details = details;
 	}
 
-	public SalesResponse(Date sale_date, Double salePrice, List<SaleDetailsResponse> details) {
+	public SalesResponse(Integer id, Date saleDate, Double salePrice, List<SaleDetailsResponse> details) {
 		super();
-		this.saleDate = sale_date;
+		this.id = id;
+		this.saleDate = saleDate;
 		this.salePrice = salePrice;
 		this.details = details;
 	}
@@ -61,7 +83,13 @@ public class SalesResponse {
 		this.saleDate = sale.getSaleDate();
 		this.salePrice = sale.getSalePrice();
 		this.details = ResponseUtils.mapperDetailsToResponse(sale.getDetails());
+		this.id = sale.getId();
 
+	}
+
+	public SalesResponse(Error error) {
+		super();
+		this.error = error;
 	}
 
 }
