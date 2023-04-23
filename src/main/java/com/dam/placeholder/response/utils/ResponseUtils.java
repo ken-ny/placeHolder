@@ -9,6 +9,7 @@ import java.util.Objects;
 
 import com.dam.placeholder.entity.Expansion;
 import com.dam.placeholder.entity.SaleDetails;
+import com.dam.placeholder.response.Error;
 import com.dam.placeholder.response.ExpansionResponse;
 import com.dam.placeholder.response.SaleDetailsResponse;
 
@@ -43,6 +44,15 @@ public class ResponseUtils {
 	public static ExpansionResponse mapperExpansionToResponse(Expansion expansion) {
 		// TODO Auto-generated method stub
 		return null;
+	}
+
+	/**
+	 * Genera un objeto error con el codigo, titulo y detalle que se le pasen
+	 * 
+	 * @return
+	 */
+	public static Error generateError(String code, String title, String detail) {
+		return new Error(code, title, detail);
 	}
 
 }

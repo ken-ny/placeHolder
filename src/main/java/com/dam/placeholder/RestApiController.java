@@ -12,33 +12,43 @@ import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.dam.placeholder.entity.Expansion;
 import com.dam.placeholder.entity.Game;
+import com.dam.placeholder.entity.Offers;
 import com.dam.placeholder.entity.Product;
 import com.dam.placeholder.entity.SaleDetails;
 import com.dam.placeholder.entity.Sales;
 import com.dam.placeholder.repo.ExpansionRepository;
 import com.dam.placeholder.repo.GameRepository;
+import com.dam.placeholder.repo.OffersRepository;
 import com.dam.placeholder.repo.ProductRepository;
 import com.dam.placeholder.repo.SaleDetailsRepository;
 import com.dam.placeholder.repo.SalesRepository;
 import com.dam.placeholder.request.ExpansionRequest;
 import com.dam.placeholder.request.GameRequest;
+import com.dam.placeholder.request.OffersRequest;
 import com.dam.placeholder.request.ProductRequest;
 import com.dam.placeholder.request.SaleDetailsRequest;
 import com.dam.placeholder.request.SalesRequest;
 import com.dam.placeholder.response.ExpansionResponse;
 import com.dam.placeholder.response.GameResponse;
+import com.dam.placeholder.response.OffersResponse;
 import com.dam.placeholder.response.ProductResponse;
 import com.dam.placeholder.response.SalesResponse;
+import com.dam.placeholder.response.utils.ErrorCodes;
+import com.dam.placeholder.response.utils.ResponseUtils;
 
 @RestController
 @RequestMapping("/placeHolder")
+
 public class RestApiController {
+
+	private static final String NOT_ENOUGH_QUANTITY_TO_DECREASE = "Not enough quantity to decrease";
 
 	private static final String EXPANSION = "E";
 
@@ -49,6 +59,8 @@ public class RestApiController {
 	private static final String SALES = "S";
 
 	private static final String SALE_DETAILS = "SD";
+
+	private static final String OFFER = "O";
 
 	@Autowired
 	ProductRepository productRepo;
@@ -65,13 +77,16 @@ public class RestApiController {
 	@Autowired
 	SaleDetailsRepository detailsRepo;
 
+	@Autowired
+	OffersRepository offersRepo;
+
 	// POST ENDPOINTS
 
 	@PostMapping("/createProduct")
 	public ResponseEntity<ProductResponse> postCreateProduct(@RequestBody ProductRequest product) {
 		try {
 
-			generateProductId(product);
+			generateId(product);
 
 			Product saveProduct = productRepo.save(new Product(product));
 
@@ -84,7 +99,7 @@ public class RestApiController {
 	@PostMapping("/createGame")
 	public ResponseEntity<GameResponse> postCreateGame(@RequestBody GameRequest game) {
 		try {
-			generateGameId(game);
+			generateId(game);
 
 			Game savedGame = gameRepo.save(new Game(game));
 
@@ -98,7 +113,7 @@ public class RestApiController {
 	public ResponseEntity<ExpansionResponse> postCreateExpansion(@RequestBody ExpansionRequest expansion) {
 		try {
 
-			generateExpansionId(expansion);
+			generateId(expansion);
 
 			Expansion savedExpansion = expansionRepo.save(new Expansion(expansion));
 
@@ -111,7 +126,7 @@ public class RestApiController {
 	@PostMapping("/createSale")
 	public ResponseEntity<SalesResponse> postCreateExpansion(@RequestBody SalesRequest sale) {
 		try {
-			generateSaleId(sale);
+			generateId(sale);
 
 			// crea el objeto sales sin relaciones
 			Sales newSale = salesRepo.saveAndFlush(new Sales(sale));
@@ -124,6 +139,78 @@ public class RestApiController {
 			return new ResponseEntity<>(new SalesResponse(updatedSale), HttpStatus.OK);
 		} catch (Exception e) {
 			return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
+		}
+	}
+
+	@PostMapping("/createOffer")
+	public ResponseEntity<OffersResponse> postCreateExpansion(@RequestBody OffersRequest offer) {
+		try {
+			generateId(offer);
+
+			Offers savedOffer = offersRepo.save(new Offers(offer));
+
+			return new ResponseEntity<>(new OffersResponse(savedOffer), HttpStatus.OK);
+		} catch (Exception e) {
+			return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
+		}
+	}
+
+	// PUT Mappings
+
+	@PutMapping("/increaseQuantity/{offerId}/{quantity}/offers")
+	public ResponseEntity<OffersResponse> postIncreaseQuantity(@PathVariable Integer offerId,
+			@PathVariable Integer quantity) {
+		try {
+
+			Optional<Offers> foundOffer = offersRepo.findById(offerId);
+
+			if (foundOffer.isPresent()) {
+				foundOffer.get().increaseQuantity(quantity);
+				Offers savedOffer = offersRepo.save(foundOffer.get());
+				return new ResponseEntity<>(new OffersResponse(savedOffer), HttpStatus.OK);
+			} else {
+				return new ResponseEntity<>(
+						new OffersResponse(ResponseUtils.generateError(ErrorCodes.NOT_FOUND_RESULT.getCode(),
+								ErrorCodes.NOT_FOUND_RESULT.getTitle(), null)),
+						HttpStatus.INTERNAL_SERVER_ERROR);
+			}
+
+		} catch (Exception e) {
+			return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
+		}
+	}
+
+	@PutMapping("/decreaseQuantity/{offerId}/{quantity}/offers")
+	public ResponseEntity<OffersResponse> postDecreaseQuantity(@PathVariable Integer offerId,
+			@PathVariable Integer quantity) {
+		try {
+
+			Optional<Offers> foundOffer = offersRepo.findById(offerId);
+
+			if (foundOffer.isPresent()) {
+				boolean hasError = foundOffer.get().decreaseQuantity(quantity);
+
+				Offers savedOffer = offersRepo.save(foundOffer.get());
+				if (hasError) {
+					return new ResponseEntity<>(new OffersResponse(savedOffer), HttpStatus.OK);
+				} else {
+					return new ResponseEntity<>(
+							new OffersResponse(ResponseUtils.generateError(ErrorCodes.GENERIC_ERROR.getCode(),
+									ErrorCodes.GENERIC_ERROR.getTitle(), NOT_ENOUGH_QUANTITY_TO_DECREASE)),
+							HttpStatus.EXPECTATION_FAILED);
+				}
+			} else {
+				return new ResponseEntity<>(
+						new OffersResponse(ResponseUtils.generateError(ErrorCodes.NOT_FOUND_RESULT.getCode(),
+								ErrorCodes.NOT_FOUND_RESULT.getTitle(), null)),
+						HttpStatus.INTERNAL_SERVER_ERROR);
+			}
+
+		} catch (Exception e) {
+			return new ResponseEntity<>(
+					new OffersResponse(ResponseUtils.generateError(ErrorCodes.GENERIC_ERROR.getCode(),
+							ErrorCodes.GENERIC_ERROR.getTitle(), e.getMessage())),
+					HttpStatus.INTERNAL_SERVER_ERROR);
 		}
 	}
 
@@ -241,6 +328,33 @@ public class RestApiController {
 		}
 	}
 
+	@GetMapping(value = "/getAllOffers", produces = "application/json;charset=UTF-8")
+	public ResponseEntity<List<OffersResponse>> getAllOffers() {
+		try {
+
+			List<Offers> retrievedOffers = offersRepo.findAll();
+
+			List<OffersResponse> response = new ArrayList<>();
+			retrievedOffers.stream().filter(Objects::nonNull).forEach(offer -> response.add(new OffersResponse(offer)));
+
+			return new ResponseEntity<>(response, HttpStatus.OK);
+		} catch (Exception e) {
+			return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
+		}
+	}
+
+	@GetMapping(value = "/getSingleOffer/{offerId}", produces = "application/json;charset=UTF-8")
+	public ResponseEntity<OffersResponse> getSingle(@PathVariable Integer offerId) {
+		try {
+
+			Optional<Offers> foundOffer = offersRepo.findById(offerId);
+
+			return new ResponseEntity<>(new OffersResponse(foundOffer.get()), HttpStatus.OK);
+		} catch (Exception e) {
+			return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
+		}
+	}
+
 	// DELETE MAPPING
 
 	@DeleteMapping(value = "/deleteGame/{gameId}", produces = "application/json;charset=UTF-8")
@@ -291,6 +405,18 @@ public class RestApiController {
 		}
 	}
 
+	@DeleteMapping(value = "/deleteOffer/{offerId}", produces = "application/json;charset=UTF-8")
+	public ResponseEntity<OffersResponse> deleteOffer(@PathVariable Integer offerId) {
+		try {
+
+			offersRepo.deleteById(offerId);
+
+			return new ResponseEntity<>(null, HttpStatus.OK);
+		} catch (Exception e) {
+			return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
+		}
+	}
+
 	// Metodos
 	/**
 	 * Devuelve el siguiente id disponible para cada tabla. En caso de que la tabla
@@ -317,6 +443,9 @@ public class RestApiController {
 		case SALE_DETAILS:
 			SaleDetails sd = detailsRepo.findTopByOrderByIdDesc();
 			return (Objects.isNull(sd)) ? 1 : sd.getId() + 1;
+		case OFFER:
+			Offers o = offersRepo.findTopByOrderByIdDesc();
+			return (Objects.isNull(o)) ? 1 : o.getId() + 1;
 
 		}
 
@@ -355,7 +484,7 @@ public class RestApiController {
 	 * 
 	 * @param product
 	 */
-	private void generateProductId(ProductRequest product) {
+	private void generateId(ProductRequest product) {
 		if (product.getId() == null) {
 			Product foundProduct = productRepo.findByNameAndRarity(product.getName(), product.getRarity());
 
@@ -374,7 +503,7 @@ public class RestApiController {
 	 * 
 	 * @param game
 	 */
-	private void generateGameId(GameRequest game) {
+	private void generateId(GameRequest game) {
 		if (game.getId() == null) {
 			Game foundGameId = gameRepo.findByNameAndAbbreviation(game.getName(), game.getAbbreviation());
 
@@ -393,7 +522,7 @@ public class RestApiController {
 	 * 
 	 * @param expansion
 	 */
-	private void generateExpansionId(ExpansionRequest expansion) {
+	private void generateId(ExpansionRequest expansion) {
 		if (expansion.getId() == null) {
 			Expansion foundExpansion = expansionRepo.findByNameAndAbbreviation(expansion.getName(),
 					expansion.getAbbreviation());
@@ -412,13 +541,31 @@ public class RestApiController {
 	 * 
 	 * @param sale
 	 */
-	private void generateSaleId(SalesRequest sale) {
+	private void generateId(SalesRequest sale) {
 		if (sale.getId() == null) {
 			Sales foundSale = salesRepo.findBySaleDateAndSalePrice(sale.getSaleDate(), sale.getSalePrice());
 			if (Objects.nonNull(foundSale)) {
 				sale.setId(foundSale.getId());
 			} else {
 				sale.setId(findNextAvailableId(SALES));
+			}
+		}
+	}
+
+	/**
+	 * Comprueba si el objeto de entrada tiene id, en caso de no tenerlo, comprueba
+	 * en la base de datos si existe. Si no existe, calcula el siguiente id, si
+	 * existe recupera el id y lo asigna para actualizarlo
+	 * 
+	 * @param offer
+	 */
+	private void generateId(OffersRequest offer) {
+		if (offer.getId() == null) {
+			Offers foundOffer = offersRepo.findByExpansionAndProduct(offer.getExpansion(), offer.getProduct());
+			if (Objects.nonNull(foundOffer)) {
+				offer.setId(foundOffer.getId());
+			} else {
+				offer.setId(findNextAvailableId(OFFER));
 			}
 		}
 	}
