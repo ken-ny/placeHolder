@@ -3,9 +3,12 @@ package com.dam.placeholder.response.utils;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 import java.util.Objects;
+
+import org.springframework.util.CollectionUtils;
 
 import com.dam.placeholder.entity.Expansion;
 import com.dam.placeholder.entity.SaleDetails;
@@ -16,6 +19,9 @@ import com.dam.placeholder.response.SaleDetailsResponse;
 public class ResponseUtils {
 
 	public static List<ExpansionResponse> mapperExpansionToResponse(List<Expansion> listExpansions) {
+		if (CollectionUtils.isEmpty(listExpansions)) {
+			return Collections.emptyList();
+		}
 
 		List<ExpansionResponse> exResponse = new ArrayList<>();
 		listExpansions.stream().filter(Objects::nonNull).forEach(ex -> exResponse.add(new ExpansionResponse(ex)));
@@ -34,6 +40,10 @@ public class ResponseUtils {
 	}
 
 	public static List<SaleDetailsResponse> mapperDetailsToResponse(List<SaleDetails> listDetails) {
+		if (CollectionUtils.isEmpty(listDetails)) {
+			return Collections.emptyList();
+		}
+
 		List<SaleDetailsResponse> response = new ArrayList<>();
 
 		listDetails.stream().filter(Objects::nonNull).forEach(ex -> response.add(new SaleDetailsResponse(ex)));

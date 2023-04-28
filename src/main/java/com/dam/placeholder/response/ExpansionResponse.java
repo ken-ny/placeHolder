@@ -1,6 +1,7 @@
 package com.dam.placeholder.response;
 
 import java.util.Date;
+import java.util.Objects;
 
 import com.dam.placeholder.entity.Expansion;
 import com.dam.placeholder.entity.Game;
@@ -98,8 +99,11 @@ public class ExpansionResponse {
 		this.is_released = expansion.getIs_released();
 		this.name = expansion.getName();
 		this.release_date = expansion.getRelease_date();
-		this.game = new GameResponse(expansion.getGame().getId(), expansion.getGame().getName(),
-				expansion.getGame().getAbbreviation());
+		if (Objects.nonNull(expansion.getGame())) {
+			this.game = new GameResponse(expansion.getGame().getId(), expansion.getGame().getName(),
+					expansion.getGame().getAbbreviation());
+		}
+
 	}
 
 	public ExpansionResponse(Integer id, String name, String abbreviation, Date release_date, Boolean is_released,
@@ -110,7 +114,9 @@ public class ExpansionResponse {
 		this.abbreviation = abbreviation;
 		this.release_date = release_date;
 		this.is_released = is_released;
-		this.game = new GameResponse(game.getId(), game.getName(), game.getAbbreviation());
+		if (Objects.nonNull(game)) {
+			this.game = new GameResponse(game.getId(), game.getName(), game.getAbbreviation());
+		}
 	}
 
 	public ExpansionResponse() {

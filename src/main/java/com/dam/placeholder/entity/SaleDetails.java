@@ -37,14 +37,6 @@ public class SaleDetails {
 		this.product = productId;
 	}
 
-	public Expansion getExpansionId() {
-		return expansion;
-	}
-
-	public void setExpansionId(Expansion expansionId) {
-		this.expansion = expansionId;
-	}
-
 	public Integer getQuantity() {
 		return quantity;
 	}
