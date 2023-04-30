@@ -124,12 +124,12 @@ public class RestApiController {
 	}
 
 	@PostMapping("/createSale")
-	public ResponseEntity<SalesResponse> postCreateExpansion(@RequestBody SalesRequest sale) {
+	public ResponseEntity<SalesResponse> postCreateSale(@RequestBody SalesRequest sale) {
 		try {
 			generateId(sale);
 
 			// crea el objeto sales sin relaciones
-			Sales newSale = salesRepo.saveAndFlush(new Sales(sale));
+			Sales newSale = salesRepo.save(new Sales(sale));
 //			// crea las relaciones y las enlaza con el objeto sale
 			sale.getDetails().stream().filter(Objects::nonNull).forEach(sd -> saveDetail(sd, newSale));
 //
@@ -143,7 +143,7 @@ public class RestApiController {
 	}
 
 	@PostMapping("/createOffer")
-	public ResponseEntity<OffersResponse> postCreateExpansion(@RequestBody OffersRequest offer) {
+	public ResponseEntity<OffersResponse> postCreateOffer(@RequestBody OffersRequest offer) {
 		try {
 			generateId(offer);
 
@@ -217,7 +217,7 @@ public class RestApiController {
 	// GET ENDPOINTS
 
 	@GetMapping("/getExpansion/{expansionId}")
-	public ResponseEntity<ExpansionResponse> getExpansion(@PathVariable Integer expansionId) {
+	public ResponseEntity<ExpansionResponse> getSingleExpansion(@PathVariable Integer expansionId) {
 		try {
 
 			Optional<Expansion> foundExpansion = expansionRepo.findById(expansionId);
@@ -247,7 +247,7 @@ public class RestApiController {
 	}
 
 	@GetMapping(value = "/getGame/{gameId}", produces = "application/json;charset=UTF-8")
-	public ResponseEntity<GameResponse> getGame(@PathVariable Integer gameId) {
+	public ResponseEntity<GameResponse> getSingleGame(@PathVariable Integer gameId) {
 		try {
 
 			Optional<Game> retrievedGames = gameRepo.findById(gameId);
@@ -274,7 +274,7 @@ public class RestApiController {
 	}
 
 	@GetMapping(value = "/getProduct/{productId}", produces = "application/json;charset=UTF-8")
-	public ResponseEntity<ProductResponse> getProduct(@PathVariable Integer productId) {
+	public ResponseEntity<ProductResponse> getSingleProduct(@PathVariable Integer productId) {
 		try {
 
 			Optional<Product> retrievedProducts = productRepo.findById(productId);
@@ -344,7 +344,7 @@ public class RestApiController {
 	}
 
 	@GetMapping(value = "/getSingleOffer/{offerId}", produces = "application/json;charset=UTF-8")
-	public ResponseEntity<OffersResponse> getSingle(@PathVariable Integer offerId) {
+	public ResponseEntity<OffersResponse> getSingleOffer(@PathVariable Integer offerId) {
 		try {
 
 			Optional<Offers> foundOffer = offersRepo.findById(offerId);

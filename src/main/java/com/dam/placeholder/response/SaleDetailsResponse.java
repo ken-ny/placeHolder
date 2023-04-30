@@ -1,5 +1,7 @@
 package com.dam.placeholder.response;
 
+import java.util.Objects;
+
 import com.dam.placeholder.entity.SaleDetails;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
@@ -75,8 +77,13 @@ public class SaleDetailsResponse {
 	}
 
 	public SaleDetailsResponse(SaleDetails ex) {
-		this.expansion = new ExpansionResponse(ex.getExpansion());
-		this.product = new ProductResponse(ex.getProduct());
+		if (Objects.nonNull(ex.getExpansion())) {
+			this.expansion = new ExpansionResponse(ex.getExpansion());
+		}
+
+		if (Objects.nonNull(ex.getProduct())) {
+			this.product = new ProductResponse(ex.getProduct());
+		}
 		this.quantity = ex.getQuantity();
 		this.id = ex.getId();
 	}

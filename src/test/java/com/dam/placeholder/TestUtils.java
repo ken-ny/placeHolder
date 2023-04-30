@@ -12,6 +12,12 @@ import com.dam.placeholder.entity.Offers;
 import com.dam.placeholder.entity.Product;
 import com.dam.placeholder.entity.SaleDetails;
 import com.dam.placeholder.entity.Sales;
+import com.dam.placeholder.request.ExpansionRequest;
+import com.dam.placeholder.request.GameRequest;
+import com.dam.placeholder.request.OffersRequest;
+import com.dam.placeholder.request.ProductRequest;
+import com.dam.placeholder.request.SaleDetailsRequest;
+import com.dam.placeholder.request.SalesRequest;
 
 public class TestUtils {
 	public List<Expansion> mockExpansionList(boolean withRelations) {
@@ -151,6 +157,82 @@ public class TestUtils {
 		detail.setUnitaryPrice(20.00);
 
 		return detail;
+	}
+
+	public ExpansionRequest createExpansionRequestMock(boolean withId) {
+		ExpansionRequest request = new ExpansionRequest();
+
+		request.setName("test");
+		request.setAbbreviation("abvr");
+		request.setIs_released(true);
+		if (withId) {
+			request.setId(1);
+		}
+
+		return request;
+	}
+
+	public GameRequest createGameRequestMock(boolean withId) {
+		GameRequest request = new GameRequest();
+
+		request.setName("test");
+		request.setAbbreviation("abvr");
+		if (withId) {
+			request.setId(1);
+		}
+
+		return request;
+	}
+
+	public ProductRequest createProductRequestMock(boolean withId) {
+		ProductRequest request = new ProductRequest();
+		request.setExpansions(Arrays.asList(mockExpansion()));
+		request.setImage("image");
+		request.setName("test");
+		request.setQuantity(15);
+		request.setRarity("RRR");
+		if (withId) {
+			request.setId(1);
+		}
+		return request;
+	}
+
+	public SalesRequest createSalesRequestMock(boolean withId) {
+		SalesRequest request = new SalesRequest();
+		request.setDetails(Arrays.asList(createSalesDetailsRequestMock(withId)));
+		request.setSaleDate(new Date());
+		request.setSalePrice(158.00);
+		if (withId) {
+			request.setId(1);
+		}
+		return request;
+	}
+
+	private SaleDetailsRequest createSalesDetailsRequestMock(boolean withId) {
+		SaleDetailsRequest request = new SaleDetailsRequest();
+
+		request.setExpansion(mockExpansion());
+		request.setProduct(mockProduct());
+		request.setQuantity(5);
+		request.setUnitaryPrice(50.00);
+
+		if (withId) {
+			request.setId(1);
+		}
+
+		return request;
+	}
+
+	public OffersRequest createOffersRequestMock(boolean withId) {
+		OffersRequest request = new OffersRequest();
+		request.setExpansion(mockExpansion());
+		request.setProduct(mockProduct());
+		request.setUnitaryPrice(15.00);
+		request.setQuantity(15);
+		if (withId) {
+			request.setId(1);
+		}
+		return request;
 	}
 
 }

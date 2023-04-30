@@ -6,6 +6,7 @@ import java.util.List;
 import com.dam.placeholder.request.ExpansionRequest;
 import com.dam.placeholder.response.utils.ResponseUtils;
 
+import io.micrometer.common.util.StringUtils;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -57,7 +58,9 @@ public class Expansion {
 		this.id = prod.getId();
 		this.is_released = prod.getIs_released();
 		this.name = prod.getName();
-		this.release_date = ResponseUtils.convertStringToDate(prod.getRelease_date());
+		if (StringUtils.isNotBlank(prod.getRelease_date())) {
+			this.release_date = ResponseUtils.convertStringToDate(prod.getRelease_date());
+		}
 		this.game = prod.getGame();
 	}
 
