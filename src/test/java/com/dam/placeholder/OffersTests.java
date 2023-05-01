@@ -15,6 +15,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
+import com.dam.placeholder.RestApiController;
 import com.dam.placeholder.entity.Offers;
 import com.dam.placeholder.repo.OffersRepository;
 import com.dam.placeholder.response.OffersResponse;
@@ -96,6 +97,34 @@ public class OffersTests {
 		ResponseEntity<OffersResponse> response = controller.getSingleOffer(1);
 		OffersResponse body = response.getBody();
 		assertEquals(body.getId(), 1);
+		assertEquals(response.getStatusCode(), HttpStatus.OK);
+	}
+
+	@Test
+	void shouldIncreaseQuantityOfOffer() {
+		when(offersRepo.findById(1)).thenReturn(Optional.of(utils.mockOffers()));
+		Offers ex = utils.mockOffers();
+		ex.setQuantity(25);
+		when(offersRepo.save(Mockito.any())).thenReturn(ex);
+
+		ResponseEntity<OffersResponse> response = controller.postIncreaseQuantity(1, 10);
+		OffersResponse body = response.getBody();
+		assertEquals(body.getId(), 1);
+		assertEquals(body.getQuantity(), 25);
+		assertEquals(response.getStatusCode(), HttpStatus.OK);
+	}
+
+	@Test
+	void shouldDecreaseQuantityOfOffer() {
+		when(offersRepo.findById(1)).thenReturn(Optional.of(utils.mockOffers()));
+		Offers ex = utils.mockOffers();
+		ex.setQuantity(0);
+		when(offersRepo.save(Mockito.any())).thenReturn(ex);
+
+		ResponseEntity<OffersResponse> response = controller.postDecreaseQuantity(1, 10);
+		OffersResponse body = response.getBody();
+		assertEquals(body.getId(), 1);
+		assertEquals(body.getQuantity(), 0);
 		assertEquals(response.getStatusCode(), HttpStatus.OK);
 	}
 

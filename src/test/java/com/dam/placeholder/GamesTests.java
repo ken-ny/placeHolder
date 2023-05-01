@@ -56,7 +56,7 @@ public class GamesTests {
 		when(gameRepo.findTopByOrderByIdDesc()).thenReturn(null);
 		when(gameRepo.save(Mockito.any())).thenReturn(utils.mockGame());
 
-		ResponseEntity<GameResponse> response = controller.postCreateGame(utils.createGameRequestMock(false));
+		ResponseEntity<GameResponse> response = controller.postCreateGame(utils.createGameRequestMock(false, null));
 
 		GameResponse body = response.getBody();
 		assertEquals(body.getId(), 1);
@@ -70,7 +70,7 @@ public class GamesTests {
 		ex.setId(2);
 		when(gameRepo.save(Mockito.any())).thenReturn(ex);
 		when(gameRepo.findTopByOrderByIdDesc()).thenReturn(utils.mockGame());
-		ResponseEntity<GameResponse> response = controller.postCreateGame(utils.createGameRequestMock(false));
+		ResponseEntity<GameResponse> response = controller.postCreateGame(utils.createGameRequestMock(false, null));
 
 		GameResponse body = response.getBody();
 		assertEquals(body.getId(), 2);
@@ -82,7 +82,7 @@ public class GamesTests {
 		when(gameRepo.save(Mockito.any())).thenReturn(utils.mockGame());
 		when(gameRepo.findByNameAndAbbreviation(utils.mockGame().getName(), utils.mockGame().getAbbreviation()))
 				.thenReturn(utils.mockGame());
-		ResponseEntity<GameResponse> response = controller.postCreateGame(utils.createGameRequestMock(false));
+		ResponseEntity<GameResponse> response = controller.postCreateGame(utils.createGameRequestMock(false, null));
 
 		GameResponse body = response.getBody();
 		assertEquals(body.getId(), 1);

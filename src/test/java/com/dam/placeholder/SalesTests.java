@@ -15,6 +15,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
+import com.dam.placeholder.RestApiController;
 import com.dam.placeholder.entity.Sales;
 import com.dam.placeholder.repo.SaleDetailsRepository;
 import com.dam.placeholder.repo.SalesRepository;

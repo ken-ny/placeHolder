@@ -35,10 +35,10 @@ public class Product {
 	@JoinTable(name = "PRODUCT_EXPANSION", joinColumns = @JoinColumn(name = "product_id"), inverseJoinColumns = @JoinColumn(name = "expansion_id"))
 	Set<Expansion> expansion;
 
-	@OneToMany(mappedBy = "product", targetEntity = SaleDetails.class, cascade = CascadeType.REMOVE, orphanRemoval = true)
+	@OneToMany(mappedBy = "product", targetEntity = SaleDetails.class, cascade = CascadeType.REMOVE)
 	List<Sales> productSales;
 
-	@OneToMany(mappedBy = "product", cascade = CascadeType.REMOVE, orphanRemoval = true)
+	@OneToMany(mappedBy = "product", cascade = CascadeType.REMOVE)
 	List<Offers> offers;
 
 	public Integer getId() {

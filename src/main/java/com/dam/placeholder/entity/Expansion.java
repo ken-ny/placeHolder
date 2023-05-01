@@ -47,10 +47,10 @@ public class Expansion {
 	@ManyToMany(mappedBy = "expansion", cascade = CascadeType.REMOVE)
 	private List<Product> productExpansion;
 
-	@OneToMany(mappedBy = "expansion", targetEntity = SaleDetails.class, cascade = CascadeType.REMOVE, orphanRemoval = true)
+	@OneToMany(mappedBy = "expansion", targetEntity = SaleDetails.class, cascade = CascadeType.REMOVE)
 	private List<Sales> productSales;
 
-	@OneToMany(mappedBy = "expansion", cascade = CascadeType.REMOVE, orphanRemoval = true)
+	@OneToMany(mappedBy = "expansion", cascade = CascadeType.REMOVE)
 	private List<Offers> offers;
 
 	public Expansion(ExpansionRequest prod) {

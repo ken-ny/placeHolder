@@ -57,7 +57,7 @@ class ExpansionTests {
 		when(expansionRepo.save(Mockito.any())).thenReturn(utils.mockExpansion());
 
 		ResponseEntity<ExpansionResponse> response = controller
-				.postCreateExpansion(utils.createExpansionRequestMock(false));
+				.postCreateExpansion(utils.createExpansionRequestMock(false, null));
 
 		ExpansionResponse body = response.getBody();
 		assertEquals(body.getId(), 1);
@@ -72,7 +72,7 @@ class ExpansionTests {
 		when(expansionRepo.save(Mockito.any())).thenReturn(ex);
 		when(expansionRepo.findTopByOrderByIdDesc()).thenReturn(utils.mockExpansion());
 		ResponseEntity<ExpansionResponse> response = controller
-				.postCreateExpansion(utils.createExpansionRequestMock(false));
+				.postCreateExpansion(utils.createExpansionRequestMock(false, null));
 
 		ExpansionResponse body = response.getBody();
 		assertEquals(body.getId(), 2);
@@ -85,7 +85,7 @@ class ExpansionTests {
 		when(expansionRepo.findByNameAndAbbreviation(utils.mockExpansion().getName(),
 				utils.mockExpansion().getAbbreviation())).thenReturn(utils.mockExpansion());
 		ResponseEntity<ExpansionResponse> response = controller
-				.postCreateExpansion(utils.createExpansionRequestMock(false));
+				.postCreateExpansion(utils.createExpansionRequestMock(false, null));
 
 		ExpansionResponse body = response.getBody();
 		assertEquals(body.getId(), 1);
