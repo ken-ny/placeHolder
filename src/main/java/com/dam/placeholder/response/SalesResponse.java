@@ -3,6 +3,8 @@ package com.dam.placeholder.response;
 import java.util.Date;
 import java.util.List;
 
+import org.springframework.util.CollectionUtils;
+
 import com.dam.placeholder.entity.Sales;
 import com.dam.placeholder.response.utils.ResponseUtils;
 import com.dam.placeholder.serializer.DetailsSerializer;
@@ -82,8 +84,10 @@ public class SalesResponse {
 	public SalesResponse(Sales sale) {
 		this.saleDate = sale.getSaleDate();
 		this.salePrice = sale.getSalePrice();
-		this.details = ResponseUtils.mapperDetailsToResponse(sale.getDetails());
 		this.id = sale.getId();
+		if (!CollectionUtils.isEmpty(sale.getDetails())) {
+			this.details = ResponseUtils.mapperDetailsToResponse(sale.getDetails());
+		}
 
 	}
 

@@ -16,12 +16,13 @@ import jakarta.persistence.Table;
 public class Game {
 
 	@Id
+	@Column(name = "ID")
 	private Integer id;
 	@Column(name = "NAME")
 	private String name;
 	@Column(name = "ABBREVIATION")
 	private String abbreviation;
-	@OneToMany(mappedBy = "game", cascade = CascadeType.REMOVE, orphanRemoval = true)
+	@OneToMany(mappedBy = "game", cascade = CascadeType.REMOVE)
 	private List<Expansion> expansions;
 
 	public Integer getId() {

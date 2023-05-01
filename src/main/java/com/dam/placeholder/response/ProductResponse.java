@@ -3,6 +3,8 @@ package com.dam.placeholder.response;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.springframework.util.CollectionUtils;
+
 import com.dam.placeholder.entity.Expansion;
 import com.dam.placeholder.entity.Product;
 import com.dam.placeholder.response.utils.ResponseUtils;
@@ -26,7 +28,7 @@ public class ProductResponse {
 	@JsonProperty
 	private String image;
 	@JsonSerialize(using = ExpansionSerializer.class)
-	private List<ExpansionResponse> expansion;
+	private List<ExpansionResponse> expansions;
 
 	@JsonProperty
 	private Error error;
@@ -80,12 +82,12 @@ public class ProductResponse {
 		this.image = image;
 	}
 
-	public List<ExpansionResponse> getExpansion() {
-		return expansion;
+	public List<ExpansionResponse> getExpansions() {
+		return expansions;
 	}
 
-	public void setExpansion(List<ExpansionResponse> expansion) {
-		this.expansion = expansion;
+	public void setExpansions(List<ExpansionResponse> expansion) {
+		this.expansions = expansion;
 	}
 
 	public ProductResponse(Integer id, String name, String rarity, Integer quantity, String image,
@@ -96,7 +98,7 @@ public class ProductResponse {
 		this.rarity = rarity;
 		this.quantity = quantity;
 		this.image = image;
-		this.expansion = expansion;
+		this.expansions = expansion;
 	}
 
 	public ProductResponse() {
@@ -110,8 +112,11 @@ public class ProductResponse {
 		this.name = product.getName();
 		this.rarity = product.getRarity();
 		this.quantity = product.getQuantity();
-		List<Expansion> ex = new ArrayList<>(product.getExpansion());
-		this.expansion = ResponseUtils.mapperExpansionToResponse(ex);
+
+		if (!CollectionUtils.isEmpty(product.getExpansion())) {
+			List<Expansion> ex = new ArrayList<>(product.getExpansion());
+			this.expansions = ResponseUtils.mapperExpansionToResponse(ex);
+		}
 
 	}
 
