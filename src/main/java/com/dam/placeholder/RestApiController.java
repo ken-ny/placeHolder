@@ -12,6 +12,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -256,22 +257,6 @@ public class RestApiController {
 		}
 	}
 
-	// THYMELEAF
-	@GetMapping(value = "/")
-	public String homePage(Model model) {
-		model.addAttribute("gameList", gameRepo.findAll());
-		return "index";
-	}
-
-	@GetMapping("/gameEdit/{id}")
-	public String showUpdateForm(@PathVariable("id") Integer id, Model model) {
-		Game game = gameRepo.findById(id).orElseThrow(() -> new IllegalArgumentException("Invalid game Id:" + id));
-
-		model.addAttribute("game", game);
-		// lo que devuelve es el nombre de la pagina html a mostrar
-		return "updateGame";
-	}
-
 	@GetMapping(value = "/getAllGames", produces = "application/json;charset=UTF-8")
 	public ResponseEntity<List<GameResponse>> getAllGames() {
 		try {
@@ -429,6 +414,37 @@ public class RestApiController {
 		} catch (Exception e) {
 			return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
 		}
+	}
+
+	// THYMELEAF
+	@GetMapping(value = "/")
+	public String homePage(Model model) {
+		model.addAttribute("gameList", gameRepo.findAll());
+		return "index";
+	}
+
+	@GetMapping("/gameEdit/{id}")
+	public String showUpdateForm(@PathVariable("id") Integer id, Model model) {
+		Game game = gameRepo.findById(id).orElseThrow(() -> new IllegalArgumentException("Invalid game Id:" + id));
+
+		model.addAttribute("game", game);
+		// lo que devuelve es el nombre de la pagina html a mostrar
+		return "updateGame";
+	}
+
+	@PostMapping("/saveGame")
+	public String postUpdateGame(@ModelAttribute Game game) {
+
+		gameRepo.save(game);
+		return "redirect:/";
+
+	}
+
+	@GetMapping("/deleteGame/{id}")
+	public String deleteThroughId(@PathVariable(value = "id") Integer id) {
+		gameRepo.deleteById(id);
+		return "redirect:/";
+
 	}
 
 	// Metodos
