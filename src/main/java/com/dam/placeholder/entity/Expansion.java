@@ -3,6 +3,8 @@ package com.dam.placeholder.entity;
 import java.util.Date;
 import java.util.List;
 
+import org.springframework.format.annotation.DateTimeFormat;
+
 import com.dam.placeholder.request.ExpansionRequest;
 import com.dam.placeholder.response.utils.ResponseUtils;
 
@@ -35,6 +37,7 @@ public class Expansion {
 
 	@Temporal(TemporalType.TIMESTAMP)
 	@Column(name = "RELEASE_DATE")
+	@DateTimeFormat(pattern = "yyyy-MM-dd")
 	private Date release_date;
 
 	@Column(name = "RELEASED")
