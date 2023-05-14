@@ -7,8 +7,6 @@ import java.util.List;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.util.CollectionUtils;
 
-import com.dam.placeholder.request.SalesRequest;
-
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -90,13 +88,6 @@ public class Sales {
 
 	public Sales() {
 		super();
-	}
-
-	public Sales(SalesRequest request) {
-		this.id = request.getId();
-		this.details = new ArrayList<>();
-		this.saleDate = request.getSaleDate();
-		this.salePrice = request.getSalePrice();
 	}
 
 }

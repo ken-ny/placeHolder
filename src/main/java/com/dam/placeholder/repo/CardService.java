@@ -1,5 +1,5 @@
 package com.dam.placeholder.repo;
 
-public class ProductService {
+public class CardService {
 
 }

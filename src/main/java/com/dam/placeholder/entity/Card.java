@@ -1,10 +1,7 @@
 package com.dam.placeholder.entity;
 
-import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
-
-import com.dam.placeholder.request.ProductRequest;
 
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
@@ -17,8 +14,8 @@ import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 
 @Entity
-@Table(name = "PRODUCT")
-public class Product {
+@Table(name = "CARD")
+public class Card {
 
 	@Id
 	private Integer id;
@@ -32,13 +29,13 @@ public class Product {
 	private String image;
 
 	@ManyToMany
-	@JoinTable(name = "PRODUCT_EXPANSION", joinColumns = @JoinColumn(name = "product_id"), inverseJoinColumns = @JoinColumn(name = "expansion_id"))
+	@JoinTable(name = "CARD_EXPANSION", joinColumns = @JoinColumn(name = "card_id"), inverseJoinColumns = @JoinColumn(name = "expansion_id"))
 	Set<Expansion> expansion;
 
-	@OneToMany(mappedBy = "product", targetEntity = SaleDetails.class, cascade = CascadeType.REMOVE)
-	List<Sales> productSales;
+	@OneToMany(mappedBy = "card", targetEntity = SaleDetails.class, cascade = CascadeType.REMOVE)
+	List<Sales> cardSales;
 
-	@OneToMany(mappedBy = "product", cascade = CascadeType.REMOVE)
+	@OneToMany(mappedBy = "card", cascade = CascadeType.REMOVE)
 	List<Offers> offers;
 
 	public Integer getId() {
@@ -81,12 +78,12 @@ public class Product {
 		this.image = image;
 	}
 
-	public List<Sales> getProductSales() {
-		return productSales;
+	public List<Sales> getCardSales() {
+		return cardSales;
 	}
 
-	public void setProductSales(List<Sales> productSales) {
-		this.productSales = productSales;
+	public void setCardSales(List<Sales> cardSales) {
+		this.cardSales = cardSales;
 	}
 
 	public Set<Expansion> getExpansion() {
@@ -105,20 +102,8 @@ public class Product {
 		this.offers = offers;
 	}
 
-	public Product(ProductRequest prod) {
-		this.id = prod.getId();
-		this.name = prod.getName();
-		this.rarity = prod.getRarity();
-		this.image = prod.getImage();
-		this.quantity = prod.getQuantity();
-
-		Set<Expansion> producExpansionList = new HashSet();
-		producExpansionList.addAll(prod.getExpansions());
-		this.expansion = producExpansionList;
-	}
-
-	public Product(Integer id, String name, String rarity, Integer quantity, String image, Set<Expansion> expansion,
-			List<Sales> productSales, List<Offers> offers) {
+	public Card(Integer id, String name, String rarity, Integer quantity, String image, Set<Expansion> expansion,
+			List<Sales> cardSales, List<Offers> offers) {
 		super();
 		this.id = id;
 		this.name = name;
@@ -126,11 +111,11 @@ public class Product {
 		this.quantity = quantity;
 		this.image = image;
 		this.expansion = expansion;
-		this.productSales = productSales;
+		this.cardSales = cardSales;
 		this.offers = offers;
 	}
 
-	public Product() {
+	public Card() {
 		super();
 	}
 

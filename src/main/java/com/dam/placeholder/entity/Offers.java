@@ -1,7 +1,5 @@
 package com.dam.placeholder.entity;
 
-import com.dam.placeholder.request.OffersRequest;
-
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
@@ -14,8 +12,8 @@ public class Offers {
 	private Integer id;
 
 	@ManyToOne
-	@JoinColumn(name = "PRODUCT_ID")
-	private Product product;
+	@JoinColumn(name = "CARD_ID")
+	private Card card;
 
 	@ManyToOne
 	@JoinColumn(name = "EXPANSION_ID")
@@ -33,12 +31,12 @@ public class Offers {
 		this.id = id;
 	}
 
-	public Product getProduct() {
-		return product;
+	public Card getCard() {
+		return card;
 	}
 
-	public void setProduct(Product product) {
-		this.product = product;
+	public void setCard(Card card) {
+		this.card = card;
 	}
 
 	public Expansion getExpansion() {
@@ -69,23 +67,13 @@ public class Offers {
 		super();
 	}
 
-	public Offers(Integer id, Product product, Expansion expansion, Integer quantity, Double unitaryPrice) {
+	public Offers(Integer id, Card card, Expansion expansion, Integer quantity, Double unitaryPrice) {
 		super();
 		this.id = id;
-		this.product = product;
+		this.card = card;
 		this.expansion = expansion;
 		this.quantity = quantity;
 		this.unitaryPrice = unitaryPrice;
-	}
-
-	public Offers(OffersRequest request) {
-
-		this.expansion = request.getExpansion();
-		this.product = request.getProduct();
-		this.id = request.getId();
-		this.quantity = request.getQuantity();
-		this.unitaryPrice = request.getUnitaryPrice();
-
 	}
 
 	/**

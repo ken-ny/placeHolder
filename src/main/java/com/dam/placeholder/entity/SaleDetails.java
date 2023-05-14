@@ -1,7 +1,5 @@
 package com.dam.placeholder.entity;
 
-import com.dam.placeholder.request.SaleDetailsRequest;
-
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
@@ -14,8 +12,8 @@ public class SaleDetails {
 	private Integer id;
 
 	@ManyToOne
-	@JoinColumn(name = "PRODUCT_ID")
-	private Product product;
+	@JoinColumn(name = "CARD_ID")
+	private Card card;
 
 	@ManyToOne
 	@JoinColumn(name = "EXPANSION_ID")
@@ -29,12 +27,12 @@ public class SaleDetails {
 
 	private Double unitaryPrice;
 
-	public Product getProductId() {
-		return product;
+	public Card getCardId() {
+		return card;
 	}
 
-	public void setProductId(Product productId) {
-		this.product = productId;
+	public void setCardId(Card cardId) {
+		this.card = cardId;
 	}
 
 	public Integer getQuantity() {
@@ -53,12 +51,12 @@ public class SaleDetails {
 		this.id = id;
 	}
 
-	public Product getProduct() {
-		return product;
+	public Card getProduct() {
+		return card;
 	}
 
-	public void setProduct(Product product) {
-		this.product = product;
+	public void setProduct(Card product) {
+		this.card = product;
 	}
 
 	public Expansion getExpansion() {
@@ -85,11 +83,10 @@ public class SaleDetails {
 		this.unitaryPrice = unitaryPrice;
 	}
 
-	public SaleDetails(Integer id, Product product, Expansion expansion, Sales sale, Integer quantity,
-			Double unitaryPrice) {
+	public SaleDetails(Integer id, Card card, Expansion expansion, Sales sale, Integer quantity, Double unitaryPrice) {
 		super();
 		this.id = id;
-		this.product = product;
+		this.card = card;
 		this.expansion = expansion;
 		this.sale = sale;
 		this.quantity = quantity;
@@ -98,15 +95,6 @@ public class SaleDetails {
 
 	public SaleDetails() {
 		super();
-	}
-
-	public SaleDetails(SaleDetailsRequest details) {
-		this.id = details.getId();
-		this.product = details.getProduct();
-		this.expansion = details.getExpansion();
-		this.sale = details.getSale();
-		this.quantity = details.getQuantity();
-		this.unitaryPrice = details.getUnitaryPrice();
 	}
 
 }
