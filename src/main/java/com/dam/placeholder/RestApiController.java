@@ -155,10 +155,12 @@ public class RestApiController {
 
 	@GetMapping("/offerEdit/{id}")
 	public String showCardUpdateForm(@PathVariable("id") Integer id, Model model) {
-		Card game = cardRepo.findById(id).orElseThrow(() -> new IllegalArgumentException("Invalid card Id:" + id));
+		Offers game = offersRepo.findById(id).orElseThrow(() -> new IllegalArgumentException("Invalid card Id:" + id));
 
-		model.addAttribute("card", game);
-		return "updateCard";
+		model.addAttribute("offer", game);
+		model.addAttribute("expansionList", expansionRepo.findAll());
+
+		return "updateOffer";
 	}
 
 	@PostMapping("/saveOffer")
