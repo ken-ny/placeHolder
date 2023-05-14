@@ -55,6 +55,11 @@ public class Game {
 		this.expansions = expansions;
 	}
 
+	public Game(Integer id) {
+		super();
+		this.id = id;
+	}
+
 	public Game(Integer id, String name, String abbreviation, List<Expansion> expansions) {
 		super();
 		this.id = id;

@@ -1,7 +1,10 @@
 package com.dam.placeholder.entity;
 
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+
+import org.springframework.util.CollectionUtils;
 
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
@@ -90,6 +93,13 @@ public class Card {
 		return expansion;
 	}
 
+	public void addExpansion(Expansion expansion) {
+		if (CollectionUtils.isEmpty(this.expansion)) {
+			this.expansion = new HashSet<>();
+		}
+		this.expansion.add(expansion);
+	}
+
 	public void setExpansion(Set<Expansion> expansion) {
 		this.expansion = expansion;
 	}
@@ -100,6 +110,11 @@ public class Card {
 
 	public void setOffers(List<Offers> offers) {
 		this.offers = offers;
+	}
+
+	public Card(Integer id) {
+		super();
+		this.id = id;
 	}
 
 	public Card(Integer id, String name, String rarity, Integer quantity, String image, Set<Expansion> expansion,

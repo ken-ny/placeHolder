@@ -1,6 +1,8 @@
 package com.dam.placeholder;
 
+import java.util.List;
 import java.util.Objects;
+import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -58,65 +60,6 @@ public class RestApiController {
 	@Autowired
 	OffersRepository offersRepo;
 
-	// PUT Mappings
-
-//	@PutMapping("/increaseQuantity/{offerId}/{quantity}/offers")
-//	public ResponseEntity<OffersResponse> postIncreaseQuantity(@PathVariable Integer offerId,
-//			@PathVariable Integer quantity) {
-//		try {
-//
-//			Optional<Offers> foundOffer = offersRepo.findById(offerId);
-//
-//			if (foundOffer.isPresent()) {
-//				foundOffer.get().increaseQuantity(quantity);
-//				Offers savedOffer = offersRepo.save(foundOffer.get());
-//				return new ResponseEntity<>(new OffersResponse(savedOffer), HttpStatus.OK);
-//			} else {
-//				return new ResponseEntity<>(
-//						new OffersResponse(ResponseUtils.generateError(ErrorCodes.NOT_FOUND_RESULT.getCode(),
-//								ErrorCodes.NOT_FOUND_RESULT.getTitle(), null)),
-//						HttpStatus.INTERNAL_SERVER_ERROR);
-//			}
-//
-//		} catch (Exception e) {
-//			return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
-//		}
-//	}
-//
-//	@PutMapping("/decreaseQuantity/{offerId}/{quantity}/offers")
-//	public ResponseEntity<OffersResponse> postDecreaseQuantity(@PathVariable Integer offerId,
-//			@PathVariable Integer quantity) {
-//		try {
-//
-//			Optional<Offers> foundOffer = offersRepo.findById(offerId);
-//
-//			if (foundOffer.isPresent()) {
-//				boolean hasError = foundOffer.get().decreaseQuantity(quantity);
-//
-//				Offers savedOffer = offersRepo.save(foundOffer.get());
-//				if (hasError) {
-//					return new ResponseEntity<>(new OffersResponse(savedOffer), HttpStatus.OK);
-//				} else {
-//					return new ResponseEntity<>(
-//							new OffersResponse(ResponseUtils.generateError(ErrorCodes.GENERIC_ERROR.getCode(),
-//									ErrorCodes.GENERIC_ERROR.getTitle(), NOT_ENOUGH_QUANTITY_TO_DECREASE)),
-//							HttpStatus.EXPECTATION_FAILED);
-//				}
-//			} else {
-//				return new ResponseEntity<>(
-//						new OffersResponse(ResponseUtils.generateError(ErrorCodes.NOT_FOUND_RESULT.getCode(),
-//								ErrorCodes.NOT_FOUND_RESULT.getTitle(), null)),
-//						HttpStatus.INTERNAL_SERVER_ERROR);
-//			}
-//
-//		} catch (Exception e) {
-//			return new ResponseEntity<>(
-//					new OffersResponse(ResponseUtils.generateError(ErrorCodes.GENERIC_ERROR.getCode(),
-//							ErrorCodes.GENERIC_ERROR.getTitle(), e.getMessage())),
-//					HttpStatus.INTERNAL_SERVER_ERROR);
-//		}
-//	}
-
 	// THYMELEAF
 	// MAIN
 	@GetMapping(value = "/")
@@ -145,17 +88,13 @@ public class RestApiController {
 
 	@PostMapping("/saveGame")
 	public String postSaveGame(@ModelAttribute Game game) {
-
 		gameRepo.save(game);
 		return "redirect:/gameMain";
 	}
 
 	@GetMapping("/createGame")
 	public String showGameUpdateForm(Model model) {
-		Integer id = findNextAvailableId(GAME);
-		Game newGame = new Game();
-		newGame.setId(id);
-		model.addAttribute("game", newGame);
+		model.addAttribute("game", new Game(findNextAvailableId(GAME)));
 		return "createGame";
 	}
 
@@ -177,8 +116,9 @@ public class RestApiController {
 	public String showExpansionUpdateForm(@PathVariable("id") Integer id, Model model) {
 		Expansion game = expansionRepo.findById(id)
 				.orElseThrow(() -> new IllegalArgumentException("Invalid expansion Id:" + id));
-
 		model.addAttribute("expansion", game);
+		List<Game> availableGames = gameRepo.findAll();
+		model.addAttribute("gameList", availableGames);
 		return "updateExpansion";
 	}
 
@@ -198,21 +138,21 @@ public class RestApiController {
 
 	@GetMapping("/createExpansion")
 	public String showExpansionUpdateForm(Model model) {
-		Integer id = findNextAvailableId(EXPANSION);
-		Expansion newExpansion = new Expansion();
-		newExpansion.setId(id);
-		model.addAttribute("expansion", newExpansion);
+		List<Game> availableGames = gameRepo.findAll();
+		model.addAttribute("gameList", availableGames);
+		model.addAttribute("expansion", new Expansion(findNextAvailableId(EXPANSION)));
+
 		return "createExpansion";
 	}
 
-	// PRODUCTS
+	// CARDS
 	@GetMapping("/cardMain")
 	public String cardsMain(Model model) {
-		model.addAttribute("cardsList", cardRepo.findAll());
+		model.addAttribute("offersList", offersRepo.findAll());
 		return "cardMain";
 	}
 
-	@GetMapping("/cardEdit/{id}")
+	@GetMapping("/offerEdit/{id}")
 	public String showCardUpdateForm(@PathVariable("id") Integer id, Model model) {
 		Card game = cardRepo.findById(id).orElseThrow(() -> new IllegalArgumentException("Invalid card Id:" + id));
 
@@ -220,27 +160,42 @@ public class RestApiController {
 		return "updateCard";
 	}
 
-	@PostMapping("/saveCard")
-	public String postUpdateCard(@ModelAttribute Card game) {
-
-		cardRepo.save(game);
+	@PostMapping("/saveOffer")
+	public String postUpdateCard(@ModelAttribute Offers offer) {
+		offersRepo.save(offer);
 		return "redirect:/cardMain";
 
-	}
-
-	@GetMapping("/deleteCard/{id}")
-	public String deleteCardThroughId(@PathVariable(value = "id") Integer id) {
-		cardRepo.deleteById(id);
-		return "redirect:/cardMain";
 	}
 
 	@GetMapping("/createCard")
 	public String showCardUpdateForm(Model model) {
-		Integer id = findNextAvailableId(PRODUCT);
-		Card newProduct = new Card();
-		newProduct.setId(id);
-		model.addAttribute("card", newProduct);
+		model.addAttribute("card", new Card(findNextAvailableId(PRODUCT)));
+		model.addAttribute("expansionList", expansionRepo.findAll());
 		return "createCard";
+	}
+
+	@PostMapping("/createOffer")
+	public String postCreateOffer(@ModelAttribute Card card, Model model) {
+
+		Optional<Card> existingCard = cardRepo.findByNameAndRarity(card.getName(), card.getRarity());
+
+		if (existingCard.isPresent()) {
+			existingCard.get().getExpansion().addAll(card.getExpansion());
+			card = existingCard.get();
+		}
+
+		Card newCard = cardRepo.save(card);
+
+		model.addAttribute("offer", new Offers(newCard, findNextAvailableId(OFFER)));
+
+		return "createOffer";
+
+	}
+
+	@GetMapping("/deleteOffer/{id}")
+	public String deleteCardThroughId(@PathVariable(value = "id") Integer id) {
+		cardRepo.deleteById(id);
+		return "redirect:/cardMain";
 	}
 
 	// SALES
@@ -270,6 +225,41 @@ public class RestApiController {
 	public String deleteSaleThroughId(@PathVariable(value = "id") Integer id) {
 		salesRepo.deleteById(id);
 		return "redirect:/saleMain";
+	}
+
+	// OFFERS
+	@GetMapping("/offerDecreaseQuantity/{id}")
+	public String postDecreaseQuantity(@PathVariable(value = "id") Integer offerId) {
+
+		Optional<Offers> foundOffer = offersRepo.findById(offerId);
+
+		if (foundOffer.isPresent()) {
+			foundOffer.get().decreaseQuantity();
+
+			offersRepo.save(foundOffer.get());
+			return "redirect:/cardMain";
+
+		} else {
+			return "redirect:/errorPage";
+		}
+
+	}
+
+	@GetMapping("/offerIncreaseQuantity/{id}")
+	public String postIncreaseQuantity(@PathVariable(value = "id") Integer offerId) {
+
+		Optional<Offers> foundOffer = offersRepo.findById(offerId);
+
+		if (foundOffer.isPresent()) {
+			foundOffer.get().increaseQuantity();
+
+			offersRepo.save(foundOffer.get());
+			return "redirect:/cardMain";
+
+		} else {
+			return "redirect:/errorPage";
+		}
+
 	}
 
 	// Metodos
@@ -330,99 +320,6 @@ public class RestApiController {
 		SaleDetails newDetail = detailsRepo.save(sd);
 
 		newSale.addDetail(newDetail);
-	}
-
-	/**
-	 * Comprueba si el objeto de entrada tiene id, en caso de no tenerlo, comprueba
-	 * en la base de datos si existe. Si no existe, calcula el siguiente id, si
-	 * existe recupera el id y lo asigna para actualizarlo
-	 * 
-	 * @param product
-	 */
-	private void generateId(Card product) {
-		if (product.getId() == null) {
-			Card foundProduct = cardRepo.findByNameAndRarity(product.getName(), product.getRarity());
-
-			if (Objects.nonNull(foundProduct)) {
-				product.setId(foundProduct.getId());
-			} else {
-				product.setId(findNextAvailableId(PRODUCT));
-			}
-		}
-	}
-
-	/**
-	 * Comprueba si el objeto de entrada tiene id, en caso de no tenerlo, comprueba
-	 * en la base de datos si existe. Si no existe, calcula el siguiente id, si
-	 * existe recupera el id y lo asigna para actualizarlo
-	 * 
-	 * @param game
-	 */
-	private void generateId(Game game) {
-		if (game.getId() == null) {
-			Game foundGameId = gameRepo.findByNameAndAbbreviation(game.getName(), game.getAbbreviation());
-
-			if (Objects.nonNull(foundGameId)) {
-				game.setId(foundGameId.getId());
-			} else {
-				game.setId(findNextAvailableId(GAME));
-			}
-		}
-	}
-
-	/**
-	 * Comprueba si el objeto de entrada tiene id, en caso de no tenerlo, comprueba
-	 * en la base de datos si existe. Si no existe, calcula el siguiente id, si
-	 * existe recupera el id y lo asigna para actualizarlo
-	 * 
-	 * @param expansion
-	 */
-	private void generateId(Expansion expansion) {
-		if (expansion.getId() == null) {
-			Expansion foundExpansion = expansionRepo.findByNameAndAbbreviation(expansion.getName(),
-					expansion.getAbbreviation());
-			if (Objects.nonNull(foundExpansion)) {
-				expansion.setId(foundExpansion.getId());
-			} else {
-				expansion.setId(findNextAvailableId(EXPANSION));
-			}
-		}
-	}
-
-	/**
-	 * Comprueba si el objeto de entrada tiene id, en caso de no tenerlo, comprueba
-	 * en la base de datos si existe. Si no existe, calcula el siguiente id, si
-	 * existe recupera el id y lo asigna para actualizarlo
-	 * 
-	 * @param sale
-	 */
-	private void generateId(Sales sale) {
-		if (sale.getId() == null) {
-			Sales foundSale = salesRepo.findBySaleDateAndSalePrice(sale.getSaleDate(), sale.getSalePrice());
-			if (Objects.nonNull(foundSale)) {
-				sale.setId(foundSale.getId());
-			} else {
-				sale.setId(findNextAvailableId(SALES));
-			}
-		}
-	}
-
-	/**
-	 * Comprueba si el objeto de entrada tiene id, en caso de no tenerlo, comprueba
-	 * en la base de datos si existe. Si no existe, calcula el siguiente id, si
-	 * existe recupera el id y lo asigna para actualizarlo
-	 * 
-	 * @param offer
-	 */
-	private void generateId(Offers offer) {
-		if (offer.getId() == null) {
-			Offers foundOffer = offersRepo.findByExpansionAndCard(offer.getExpansion(), offer.getCard());
-			if (Objects.nonNull(foundOffer)) {
-				offer.setId(foundOffer.getId());
-			} else {
-				offer.setId(findNextAvailableId(OFFER));
-			}
-		}
 	}
 
 }

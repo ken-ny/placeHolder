@@ -56,6 +56,11 @@ public class Expansion {
 		super();
 	}
 
+	public Expansion(Integer id) {
+		super();
+		this.id = id;
+	}
+
 	public Expansion(Integer id, String name, String abbreviation, Date release_date, Boolean is_released, Game game,
 			List<Card> cardExpansion, List<Sales> productSales, List<Offers> offers) {
 		super();

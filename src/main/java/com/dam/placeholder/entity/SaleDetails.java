@@ -83,6 +83,11 @@ public class SaleDetails {
 		this.unitaryPrice = unitaryPrice;
 	}
 
+	public SaleDetails(Integer id) {
+		super();
+		this.id = id;
+	}
+
 	public SaleDetails(Integer id, Card card, Expansion expansion, Sales sale, Integer quantity, Double unitaryPrice) {
 		super();
 		this.id = id;
