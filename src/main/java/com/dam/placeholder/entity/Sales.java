@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.util.CollectionUtils;
 
 import com.dam.placeholder.request.SalesRequest;
@@ -27,6 +28,7 @@ public class Sales {
 
 	@Temporal(TemporalType.TIMESTAMP)
 	@Column(name = "SALE_DATE")
+	@DateTimeFormat(pattern = "yyyy-MM-dd")
 	private Date saleDate;
 
 	@Column(name = "SALE_PRICE")

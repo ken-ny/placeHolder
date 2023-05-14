@@ -8,14 +8,15 @@ import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
 
 import com.dam.placeholder.entity.Expansion;
 import com.dam.placeholder.entity.Game;
@@ -43,9 +44,7 @@ import com.dam.placeholder.response.SalesResponse;
 import com.dam.placeholder.response.utils.ErrorCodes;
 import com.dam.placeholder.response.utils.ResponseUtils;
 
-@RestController
-@RequestMapping("/placeHolder")
-
+@Controller
 public class RestApiController {
 
 	private static final String NOT_ENOUGH_QUANTITY_TO_DECREASE = "Not enough quantity to decrease";
@@ -415,6 +414,162 @@ public class RestApiController {
 		} catch (Exception e) {
 			return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
 		}
+	}
+
+	// THYMELEAF
+	// MAIN
+	@GetMapping(value = "/")
+	public String homePage(Model model) {
+		model.addAttribute("totalGames", gameRepo.findAll().size());
+		model.addAttribute("totalExpansions", expansionRepo.findAll().size());
+		model.addAttribute("totalCards", productRepo.findAll().size());
+		model.addAttribute("totalSells", salesRepo.findAll().size());
+		return "index";
+	}
+
+	// GAMES
+	@GetMapping("/gameMain")
+	public String gameMain(Model model) {
+		model.addAttribute("gameList", gameRepo.findAll());
+		return "gameMain";
+	}
+
+	@GetMapping("/gameEdit/{id}")
+	public String showGameUpdateForm(@PathVariable("id") Integer id, Model model) {
+		Game game = gameRepo.findById(id).orElseThrow(() -> new IllegalArgumentException("Invalid game Id:" + id));
+
+		model.addAttribute("game", game);
+		return "updateGame";
+	}
+
+	@PostMapping("/saveGame")
+	public String postSaveGame(@ModelAttribute Game game) {
+
+		gameRepo.save(game);
+		return "redirect:/gameMain";
+	}
+
+	@GetMapping("/createGame")
+	public String showGameUpdateForm(Model model) {
+		Integer id = findNextAvailableId(GAME);
+		Game newGame = new Game();
+		newGame.setId(id);
+		model.addAttribute("game", newGame);
+		return "createGame";
+	}
+
+	@GetMapping("/deleteGame/{id}")
+	public String deleteGameThroughId(@PathVariable(value = "id") Integer id) {
+		gameRepo.deleteById(id);
+		return "redirect:/gameMain";
+
+	}
+
+	// EXPANSIONS
+	@GetMapping("/expansionMain")
+	public String expansionMain(Model model) {
+		model.addAttribute("expansionList", expansionRepo.findAll());
+		return "expansionMain";
+	}
+
+	@GetMapping("/expansionEdit/{id}")
+	public String showExpansionUpdateForm(@PathVariable("id") Integer id, Model model) {
+		Expansion game = expansionRepo.findById(id)
+				.orElseThrow(() -> new IllegalArgumentException("Invalid expansion Id:" + id));
+
+		model.addAttribute("expansion", game);
+		return "updateExpansion";
+	}
+
+	@PostMapping("/saveExpansion")
+	public String postUpdateExpansion(@ModelAttribute Expansion game) {
+
+		expansionRepo.save(game);
+		return "redirect:/expansionMain";
+
+	}
+
+	@GetMapping("/deleteExpansion/{id}")
+	public String deleteExpansionThroughId(@PathVariable(value = "id") Integer id) {
+		expansionRepo.deleteById(id);
+		return "redirect:/expansionMain";
+	}
+
+	@GetMapping("/createExpansion")
+	public String showExpansionUpdateForm(Model model) {
+		Integer id = findNextAvailableId(EXPANSION);
+		Expansion newExpansion = new Expansion();
+		newExpansion.setId(id);
+		model.addAttribute("expansion", newExpansion);
+		return "createExpansion";
+	}
+
+	// PRODUCTS
+	@GetMapping("/cardMain")
+	public String cardsMain(Model model) {
+		model.addAttribute("cardsList", productRepo.findAll());
+		return "cardMain";
+	}
+
+	@GetMapping("/cardEdit/{id}")
+	public String showCardUpdateForm(@PathVariable("id") Integer id, Model model) {
+		Product game = productRepo.findById(id)
+				.orElseThrow(() -> new IllegalArgumentException("Invalid card Id:" + id));
+
+		model.addAttribute("card", game);
+		return "updateCard";
+	}
+
+	@PostMapping("/saveCard")
+	public String postUpdateCard(@ModelAttribute Product game) {
+
+		productRepo.save(game);
+		return "redirect:/cardMain";
+
+	}
+
+	@GetMapping("/deleteCard/{id}")
+	public String deleteCardThroughId(@PathVariable(value = "id") Integer id) {
+		productRepo.deleteById(id);
+		return "redirect:/cardMain";
+	}
+
+	@GetMapping("/createCard")
+	public String showCardUpdateForm(Model model) {
+		Integer id = findNextAvailableId(PRODUCT);
+		Product newProduct = new Product();
+		newProduct.setId(id);
+		model.addAttribute("card", newProduct);
+		return "createCard";
+	}
+
+	// SALES
+	@GetMapping("/saleMain")
+	public String saleMain(Model model) {
+		model.addAttribute("salesList", salesRepo.findAll());
+		return "saleMain";
+	}
+
+	@GetMapping("/saleEdit/{id}")
+	public String showSaleUpdateForm(@PathVariable("id") Integer id, Model model) {
+		Sales game = salesRepo.findById(id).orElseThrow(() -> new IllegalArgumentException("Invalid sale Id:" + id));
+
+		model.addAttribute("card", game);
+		return "updateSale";
+	}
+
+	@PostMapping("/saveSale")
+	public String postUpdateSale(@ModelAttribute Sales game) {
+
+		salesRepo.save(game);
+		return "redirect:/saleMain";
+
+	}
+
+	@GetMapping("/deleteSale/{id}")
+	public String deleteSaleThroughId(@PathVariable(value = "id") Integer id) {
+		salesRepo.deleteById(id);
+		return "redirect:/saleMain";
 	}
 
 	// Metodos
