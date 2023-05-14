@@ -46,6 +46,17 @@
 										<input type="text" class="form-control form-control-user" th:field="*{abbreviation}" placeholder="Abreviatura">
 									</div>
 								</div>
+								<div class="form-group row">
+									<div class="col-sm-12 mb-6 mb-sm-0">
+										<fieldset>
+											<legend>Si deseas modificar el juego, selecciona el nuevo juego:</legend>
+											<div th:each="game:${gameList}">
+												<input th:field="*{game}" type="radio" name="game" th:value="${game.id}">
+												<label for="${game.name}" th:text="${game.name}"></label>
+											</div>
+										</fieldset>
+									</div>
+								</div>
 
 								<button type="submit" class="btn btn-primary btn-user btn-block">Actualizar expansion</button>
 							</form>

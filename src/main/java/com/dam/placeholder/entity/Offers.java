@@ -67,6 +67,11 @@ public class Offers {
 		super();
 	}
 
+	public Offers(Integer id) {
+		super();
+		this.id = id;
+	}
+
 	public Offers(Integer id, Card card, Expansion expansion, Integer quantity, Double unitaryPrice) {
 		super();
 		this.id = id;
@@ -76,37 +81,40 @@ public class Offers {
 		this.unitaryPrice = unitaryPrice;
 	}
 
+	public Offers(Card card, Expansion expansion, Integer id) {
+		this.card = card;
+		this.id = id;
+		this.expansion = expansion;
+	}
+
 	/**
-	 * Incrementa la cantidad ofrecida en la cantidad que recibe. En caso de que aún
-	 * no haya ninguna cantidad, la inicializa a 0
+	 * Incrementa la cantidad ofrecida en 1. En caso de que aún no haya ninguna
+	 * cantidad, la inicializa a 0
 	 * 
 	 * @param quantity quantity to add
 	 * @return
 	 */
-	public void increaseQuantity(Integer quantity) {
+	public void increaseQuantity() {
 		if (this.quantity == null) {
 			this.quantity = 0;
 		}
-		this.quantity += quantity;
+		this.quantity++;
 	}
 
 	/**
-	 * Reduce la cantidad ofrecida en la cantidad que recibe. En caso de que fuera a
-	 * reducir la cantidad por debajo de 0 (o la cantidad original fuera 0), la deja
-	 * en 0 y devuelve false para indicar que no se ha podido reducir toda la
-	 * cantidad pasada. En cualquier otro caso, lo reduce y devuelve true
+	 * Reduce la cantidad ofrecida en 1. En caso de que fuera a reducir la cantidad
+	 * por debajo de 0 (o la cantidad original fuera 0), la deja en 0. En cualquier
+	 * otro caso, lo reduce
 	 * 
 	 * @param quantity quantity to decrease
 	 * @return
 	 */
-	public boolean decreaseQuantity(Integer quantity) {
+	public void decreaseQuantity() {
 		if (this.quantity == 0 || (this.quantity - quantity) < 0) {
 			this.quantity = 0;
-			return false;
+		} else {
+			this.quantity--;
 		}
-
-		this.quantity -= quantity;
-		return true;
 
 	}
 

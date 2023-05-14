@@ -78,6 +78,11 @@ public class Sales {
 		this.details.add(detail);
 	}
 
+	public Sales(Integer id) {
+		super();
+		this.id = id;
+	}
+
 	public Sales(Integer id, Date saleDate, Double salePrice, List<SaleDetails> details) {
 		super();
 		this.id = id;
