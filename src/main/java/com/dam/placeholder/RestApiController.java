@@ -1,48 +1,27 @@
 package com.dam.placeholder;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Objects;
-import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
 
+import com.dam.placeholder.entity.Card;
 import com.dam.placeholder.entity.Expansion;
 import com.dam.placeholder.entity.Game;
 import com.dam.placeholder.entity.Offers;
-import com.dam.placeholder.entity.Product;
 import com.dam.placeholder.entity.SaleDetails;
 import com.dam.placeholder.entity.Sales;
+import com.dam.placeholder.repo.CardRepository;
 import com.dam.placeholder.repo.ExpansionRepository;
 import com.dam.placeholder.repo.GameRepository;
 import com.dam.placeholder.repo.OffersRepository;
-import com.dam.placeholder.repo.ProductRepository;
 import com.dam.placeholder.repo.SaleDetailsRepository;
 import com.dam.placeholder.repo.SalesRepository;
-import com.dam.placeholder.request.ExpansionRequest;
-import com.dam.placeholder.request.GameRequest;
-import com.dam.placeholder.request.OffersRequest;
-import com.dam.placeholder.request.ProductRequest;
-import com.dam.placeholder.request.SaleDetailsRequest;
-import com.dam.placeholder.request.SalesRequest;
-import com.dam.placeholder.response.ExpansionResponse;
-import com.dam.placeholder.response.GameResponse;
-import com.dam.placeholder.response.OffersResponse;
-import com.dam.placeholder.response.ProductResponse;
-import com.dam.placeholder.response.SalesResponse;
-import com.dam.placeholder.response.utils.ErrorCodes;
-import com.dam.placeholder.response.utils.ResponseUtils;
 
 @Controller
 public class RestApiController {
@@ -62,7 +41,7 @@ public class RestApiController {
 	private static final String OFFER = "O";
 
 	@Autowired
-	ProductRepository productRepo;
+	CardRepository cardRepo;
 
 	@Autowired
 	ExpansionRepository expansionRepo;
@@ -79,342 +58,64 @@ public class RestApiController {
 	@Autowired
 	OffersRepository offersRepo;
 
-	// POST ENDPOINTS
-
-	@PostMapping("/createProduct")
-	public ResponseEntity<ProductResponse> postCreateProduct(@RequestBody ProductRequest product) {
-		try {
-
-			generateId(product);
-
-			Product saveProduct = productRepo.save(new Product(product));
-
-			return new ResponseEntity<>(new ProductResponse(saveProduct), HttpStatus.OK);
-		} catch (Exception e) {
-			return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
-		}
-	}
-
-	@PostMapping("/createGame")
-	public ResponseEntity<GameResponse> postCreateGame(@RequestBody GameRequest game) {
-		try {
-			generateId(game);
-
-			Game savedGame = gameRepo.save(new Game(game));
-
-			return new ResponseEntity<>(new GameResponse(savedGame), HttpStatus.OK);
-		} catch (Exception e) {
-			return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
-		}
-	}
-
-	@PostMapping("/createExpansion")
-	public ResponseEntity<ExpansionResponse> postCreateExpansion(@RequestBody ExpansionRequest expansion) {
-		try {
-
-			generateId(expansion);
-
-			Expansion savedExpansion = expansionRepo.save(new Expansion(expansion));
-
-			return new ResponseEntity<>(new ExpansionResponse(savedExpansion), HttpStatus.OK);
-		} catch (Exception e) {
-			return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
-		}
-	}
-
-	@PostMapping("/createSale")
-	public ResponseEntity<SalesResponse> postCreateSale(@RequestBody SalesRequest sale) {
-		try {
-			generateId(sale);
-
-			// crea el objeto sales sin relaciones
-			Sales newSale = salesRepo.save(new Sales(sale));
-//			// crea las relaciones y las enlaza con el objeto sale
-			sale.getDetails().stream().filter(Objects::nonNull).forEach(sd -> saveDetail(sd, newSale));
-//
-//			// actualiza el Sale con las nuevas relaciones
-			Sales updatedSale = salesRepo.save(newSale);
-
-			return new ResponseEntity<>(new SalesResponse(updatedSale), HttpStatus.OK);
-		} catch (Exception e) {
-			return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
-		}
-	}
-
-	@PostMapping("/createOffer")
-	public ResponseEntity<OffersResponse> postCreateOffer(@RequestBody OffersRequest offer) {
-		try {
-			generateId(offer);
-
-			Offers savedOffer = offersRepo.save(new Offers(offer));
-
-			return new ResponseEntity<>(new OffersResponse(savedOffer), HttpStatus.OK);
-		} catch (Exception e) {
-			return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
-		}
-	}
-
 	// PUT Mappings
 
-	@PutMapping("/increaseQuantity/{offerId}/{quantity}/offers")
-	public ResponseEntity<OffersResponse> postIncreaseQuantity(@PathVariable Integer offerId,
-			@PathVariable Integer quantity) {
-		try {
-
-			Optional<Offers> foundOffer = offersRepo.findById(offerId);
-
-			if (foundOffer.isPresent()) {
-				foundOffer.get().increaseQuantity(quantity);
-				Offers savedOffer = offersRepo.save(foundOffer.get());
-				return new ResponseEntity<>(new OffersResponse(savedOffer), HttpStatus.OK);
-			} else {
-				return new ResponseEntity<>(
-						new OffersResponse(ResponseUtils.generateError(ErrorCodes.NOT_FOUND_RESULT.getCode(),
-								ErrorCodes.NOT_FOUND_RESULT.getTitle(), null)),
-						HttpStatus.INTERNAL_SERVER_ERROR);
-			}
-
-		} catch (Exception e) {
-			return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
-		}
-	}
-
-	@PutMapping("/decreaseQuantity/{offerId}/{quantity}/offers")
-	public ResponseEntity<OffersResponse> postDecreaseQuantity(@PathVariable Integer offerId,
-			@PathVariable Integer quantity) {
-		try {
-
-			Optional<Offers> foundOffer = offersRepo.findById(offerId);
-
-			if (foundOffer.isPresent()) {
-				boolean hasError = foundOffer.get().decreaseQuantity(quantity);
-
-				Offers savedOffer = offersRepo.save(foundOffer.get());
-				if (hasError) {
-					return new ResponseEntity<>(new OffersResponse(savedOffer), HttpStatus.OK);
-				} else {
-					return new ResponseEntity<>(
-							new OffersResponse(ResponseUtils.generateError(ErrorCodes.GENERIC_ERROR.getCode(),
-									ErrorCodes.GENERIC_ERROR.getTitle(), NOT_ENOUGH_QUANTITY_TO_DECREASE)),
-							HttpStatus.EXPECTATION_FAILED);
-				}
-			} else {
-				return new ResponseEntity<>(
-						new OffersResponse(ResponseUtils.generateError(ErrorCodes.NOT_FOUND_RESULT.getCode(),
-								ErrorCodes.NOT_FOUND_RESULT.getTitle(), null)),
-						HttpStatus.INTERNAL_SERVER_ERROR);
-			}
-
-		} catch (Exception e) {
-			return new ResponseEntity<>(
-					new OffersResponse(ResponseUtils.generateError(ErrorCodes.GENERIC_ERROR.getCode(),
-							ErrorCodes.GENERIC_ERROR.getTitle(), e.getMessage())),
-					HttpStatus.INTERNAL_SERVER_ERROR);
-		}
-	}
-
-	// GET ENDPOINTS
-
-	@GetMapping("/getExpansion/{expansionId}")
-	public ResponseEntity<ExpansionResponse> getSingleExpansion(@PathVariable Integer expansionId) {
-		try {
-
-			Optional<Expansion> foundExpansion = expansionRepo.findById(expansionId);
-
-			ExpansionResponse response = new ExpansionResponse(foundExpansion.get());
-
-			return new ResponseEntity<>(response, HttpStatus.OK);
-		} catch (Exception e) {
-			return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
-		}
-	}
-
-	@GetMapping("/getAllExpansions")
-	public ResponseEntity<List<ExpansionResponse>> getAllExpansion() {
-		try {
-
-			List<Expansion> retrievedExpansions = expansionRepo.findAll();
-
-			List<ExpansionResponse> response = new ArrayList<>();
-			retrievedExpansions.stream().filter(Objects::nonNull)
-					.forEach(expansion -> response.add(new ExpansionResponse(expansion)));
-
-			return new ResponseEntity<>(response, HttpStatus.OK);
-		} catch (Exception e) {
-			return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
-		}
-	}
-
-	@GetMapping(value = "/getGame/{gameId}", produces = "application/json;charset=UTF-8")
-	public ResponseEntity<GameResponse> getSingleGame(@PathVariable Integer gameId) {
-		try {
-
-			Optional<Game> retrievedGames = gameRepo.findById(gameId);
-
-			return new ResponseEntity<>(new GameResponse(retrievedGames.get()), HttpStatus.OK);
-		} catch (Exception e) {
-			return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
-		}
-	}
-
-	@GetMapping(value = "/getAllGames", produces = "application/json;charset=UTF-8")
-	public ResponseEntity<List<GameResponse>> getAllGames() {
-		try {
-
-			List<Game> retrievedGames = gameRepo.findAll();
-
-			List<GameResponse> response = new ArrayList<>();
-			retrievedGames.stream().filter(Objects::nonNull).forEach(game -> response.add(new GameResponse(game)));
-
-			return new ResponseEntity<>(response, HttpStatus.OK);
-		} catch (Exception e) {
-			return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
-		}
-	}
-
-	@GetMapping(value = "/getProduct/{productId}", produces = "application/json;charset=UTF-8")
-	public ResponseEntity<ProductResponse> getSingleProduct(@PathVariable Integer productId) {
-		try {
-
-			Optional<Product> retrievedProducts = productRepo.findById(productId);
-
-			return new ResponseEntity<>(new ProductResponse(retrievedProducts.get()), HttpStatus.OK);
-		} catch (Exception e) {
-			return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
-		}
-	}
-
-	@GetMapping(value = "/getAllProducts", produces = "application/json;charset=UTF-8")
-	public ResponseEntity<List<ProductResponse>> getAllProducts() {
-		try {
-
-			List<Product> retrievedProducts = productRepo.findAll();
-
-			List<ProductResponse> response = new ArrayList<>();
-			retrievedProducts.stream().filter(Objects::nonNull)
-					.forEach(product -> response.add(new ProductResponse(product)));
-
-			return new ResponseEntity<>(response, HttpStatus.OK);
-		} catch (Exception e) {
-			return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
-		}
-	}
-
-	@GetMapping(value = "/getAllSales", produces = "application/json;charset=UTF-8")
-	public ResponseEntity<List<SalesResponse>> getAllSales() {
-		try {
-
-			List<Sales> retrievedSales = salesRepo.findAll();
-
-			List<SalesResponse> response = new ArrayList<>();
-			retrievedSales.stream().filter(Objects::nonNull).forEach(sale -> response.add(new SalesResponse(sale)));
-
-			return new ResponseEntity<>(response, HttpStatus.OK);
-		} catch (Exception e) {
-			return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
-		}
-	}
-
-	@GetMapping(value = "/getSingleSale/{saleId}", produces = "application/json;charset=UTF-8")
-	public ResponseEntity<SalesResponse> getSingleSale(@PathVariable Integer saleId) {
-		try {
-
-			Optional<Sales> foundSale = salesRepo.findById(saleId);
-
-			return new ResponseEntity<>(new SalesResponse(foundSale.get()), HttpStatus.OK);
-		} catch (Exception e) {
-			return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
-		}
-	}
-
-	@GetMapping(value = "/getAllOffers", produces = "application/json;charset=UTF-8")
-	public ResponseEntity<List<OffersResponse>> getAllOffers() {
-		try {
-
-			List<Offers> retrievedOffers = offersRepo.findAll();
-
-			List<OffersResponse> response = new ArrayList<>();
-			retrievedOffers.stream().filter(Objects::nonNull).forEach(offer -> response.add(new OffersResponse(offer)));
-
-			return new ResponseEntity<>(response, HttpStatus.OK);
-		} catch (Exception e) {
-			return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
-		}
-	}
-
-	@GetMapping(value = "/getSingleOffer/{offerId}", produces = "application/json;charset=UTF-8")
-	public ResponseEntity<OffersResponse> getSingleOffer(@PathVariable Integer offerId) {
-		try {
-
-			Optional<Offers> foundOffer = offersRepo.findById(offerId);
-
-			return new ResponseEntity<>(new OffersResponse(foundOffer.get()), HttpStatus.OK);
-		} catch (Exception e) {
-			return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
-		}
-	}
-
-	// DELETE MAPPING
-
-	@DeleteMapping(value = "/deleteGame/{gameId}", produces = "application/json;charset=UTF-8")
-	public ResponseEntity<GameResponse> deleteGame(@PathVariable Integer gameId) {
-		try {
-
-			gameRepo.deleteById(gameId);
-
-			return new ResponseEntity<>(null, HttpStatus.OK);
-		} catch (Exception e) {
-			return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
-		}
-	}
-
-	@DeleteMapping(value = "/deleteExpansion/{expansionId}", produces = "application/json;charset=UTF-8")
-	public ResponseEntity<GameResponse> deleteExpansion(@PathVariable Integer expansionId) {
-		try {
-
-			expansionRepo.deleteById(expansionId);
-
-			return new ResponseEntity<>(null, HttpStatus.OK);
-		} catch (Exception e) {
-			return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
-		}
-	}
-
-	@DeleteMapping(value = "/deleteProduct/{productId}", produces = "application/json;charset=UTF-8")
-	public ResponseEntity<GameResponse> deleteProduct(@PathVariable Integer productId) {
-		try {
-
-			productRepo.deleteById(productId);
-
-			return new ResponseEntity<>(null, HttpStatus.OK);
-		} catch (Exception e) {
-			return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
-		}
-	}
-
-	@DeleteMapping(value = "/deleteSale/{saleId}", produces = "application/json;charset=UTF-8")
-	public ResponseEntity<GameResponse> deleteSale(@PathVariable Integer saleId) {
-		try {
-
-			salesRepo.deleteById(saleId);
-
-			return new ResponseEntity<>(null, HttpStatus.OK);
-		} catch (Exception e) {
-			return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
-		}
-	}
-
-	@DeleteMapping(value = "/deleteOffer/{offerId}", produces = "application/json;charset=UTF-8")
-	public ResponseEntity<OffersResponse> deleteOffer(@PathVariable Integer offerId) {
-		try {
-
-			offersRepo.deleteById(offerId);
-
-			return new ResponseEntity<>(null, HttpStatus.OK);
-		} catch (Exception e) {
-			return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
-		}
-	}
+//	@PutMapping("/increaseQuantity/{offerId}/{quantity}/offers")
+//	public ResponseEntity<OffersResponse> postIncreaseQuantity(@PathVariable Integer offerId,
+//			@PathVariable Integer quantity) {
+//		try {
+//
+//			Optional<Offers> foundOffer = offersRepo.findById(offerId);
+//
+//			if (foundOffer.isPresent()) {
+//				foundOffer.get().increaseQuantity(quantity);
+//				Offers savedOffer = offersRepo.save(foundOffer.get());
+//				return new ResponseEntity<>(new OffersResponse(savedOffer), HttpStatus.OK);
+//			} else {
+//				return new ResponseEntity<>(
+//						new OffersResponse(ResponseUtils.generateError(ErrorCodes.NOT_FOUND_RESULT.getCode(),
+//								ErrorCodes.NOT_FOUND_RESULT.getTitle(), null)),
+//						HttpStatus.INTERNAL_SERVER_ERROR);
+//			}
+//
+//		} catch (Exception e) {
+//			return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
+//		}
+//	}
+//
+//	@PutMapping("/decreaseQuantity/{offerId}/{quantity}/offers")
+//	public ResponseEntity<OffersResponse> postDecreaseQuantity(@PathVariable Integer offerId,
+//			@PathVariable Integer quantity) {
+//		try {
+//
+//			Optional<Offers> foundOffer = offersRepo.findById(offerId);
+//
+//			if (foundOffer.isPresent()) {
+//				boolean hasError = foundOffer.get().decreaseQuantity(quantity);
+//
+//				Offers savedOffer = offersRepo.save(foundOffer.get());
+//				if (hasError) {
+//					return new ResponseEntity<>(new OffersResponse(savedOffer), HttpStatus.OK);
+//				} else {
+//					return new ResponseEntity<>(
+//							new OffersResponse(ResponseUtils.generateError(ErrorCodes.GENERIC_ERROR.getCode(),
+//									ErrorCodes.GENERIC_ERROR.getTitle(), NOT_ENOUGH_QUANTITY_TO_DECREASE)),
+//							HttpStatus.EXPECTATION_FAILED);
+//				}
+//			} else {
+//				return new ResponseEntity<>(
+//						new OffersResponse(ResponseUtils.generateError(ErrorCodes.NOT_FOUND_RESULT.getCode(),
+//								ErrorCodes.NOT_FOUND_RESULT.getTitle(), null)),
+//						HttpStatus.INTERNAL_SERVER_ERROR);
+//			}
+//
+//		} catch (Exception e) {
+//			return new ResponseEntity<>(
+//					new OffersResponse(ResponseUtils.generateError(ErrorCodes.GENERIC_ERROR.getCode(),
+//							ErrorCodes.GENERIC_ERROR.getTitle(), e.getMessage())),
+//					HttpStatus.INTERNAL_SERVER_ERROR);
+//		}
+//	}
 
 	// THYMELEAF
 	// MAIN
@@ -422,7 +123,7 @@ public class RestApiController {
 	public String homePage(Model model) {
 		model.addAttribute("totalGames", gameRepo.findAll().size());
 		model.addAttribute("totalExpansions", expansionRepo.findAll().size());
-		model.addAttribute("totalCards", productRepo.findAll().size());
+		model.addAttribute("totalCards", cardRepo.findAll().size());
 		model.addAttribute("totalSells", salesRepo.findAll().size());
 		return "index";
 	}
@@ -507,37 +208,36 @@ public class RestApiController {
 	// PRODUCTS
 	@GetMapping("/cardMain")
 	public String cardsMain(Model model) {
-		model.addAttribute("cardsList", productRepo.findAll());
+		model.addAttribute("cardsList", cardRepo.findAll());
 		return "cardMain";
 	}
 
 	@GetMapping("/cardEdit/{id}")
 	public String showCardUpdateForm(@PathVariable("id") Integer id, Model model) {
-		Product game = productRepo.findById(id)
-				.orElseThrow(() -> new IllegalArgumentException("Invalid card Id:" + id));
+		Card game = cardRepo.findById(id).orElseThrow(() -> new IllegalArgumentException("Invalid card Id:" + id));
 
 		model.addAttribute("card", game);
 		return "updateCard";
 	}
 
 	@PostMapping("/saveCard")
-	public String postUpdateCard(@ModelAttribute Product game) {
+	public String postUpdateCard(@ModelAttribute Card game) {
 
-		productRepo.save(game);
+		cardRepo.save(game);
 		return "redirect:/cardMain";
 
 	}
 
 	@GetMapping("/deleteCard/{id}")
 	public String deleteCardThroughId(@PathVariable(value = "id") Integer id) {
-		productRepo.deleteById(id);
+		cardRepo.deleteById(id);
 		return "redirect:/cardMain";
 	}
 
 	@GetMapping("/createCard")
 	public String showCardUpdateForm(Model model) {
 		Integer id = findNextAvailableId(PRODUCT);
-		Product newProduct = new Product();
+		Card newProduct = new Card();
 		newProduct.setId(id);
 		model.addAttribute("card", newProduct);
 		return "createCard";
@@ -587,7 +287,7 @@ public class RestApiController {
 			Game g = gameRepo.findTopByOrderByIdDesc();
 			return (Objects.isNull(g)) ? 1 : g.getId() + 1;
 		case PRODUCT:
-			Product p = productRepo.findTopByOrderByIdDesc();
+			Card p = cardRepo.findTopByOrderByIdDesc();
 			return (Objects.isNull(p)) ? 1 : p.getId() + 1;
 		case EXPANSION:
 			Expansion e = expansionRepo.findTopByOrderByIdDesc();
@@ -615,7 +315,7 @@ public class RestApiController {
 	 * @param sd
 	 * @param newSale
 	 */
-	private void saveDetail(SaleDetailsRequest sd, Sales newSale) {
+	private void saveDetail(SaleDetails sd, Sales newSale) {
 
 		/**
 		 * En caso de que no llegue el id, será un detail nuevo ya que todos los campos
@@ -627,7 +327,7 @@ public class RestApiController {
 		}
 
 		sd.setSale(newSale);
-		SaleDetails newDetail = detailsRepo.save(new SaleDetails(sd));
+		SaleDetails newDetail = detailsRepo.save(sd);
 
 		newSale.addDetail(newDetail);
 	}
@@ -639,9 +339,9 @@ public class RestApiController {
 	 * 
 	 * @param product
 	 */
-	private void generateId(ProductRequest product) {
+	private void generateId(Card product) {
 		if (product.getId() == null) {
-			Product foundProduct = productRepo.findByNameAndRarity(product.getName(), product.getRarity());
+			Card foundProduct = cardRepo.findByNameAndRarity(product.getName(), product.getRarity());
 
 			if (Objects.nonNull(foundProduct)) {
 				product.setId(foundProduct.getId());
@@ -658,7 +358,7 @@ public class RestApiController {
 	 * 
 	 * @param game
 	 */
-	private void generateId(GameRequest game) {
+	private void generateId(Game game) {
 		if (game.getId() == null) {
 			Game foundGameId = gameRepo.findByNameAndAbbreviation(game.getName(), game.getAbbreviation());
 
@@ -677,7 +377,7 @@ public class RestApiController {
 	 * 
 	 * @param expansion
 	 */
-	private void generateId(ExpansionRequest expansion) {
+	private void generateId(Expansion expansion) {
 		if (expansion.getId() == null) {
 			Expansion foundExpansion = expansionRepo.findByNameAndAbbreviation(expansion.getName(),
 					expansion.getAbbreviation());
@@ -696,7 +396,7 @@ public class RestApiController {
 	 * 
 	 * @param sale
 	 */
-	private void generateId(SalesRequest sale) {
+	private void generateId(Sales sale) {
 		if (sale.getId() == null) {
 			Sales foundSale = salesRepo.findBySaleDateAndSalePrice(sale.getSaleDate(), sale.getSalePrice());
 			if (Objects.nonNull(foundSale)) {
@@ -714,9 +414,9 @@ public class RestApiController {
 	 * 
 	 * @param offer
 	 */
-	private void generateId(OffersRequest offer) {
+	private void generateId(Offers offer) {
 		if (offer.getId() == null) {
-			Offers foundOffer = offersRepo.findByExpansionAndProduct(offer.getExpansion(), offer.getProduct());
+			Offers foundOffer = offersRepo.findByExpansionAndCard(offer.getExpansion(), offer.getCard());
 			if (Objects.nonNull(foundOffer)) {
 				offer.setId(foundOffer.getId());
 			} else {

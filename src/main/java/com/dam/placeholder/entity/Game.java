@@ -2,8 +2,6 @@ package com.dam.placeholder.entity;
 
 import java.util.List;
 
-import com.dam.placeholder.request.GameRequest;
-
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -74,14 +72,6 @@ public class Game {
 		this.abbreviation = game.getAbbreviation();
 		this.expansions = game.getExpansions();
 		this.name = game.getName();
-	}
-
-	public Game(GameRequest game) {
-		this.abbreviation = game.getAbbreviation();
-		this.expansions = game.getExpansions();
-		this.id = game.getId();
-		this.name = game.getName();
-
 	}
 
 }

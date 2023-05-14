@@ -8,18 +8,12 @@ import java.util.Date;
 import java.util.List;
 import java.util.Set;
 
+import com.dam.placeholder.entity.Card;
 import com.dam.placeholder.entity.Expansion;
 import com.dam.placeholder.entity.Game;
 import com.dam.placeholder.entity.Offers;
-import com.dam.placeholder.entity.Product;
 import com.dam.placeholder.entity.SaleDetails;
 import com.dam.placeholder.entity.Sales;
-import com.dam.placeholder.request.ExpansionRequest;
-import com.dam.placeholder.request.GameRequest;
-import com.dam.placeholder.request.OffersRequest;
-import com.dam.placeholder.request.ProductRequest;
-import com.dam.placeholder.request.SaleDetailsRequest;
-import com.dam.placeholder.request.SalesRequest;
 
 public class TestUtils {
 	private static final String DD_MM_YYYY = "dd-MM-yyyy";
@@ -57,15 +51,15 @@ public class TestUtils {
 
 	}
 
-	public List<Product> mockProductList(boolean withRelations) {
-		List<Product> list = new ArrayList<>();
+	public List<Card> mockProductList(boolean withRelations) {
+		List<Card> list = new ArrayList<>();
 		if (withRelations) {
-			list.add(new Product(1, PRUEBA1, RRR, 12, null, Set.of(mockExpansion()), Arrays.asList(mockSales()),
+			list.add(new Card(1, PRUEBA1, RRR, 12, null, Set.of(mockExpansion()), Arrays.asList(mockSales()),
 					Arrays.asList(mockOffers())));
 		} else {
-			list.add(new Product(1, PRUEBA1, RRR, 12, null, null, null, null));
+			list.add(new Card(1, PRUEBA1, RRR, 12, null, null, null, null));
 		}
-		list.add(new Product(2, PRUEBA2, "RR", 12, null, null, null, null));
+		list.add(new Card(2, PRUEBA2, "RR", 12, null, null, null, null));
 		return list;
 	}
 
@@ -117,8 +111,8 @@ public class TestUtils {
 		return list;
 	}
 
-	public Product mockProduct() {
-		Product prod = new Product();
+	public Card mockProduct() {
+		Card prod = new Card();
 
 		prod.setId(1);
 		prod.setName(TEST);
@@ -178,131 +172,6 @@ public class TestUtils {
 		detail.setUnitaryPrice(20.00);
 
 		return detail;
-	}
-
-	public ExpansionRequest createExpansionRequestMock(boolean withId, Integer id) {
-		ExpansionRequest request = new ExpansionRequest();
-		request.setGame(new Game(1, null, null, null));
-		request.setName(TEST);
-		request.setAbbreviation(ABVR);
-		request.setIs_released(true);
-		if (withId) {
-			request.setId(id);
-		}
-
-		return request;
-	}
-
-	public GameRequest createGameRequestMock(boolean withId, Integer id) {
-		GameRequest request = new GameRequest();
-
-		request.setName(TEST);
-		request.setAbbreviation(ABVR);
-		if (withId) {
-			request.setId(id);
-		}
-
-		return request;
-	}
-
-	public ProductRequest createProductRequestMock(boolean withId) {
-		ProductRequest request = new ProductRequest();
-		request.setExpansions(Arrays.asList(mockExpansion()));
-		request.setImage(IMAGE);
-		request.setName(TEST);
-		request.setQuantity(15);
-		request.setRarity(RRR);
-		if (withId) {
-			request.setId(1);
-		}
-		return request;
-	}
-
-	public SalesRequest createSalesRequestMock(boolean withId) {
-		SalesRequest request = new SalesRequest();
-		request.setDetails(Arrays.asList(createSalesDetailsRequestMock(withId)));
-		request.setSaleDate(new Date());
-		request.setSalePrice(158.00);
-		if (withId) {
-			request.setId(1);
-		}
-		return request;
-	}
-
-	private SaleDetailsRequest createSalesDetailsRequestMock(boolean withId) {
-		SaleDetailsRequest request = new SaleDetailsRequest();
-
-		request.setExpansion(mockExpansion());
-		request.setProduct(mockProduct());
-		request.setQuantity(5);
-		request.setUnitaryPrice(50.00);
-
-		if (withId) {
-			request.setId(1);
-		}
-
-		return request;
-	}
-
-	public OffersRequest createOffersRequestMock(boolean withId) {
-		OffersRequest request = new OffersRequest();
-		request.setExpansion(mockExpansion());
-		request.setProduct(mockProduct());
-		request.setUnitaryPrice(15.00);
-		request.setQuantity(15);
-		if (withId) {
-			request.setId(1);
-		}
-		return request;
-	}
-
-	// NRE UTILS
-
-	public Game expectedGameNREResponseCFV() {
-		return new Game(1, CARDFIGHT_VANGUARD, CFV, null);
-	}
-
-	public Game expectedGameNREResponseMTG() {
-		return new Game(2, MAGIC_THE_GATHERING, MTG, null);
-	}
-
-	public Expansion expectedExpansionNREResponseDBT08() {
-		Date formattedDate = convertDate("23-02-2023");
-
-		return new Expansion(1, D_BOOSTER_SET_08_MINERVA_RISING, DBT08, formattedDate, false, null, null, null, null);
-	}
-
-	public Expansion expectedExpansionNREResponseBROTH() {
-		Date formattedDate = convertDate("15-11-2022");
-
-		return new Expansion(2, LA_GUERRA_DE_LOS_HERMANOS, BROTH, formattedDate, false, null, null, null, null);
-	}
-
-	public ExpansionRequest createExistingExpansionRequest(boolean withId, Integer id) {
-		ExpansionRequest request = new ExpansionRequest();
-		request.setGame(new Game(1, null, null, null));
-		request.setName(D_BOOSTER_SET_08_MINERVA_RISING);
-		request.setAbbreviation(DBT08);
-		request.setIs_released(false);
-
-		if (withId) {
-			request.setId(id);
-		}
-
-		return request;
-	}
-
-	public GameRequest createExistingGameRequest(boolean withId, Integer id) {
-		GameRequest request = new GameRequest();
-		request.setExpansions(Arrays.asList(new Expansion(1, null, null, null, null, null, null, null, null)));
-		request.setName(CARDFIGHT_VANGUARD);
-		request.setAbbreviation(CFV);
-
-		if (withId) {
-			request.setId(id);
-		}
-
-		return request;
 	}
 
 	/**

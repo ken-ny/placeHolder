@@ -5,10 +5,6 @@ import java.util.List;
 
 import org.springframework.format.annotation.DateTimeFormat;
 
-import com.dam.placeholder.request.ExpansionRequest;
-import com.dam.placeholder.response.utils.ResponseUtils;
-
-import io.micrometer.common.util.StringUtils;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -48,7 +44,7 @@ public class Expansion {
 	private Game game;
 
 	@ManyToMany(mappedBy = "expansion", cascade = CascadeType.REMOVE)
-	private List<Product> productExpansion;
+	private List<Card> cardExpansion;
 
 	@OneToMany(mappedBy = "expansion", targetEntity = SaleDetails.class, cascade = CascadeType.REMOVE)
 	private List<Sales> productSales;
@@ -56,23 +52,12 @@ public class Expansion {
 	@OneToMany(mappedBy = "expansion", cascade = CascadeType.REMOVE)
 	private List<Offers> offers;
 
-	public Expansion(ExpansionRequest prod) {
-		this.abbreviation = prod.getAbbreviation();
-		this.id = prod.getId();
-		this.is_released = prod.getIs_released();
-		this.name = prod.getName();
-		if (StringUtils.isNotBlank(prod.getRelease_date())) {
-			this.release_date = ResponseUtils.convertStringToDate(prod.getRelease_date());
-		}
-		this.game = prod.getGame();
-	}
-
 	public Expansion() {
 		super();
 	}
 
 	public Expansion(Integer id, String name, String abbreviation, Date release_date, Boolean is_released, Game game,
-			List<Product> productExpansion, List<Sales> productSales, List<Offers> offers) {
+			List<Card> cardExpansion, List<Sales> productSales, List<Offers> offers) {
 		super();
 		this.id = id;
 		this.name = name;
@@ -80,7 +65,7 @@ public class Expansion {
 		this.release_date = release_date;
 		this.is_released = is_released;
 		this.game = game;
-		this.productExpansion = productExpansion;
+		this.cardExpansion = cardExpansion;
 		this.productSales = productSales;
 		this.offers = offers;
 	}
@@ -149,12 +134,12 @@ public class Expansion {
 		this.productSales = productSales;
 	}
 
-	public List<Product> getProductExpansion() {
-		return productExpansion;
+	public List<Card> getCardExpansion() {
+		return cardExpansion;
 	}
 
-	public void setProductExpansion(List<Product> productExpansion) {
-		this.productExpansion = productExpansion;
+	public void setCardExpansion(List<Card> cardExpansion) {
+		this.cardExpansion = cardExpansion;
 	}
 
 }
