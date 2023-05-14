@@ -81,9 +81,10 @@ public class Offers {
 		this.unitaryPrice = unitaryPrice;
 	}
 
-	public Offers(Card card, Integer id) {
+	public Offers(Card card, Expansion expansion, Integer id) {
 		this.card = card;
 		this.id = id;
+		this.expansion = expansion;
 	}
 
 	/**

@@ -24,6 +24,7 @@ import com.dam.placeholder.repo.GameRepository;
 import com.dam.placeholder.repo.OffersRepository;
 import com.dam.placeholder.repo.SaleDetailsRepository;
 import com.dam.placeholder.repo.SalesRepository;
+import com.google.common.collect.Iterables;
 
 @Controller
 public class RestApiController {
@@ -178,7 +179,7 @@ public class RestApiController {
 	public String postCreateOffer(@ModelAttribute Card card, Model model) {
 
 		Optional<Card> existingCard = cardRepo.findByNameAndRarity(card.getName(), card.getRarity());
-
+		Expansion inputExpansion = Iterables.getOnlyElement(card.getExpansion());
 		if (existingCard.isPresent()) {
 			existingCard.get().getExpansion().addAll(card.getExpansion());
 			card = existingCard.get();
@@ -186,7 +187,7 @@ public class RestApiController {
 
 		Card newCard = cardRepo.save(card);
 
-		model.addAttribute("offer", new Offers(newCard, findNextAvailableId(OFFER)));
+		model.addAttribute("offer", new Offers(newCard, inputExpansion, findNextAvailableId(OFFER)));
 
 		return "createOffer";
 
@@ -194,7 +195,7 @@ public class RestApiController {
 
 	@GetMapping("/deleteOffer/{id}")
 	public String deleteCardThroughId(@PathVariable(value = "id") Integer id) {
-		cardRepo.deleteById(id);
+		offersRepo.deleteById(id);
 		return "redirect:/cardMain";
 	}
 
