@@ -495,6 +495,15 @@ public class RestApiController {
 		return "redirect:/expansionMain";
 	}
 
+	@GetMapping("/createExpansion")
+	public String showExpansionUpdateForm(Model model) {
+		Integer id = findNextAvailableId(EXPANSION);
+		Expansion newExpansion = new Expansion();
+		newExpansion.setId(id);
+		model.addAttribute("expansion", newExpansion);
+		return "createExpansion";
+	}
+
 	// PRODUCTS
 	@GetMapping("/cardMain")
 	public String cardsMain(Model model) {
@@ -523,6 +532,15 @@ public class RestApiController {
 	public String deleteCardThroughId(@PathVariable(value = "id") Integer id) {
 		productRepo.deleteById(id);
 		return "redirect:/cardMain";
+	}
+
+	@GetMapping("/createCard")
+	public String showCardUpdateForm(Model model) {
+		Integer id = findNextAvailableId(PRODUCT);
+		Product newProduct = new Product();
+		newProduct.setId(id);
+		model.addAttribute("card", newProduct);
+		return "createCard";
 	}
 
 	// SALES

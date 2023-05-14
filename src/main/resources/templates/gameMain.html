@@ -162,8 +162,8 @@
 										<tr>
 											<th>Nombre</th>
 											<th>Abreviatura</th>
-											<th>Actualizar</th>
-											<th>Borrar</th>
+											<th>&nbsp;</th>
+											<th>&nbsp;</th>
 										</tr>
 									</tfoot>
 									<tbody>
@@ -171,10 +171,21 @@
 											<td th:text="${game.name}"></td>
 											<td th:text="${game.abbreviation}"></td>
 											<td>
-												<a th:href="@{/gameEdit/{id}(id=${game.id})}" class="btn btn-primary">Actualizar</a>
+												<a th:href="@{/gameEdit/{id}(id=${game.id})}" class="btn btn-info btn-icon-split">
+													<span class="icon text-white-50">
+														<i class="fas fa-info-circle"></i>
+													</span>
+													<span class="text">Actualizar</span>
+												</a>
 											</td>
 											<td>
-												<a th:href="@{/deleteGame/{id}(id=${game.id})}" class="btn btn-danger">Borrar</a>
+
+												<a th:href="@{/deleteGame/{id}(id=${game.id})}" class="btn btn-danger btn-icon-split">
+													<span class="icon text-white-50">
+														<i class="fas fa-trash"></i>
+													</span>
+													<span class="text">Borrar</span>
+												</a>
 											</td>
 										</tr>
 									</tbody>

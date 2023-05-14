@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="ISO-8859-1">
+<title>Employee</title>
+<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css">
+</head>
+<body>
+	<div class="container my-2" align="center">
+
+		<h3>Expansiones dadas de alta</h3>
+		<table style="width: 80%" border="1" class="table table-striped table-responsive-md">
+			<thead>
+				<tr>
+					<th>Nombre</th>
+					<th>Abreviatura</th>
+					<th>Accion</th>
+				</tr>
+			</thead>
+			<tbody>
+				<tr th:each="expansion:${expansionList}">
+					<td th:text="${expansion.name}"></td>
+					<td th:text="${expansion.abbreviation}"></td>
+					<td>
+						<a th:href="@{/expansionEdit/{id}(id=${expansion.id})}" class="btn btn-primary">Update</a>
+						<a th:href="@{/deleteExpansion/{id}(id=${expansion.id})}" class="btn btn-danger">Delete</a>
+					</td>
+				</tr>
+			</tbody>
+		</table>
+	</div>
+</body>
+</html>
