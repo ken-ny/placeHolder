@@ -67,7 +67,7 @@ public class RestApiController {
 	public String homePage(Model model) {
 		model.addAttribute("totalGames", gameRepo.findAll().size());
 		model.addAttribute("totalExpansions", expansionRepo.findAll().size());
-		model.addAttribute("totalCards", cardRepo.findAll().size());
+		model.addAttribute("totalCards", offersRepo.findAll().size());
 		model.addAttribute("totalSells", salesRepo.findAll().size());
 		return "index";
 	}
@@ -192,45 +192,8 @@ public class RestApiController {
 		model.addAttribute("offer", new Offers(newCard, inputExpansion, findNextAvailableId(OFFER)));
 
 		return "createOffer";
-
 	}
 
-	@GetMapping("/deleteOffer/{id}")
-	public String deleteCardThroughId(@PathVariable(value = "id") Integer id) {
-		offersRepo.deleteById(id);
-		return "redirect:/cardMain";
-	}
-
-	// SALES
-	@GetMapping("/saleMain")
-	public String saleMain(Model model) {
-		model.addAttribute("salesList", salesRepo.findAll());
-		return "saleMain";
-	}
-
-	@GetMapping("/saleEdit/{id}")
-	public String showSaleUpdateForm(@PathVariable("id") Integer id, Model model) {
-		Sales game = salesRepo.findById(id).orElseThrow(() -> new IllegalArgumentException("Invalid sale Id:" + id));
-
-		model.addAttribute("card", game);
-		return "updateSale";
-	}
-
-	@PostMapping("/saveSale")
-	public String postUpdateSale(@ModelAttribute Sales game) {
-
-		salesRepo.save(game);
-		return "redirect:/saleMain";
-
-	}
-
-	@GetMapping("/deleteSale/{id}")
-	public String deleteSaleThroughId(@PathVariable(value = "id") Integer id) {
-		salesRepo.deleteById(id);
-		return "redirect:/saleMain";
-	}
-
-	// OFFERS
 	@GetMapping("/offerDecreaseQuantity/{id}")
 	public String postDecreaseQuantity(@PathVariable(value = "id") Integer offerId) {
 
@@ -263,6 +226,50 @@ public class RestApiController {
 			return "redirect:/errorPage";
 		}
 
+	}
+
+	@GetMapping("/deleteOffer/{id}")
+	public String deleteCardThroughId(@PathVariable(value = "id") Integer id) {
+		offersRepo.deleteById(id);
+		return "redirect:/cardMain";
+	}
+
+	// SALES
+	@GetMapping("/saleMain")
+	public String saleMain(Model model) {
+		model.addAttribute("salesList", salesRepo.findAll());
+		return "saleMain";
+	}
+
+	@GetMapping("/saleEdit/{id}")
+	public String showSaleUpdateForm(@PathVariable("id") Integer id, Model model) {
+		Sales sale = salesRepo.findById(id).orElseThrow(() -> new IllegalArgumentException("Invalid sale Id:" + id));
+
+		model.addAttribute("card", sale);
+		return "updateSale";
+	}
+
+	@PostMapping("/saveSale")
+	public String postUpdateSale(@ModelAttribute Sales game) {
+
+		salesRepo.save(game);
+		return "redirect:/saleMain";
+
+	}
+
+	@GetMapping("/deleteSale/{id}")
+	public String deleteSaleThroughId(@PathVariable(value = "id") Integer id) {
+		salesRepo.deleteById(id);
+		return "redirect:/saleMain";
+	}
+
+	@GetMapping("/saleDetail/{id}")
+	public String getSaleDetail(@PathVariable(value = "id") Integer id, Model model) {
+		Sales sale = salesRepo.findById(id).orElseThrow(() -> new IllegalArgumentException("Invalid sale Id:" + id));
+
+		model.addAttribute("sale", sale);
+
+		return "saleDetail";
 	}
 
 	// Metodos

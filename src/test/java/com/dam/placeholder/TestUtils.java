@@ -79,8 +79,8 @@ public class TestUtils {
 	public List<Sales> mockSalesList(boolean withRelations) {
 		List<Sales> list = new ArrayList<>();
 
-		list.add(new Sales(1, new Date(), 20.00, Arrays.asList(mockSaleDetails())));
-		list.add(new Sales(2, new Date(), 20.00, mockDetailsList(withRelations)));
+		list.add(new Sales(1, new Date(), 20.00, Arrays.asList(mockSaleDetails()), "SENT"));
+		list.add(new Sales(2, new Date(), 20.00, mockDetailsList(withRelations), "PAID"));
 
 		return list;
 	}
