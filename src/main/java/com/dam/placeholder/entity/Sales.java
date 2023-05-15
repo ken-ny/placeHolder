@@ -35,6 +35,9 @@ public class Sales {
 	@OneToMany(mappedBy = "sale", cascade = CascadeType.REMOVE)
 	private List<SaleDetails> details;
 
+	@Column(name = "STATUS")
+	private String status;
+
 	public List<SaleDetails> getDetails() {
 		return details;
 	}
@@ -71,6 +74,14 @@ public class Sales {
 		this.details.remove(detail);
 	}
 
+	public String getStatus() {
+		return status;
+	}
+
+	public void setStatus(String status) {
+		this.status = status;
+	}
+
 	public void addDetail(SaleDetails detail) {
 		if (CollectionUtils.isEmpty(this.details)) {
 			this.details = new ArrayList<>();
@@ -78,17 +89,18 @@ public class Sales {
 		this.details.add(detail);
 	}
 
-	public Sales(Integer id) {
-		super();
-		this.id = id;
-	}
-
-	public Sales(Integer id, Date saleDate, Double salePrice, List<SaleDetails> details) {
+	public Sales(Integer id, Date saleDate, Double salePrice, List<SaleDetails> details, String status) {
 		super();
 		this.id = id;
 		this.saleDate = saleDate;
 		this.salePrice = salePrice;
 		this.details = details;
+		this.status = status;
+	}
+
+	public Sales(Integer id) {
+		super();
+		this.id = id;
 	}
 
 	public Sales() {

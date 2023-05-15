@@ -47,14 +47,12 @@
 									</div>
 								</div>
 								<div class="form-group row">
-									<div class="col-sm-12 mb-6 mb-sm-0">
-										<fieldset>
-											<legend>Selecciona a que juego pertenece:</legend>
+									<div class="col-sm-12 mb-6 mb-sm-0">Selecciona a que juego pertenece
+										<select class="js-example-basic-single form-control" name="state" th:field="*{game}">
 											<div th:each="game:${gameList}">
-												<input th:field="*{game}" type="radio" name="game" th:value="${game.id}">
-												<label for="${game.name}" th:text="${game.name}"></label>
+												<option th:value="${game.id}" th:text="${game.name}"></option>
 											</div>
-										</fieldset>
+										</select>
 									</div>
 								</div>
 

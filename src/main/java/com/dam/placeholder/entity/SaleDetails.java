@@ -27,11 +27,11 @@ public class SaleDetails {
 
 	private Double unitaryPrice;
 
-	public Card getCardId() {
+	public Card getCard() {
 		return card;
 	}
 
-	public void setCardId(Card cardId) {
+	public void setCard(Card cardId) {
 		this.card = cardId;
 	}
 
