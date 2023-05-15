@@ -149,7 +149,7 @@
 										<tr>
 											<th>Nombre de carta</th>
 											<th>Expansion</th>
-											<th>Precio Unitario</th>
+											<th>Precio</th>
 											<th>Cantidad</th>
 										</tr>
 									</thead>
@@ -157,7 +157,7 @@
 										<tr>
 											<th>Nombre de carta</th>
 											<th>Expansion</th>
-											<th>Precio Unitario</th>
+											<th>Precio</th>
 											<th>Cantidad</th>
 										</tr>
 									</tfoot>
@@ -165,7 +165,7 @@
 										<tr th:each="detail:${sale.details}">
 											<td th:text="${detail.card.name}"></td>
 											<td th:text="${detail.expansion.name}"></td>
-											<td th:text="${detail.unitaryPrice}"></td>
+											<td th:text="${#numbers.formatCurrency(detail.unitaryPrice)}"></td>
 											<td th:text="${detail.quantity}"></td>
 										</tr>
 									</tbody>

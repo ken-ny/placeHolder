@@ -1,5 +1,7 @@
 package com.dam.placeholder;
 
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
@@ -12,6 +14,7 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 
+import com.dam.placeholder.cardmarket.Order;
 import com.dam.placeholder.entity.Card;
 import com.dam.placeholder.entity.Expansion;
 import com.dam.placeholder.entity.Game;
@@ -24,12 +27,14 @@ import com.dam.placeholder.repo.GameRepository;
 import com.dam.placeholder.repo.OffersRepository;
 import com.dam.placeholder.repo.SaleDetailsRepository;
 import com.dam.placeholder.repo.SalesRepository;
+import com.fasterxml.jackson.core.exc.StreamReadException;
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.DatabindException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.collect.Iterables;
 
 @Controller
 public class RestApiController {
-
-	private static final String NOT_ENOUGH_QUANTITY_TO_DECREASE = "Not enough quantity to decrease";
 
 	private static final String EXPANSION = "E";
 
@@ -270,6 +275,30 @@ public class RestApiController {
 		model.addAttribute("sale", sale);
 
 		return "saleDetail";
+	}
+
+	// UPDATE WITH CARDMARKET
+	@GetMapping("/update")
+	public String getSaleDetail(Model model) throws StreamReadException, DatabindException, IOException {
+
+		List<Order> orders = retrieveCardMarketJson();
+		Offers tests = new Offers();
+
+		return "redirect:/";
+
+	}
+
+	/**
+	 * @return
+	 * @throws IOException
+	 * @throws StreamReadException
+	 * @throws DatabindException
+	 */
+	private List<Order> retrieveCardMarketJson() throws IOException, StreamReadException, DatabindException {
+		ObjectMapper mapper = new ObjectMapper();
+		InputStream is = Order.class.getResourceAsStream("/cardmarket.json");
+		return mapper.readValue(is, new TypeReference<>() {
+		});
 	}
 
 	// Metodos

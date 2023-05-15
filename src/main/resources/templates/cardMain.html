@@ -157,7 +157,7 @@
 											<th>Expansion</th>
 											<th>Juego</th>
 											<th>Cantidad</th>
-											<th>Precio unitario</th>
+											<th>Precio</th>
 											<th>&nbsp;</th>
 											<th>&nbsp;</th>
 											<th>&nbsp;</th>
@@ -170,7 +170,7 @@
 											<th>Expansion</th>
 											<th>Juego</th>
 											<th>Cantidad</th>
-											<th>Precio unitario</th>
+											<th>Precio</th>
 											<th>&nbsp;</th>
 											<th>&nbsp;</th>
 											<th>&nbsp;</th>
@@ -184,7 +184,7 @@
 											<td th:text="${offer.expansion.game.name}"></td>
 											<td th:text="${offer.quantity}"></td>
 
-											<td th:text="${offer.unitaryPrice}"></td>
+											<td th:text="${#numbers.formatCurrency(offer.unitaryPrice)}"></td>
 											<td>
 												<a th:href="@{/offerIncreaseQuantity/{id}(id=${offer.id})}" class="btn btn-success btn-square btn-sm">
 													<i class="fas fa-plus"></i>
