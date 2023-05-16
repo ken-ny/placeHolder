@@ -1,5 +1,7 @@
 package com.dam.placeholder;
 
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
@@ -12,28 +14,36 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 
+import com.dam.placeholder.cardmarket.Article;
+import com.dam.placeholder.cardmarket.Order;
+import com.dam.placeholder.cardmarket.Product;
 import com.dam.placeholder.entity.Card;
+import com.dam.placeholder.entity.CardMarketRelation;
 import com.dam.placeholder.entity.Expansion;
 import com.dam.placeholder.entity.Game;
 import com.dam.placeholder.entity.Offers;
 import com.dam.placeholder.entity.SaleDetails;
 import com.dam.placeholder.entity.Sales;
+import com.dam.placeholder.repo.CardMarketRelationRepository;
 import com.dam.placeholder.repo.CardRepository;
 import com.dam.placeholder.repo.ExpansionRepository;
 import com.dam.placeholder.repo.GameRepository;
 import com.dam.placeholder.repo.OffersRepository;
 import com.dam.placeholder.repo.SaleDetailsRepository;
 import com.dam.placeholder.repo.SalesRepository;
+import com.dam.placeholder.utils.Utils;
+import com.fasterxml.jackson.core.exc.StreamReadException;
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.DatabindException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.collect.Iterables;
 
 @Controller
 public class RestApiController {
 
-	private static final String NOT_ENOUGH_QUANTITY_TO_DECREASE = "Not enough quantity to decrease";
-
 	private static final String EXPANSION = "E";
 
-	private static final String PRODUCT = "P";
+	private static final String CARD = "C";
 
 	private static final String GAME = "G";
 
@@ -42,6 +52,8 @@ public class RestApiController {
 	private static final String SALE_DETAILS = "SD";
 
 	private static final String OFFER = "O";
+
+	private static final String formatoCardMarket = "yyyy-MM.dd'T'HH:mm:ssZ";
 
 	@Autowired
 	CardRepository cardRepo;
@@ -60,6 +72,11 @@ public class RestApiController {
 
 	@Autowired
 	OffersRepository offersRepo;
+
+	@Autowired
+	CardMarketRelationRepository marketRepo;
+
+	Utils utils = new Utils();
 
 	// THYMELEAF
 	// MAIN
@@ -172,7 +189,7 @@ public class RestApiController {
 
 	@GetMapping("/createCard")
 	public String showCardUpdateForm(Model model) {
-		model.addAttribute("card", new Card(findNextAvailableId(PRODUCT)));
+		model.addAttribute("card", new Card(findNextAvailableId(CARD)));
 		model.addAttribute("expansionList", expansionRepo.findAll());
 		return "createCard";
 	}
@@ -272,6 +289,59 @@ public class RestApiController {
 		return "saleDetail";
 	}
 
+	// UPDATE WITH CARDMARKET
+	@GetMapping("/update")
+	public String getSaleDetail(Model model) throws StreamReadException, DatabindException, IOException {
+
+		List<Order> orders = retrieveCardMarketJson();
+
+		orders.stream().filter(Objects::nonNull).forEach(order -> createSale(order));
+
+		return "redirect:/";
+
+	}
+
+	private void createSale(Order order) {
+		Sales newSale = new Sales();
+
+		newSale.setSalePrice(order.getTotalValue());
+		newSale.setSaleDate(utils.convertDate(order.getState().getDateBought(), formatoCardMarket));
+		newSale.setId(findNextAvailableId(SALES));
+		newSale.setStatus(order.getState().getState());
+		Optional<CardMarketRelation> cmr = marketRepo.findByIdOrder(order.getIdOrder());
+		if (cmr.isPresent()) {
+			newSale.setId(cmr.get().getSale().getId());
+		} else {
+			newSale = salesRepo.save(newSale);
+			marketRepo.save(new CardMarketRelation(order.getIdOrder(), newSale));
+			addDetails(order, newSale);
+
+		}
+
+		salesRepo.save(newSale);
+	}
+
+	/**
+	 * @param order
+	 * @param newSale
+	 */
+	private void addDetails(Order order, Sales newSale) {
+		order.getArticle().stream().filter(Objects::nonNull).forEach(article -> saveDetail(article, newSale));
+	}
+
+	/**
+	 * @return
+	 * @throws IOException
+	 * @throws StreamReadException
+	 * @throws DatabindException
+	 */
+	private List<Order> retrieveCardMarketJson() throws IOException, StreamReadException, DatabindException {
+		ObjectMapper mapper = new ObjectMapper();
+		InputStream is = Order.class.getResourceAsStream("/cardmarket.json");
+		return mapper.readValue(is, new TypeReference<>() {
+		});
+	}
+
 	// Metodos
 	/**
 	 * Devuelve el siguiente id disponible para cada tabla. En caso de que la tabla
@@ -286,7 +356,7 @@ public class RestApiController {
 		case GAME:
 			Game g = gameRepo.findTopByOrderByIdDesc();
 			return (Objects.isNull(g)) ? 1 : g.getId() + 1;
-		case PRODUCT:
+		case CARD:
 			Card p = cardRepo.findTopByOrderByIdDesc();
 			return (Objects.isNull(p)) ? 1 : p.getId() + 1;
 		case EXPANSION:
@@ -312,24 +382,36 @@ public class RestApiController {
 	 * Guarda cada detalle de la entrada relacionándolo con el objeto sales que se
 	 * le pasa. Después añade el nuevo detail al objeto Sales
 	 * 
-	 * @param sd
+	 * @param article
 	 * @param newSale
 	 */
-	private void saveDetail(SaleDetails sd, Sales newSale) {
+	private void saveDetail(Article article, Sales newSale) {
 
-		/**
-		 * En caso de que no llegue el id, será un detail nuevo ya que todos los campos
-		 * se pueden repetir (se puede vender varias veces una carta de una misma
-		 * expansion en diferentes ventas y con diferente o mismo precio)
-		 */
-		if (sd.getId() == null) {
-			sd.setId(findNextAvailableId(SALE_DETAILS));
+		if (Objects.isNull(article.getProduct())) {
+			return;
 		}
 
-		sd.setSale(newSale);
-		SaleDetails newDetail = detailsRepo.save(sd);
+		Product product = article.getProduct();
+		Optional<Card> foundCard = cardRepo.findByNameAndRarity(product.getName(), product.getRarity());
+		Optional<Expansion> foundExpansion = expansionRepo.findByName(product.getExpansion());
+		SaleDetails newDetail = new SaleDetails(findNextAvailableId(SALE_DETAILS));
 
-		newSale.addDetail(newDetail);
+		if (!foundCard.isPresent()) {
+			Card newCard = new Card(findNextAvailableId(CARD), product.getName(), product.getRarity(), null,
+					product.getImage(), foundExpansion.get(), null, null);
+
+			Card card = cardRepo.save(newCard);
+			newDetail.setCard(card);
+		} else {
+			newDetail.setCard(foundCard.get());
+		}
+		newDetail.setExpansion(foundExpansion.get());
+		newDetail.setQuantity(article.getCount());
+		newDetail.setUnitaryPrice(article.getPrice());
+		newDetail.setSale(newSale);
+		SaleDetails savedDetail = detailsRepo.save(newDetail);
+
+		newSale.addDetail(savedDetail);
 	}
 
 }

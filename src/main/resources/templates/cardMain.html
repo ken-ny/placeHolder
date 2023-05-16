@@ -34,7 +34,7 @@
 		<ul class="navbar-nav bg-gradient-primary sidebar sidebar-dark accordion" id="accordionSidebar">
 
 			<!-- Sidebar - Brand -->
-			<a class="sidebar-brand d-flex align-items-center justify-content-center" href="index.html">
+			<a class="sidebar-brand d-flex align-items-center justify-content-center" href="/">
 				<div class="sidebar-brand-icon rotate-n-15">
 					<i class="fas fa-laugh-wink"></i>
 				</div>
@@ -79,6 +79,12 @@
 				<a class="nav-link" th:href="@{/saleMain}">
 					<i class="fas fa-fw fa-chart-line"></i>
 					<span>Ventas</span>
+				</a>
+			</li>
+			<li class="nav-item ">
+				<a class="nav-link" th:href="@{/update}">
+					<i class="fas fa-fw fa-clone"></i>
+					<span>Actualizar Datos</span>
 				</a>
 			</li>
 
@@ -157,7 +163,7 @@
 											<th>Expansion</th>
 											<th>Juego</th>
 											<th>Cantidad</th>
-											<th>Precio unitario</th>
+											<th>Precio</th>
 											<th>&nbsp;</th>
 											<th>&nbsp;</th>
 											<th>&nbsp;</th>
@@ -170,7 +176,7 @@
 											<th>Expansion</th>
 											<th>Juego</th>
 											<th>Cantidad</th>
-											<th>Precio unitario</th>
+											<th>Precio</th>
 											<th>&nbsp;</th>
 											<th>&nbsp;</th>
 											<th>&nbsp;</th>
@@ -184,7 +190,7 @@
 											<td th:text="${offer.expansion.game.name}"></td>
 											<td th:text="${offer.quantity}"></td>
 
-											<td th:text="${offer.unitaryPrice}"></td>
+											<td th:text="${#numbers.formatCurrency(offer.unitaryPrice)}"></td>
 											<td>
 												<a th:href="@{/offerIncreaseQuantity/{id}(id=${offer.id})}" class="btn btn-success btn-square btn-sm">
 													<i class="fas fa-plus"></i>
