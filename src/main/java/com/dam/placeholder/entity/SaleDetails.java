@@ -27,22 +27,6 @@ public class SaleDetails {
 
 	private Double unitaryPrice;
 
-	public Card getCard() {
-		return card;
-	}
-
-	public void setCard(Card cardId) {
-		this.card = cardId;
-	}
-
-	public Integer getQuantity() {
-		return quantity;
-	}
-
-	public void setQuantity(Integer quantity) {
-		this.quantity = quantity;
-	}
-
 	public Integer getId() {
 		return id;
 	}
@@ -51,12 +35,12 @@ public class SaleDetails {
 		this.id = id;
 	}
 
-	public Card getProduct() {
+	public Card getCard() {
 		return card;
 	}
 
-	public void setProduct(Card product) {
-		this.card = product;
+	public void setCard(Card card) {
+		this.card = card;
 	}
 
 	public Expansion getExpansion() {
@@ -73,6 +57,14 @@ public class SaleDetails {
 
 	public void setSale(Sales sale) {
 		this.sale = sale;
+	}
+
+	public Integer getQuantity() {
+		return quantity;
+	}
+
+	public void setQuantity(Integer quantity) {
+		this.quantity = quantity;
 	}
 
 	public Double getUnitaryPrice() {

@@ -6,7 +6,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
-import java.util.Set;
 
 import com.dam.placeholder.entity.Card;
 import com.dam.placeholder.entity.Expansion;
@@ -49,18 +48,6 @@ public class TestUtils {
 
 		return list;
 
-	}
-
-	public List<Card> mockProductList(boolean withRelations) {
-		List<Card> list = new ArrayList<>();
-		if (withRelations) {
-			list.add(new Card(1, PRUEBA1, RRR, 12, null, Set.of(mockExpansion()), Arrays.asList(mockSales()),
-					Arrays.asList(mockOffers())));
-		} else {
-			list.add(new Card(1, PRUEBA1, RRR, 12, null, null, null, null));
-		}
-		list.add(new Card(2, PRUEBA2, "RR", 12, null, null, null, null));
-		return list;
 	}
 
 	public List<Game> mockGameList(boolean withRelations) {
@@ -178,7 +165,7 @@ public class TestUtils {
 	 * @return
 	 * @throws ParseException
 	 */
-	private Date convertDate(String date) {
+	public Date convertDate(String date) {
 		try {
 			return new SimpleDateFormat(DD_MM_YYYY).parse(date);
 		} catch (ParseException e) {

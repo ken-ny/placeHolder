@@ -1,5 +1,6 @@
 package com.dam.placeholder.entity;
 
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -100,6 +101,20 @@ public class Card {
 		this.expansion.add(expansion);
 	}
 
+	public void addSales(Sales sale) {
+		if (CollectionUtils.isEmpty(this.cardSales)) {
+			this.cardSales = new ArrayList<>();
+		}
+		this.cardSales.add(sale);
+	}
+
+	public void addOffers(Offers offer) {
+		if (CollectionUtils.isEmpty(this.offers)) {
+			this.offers = new ArrayList<>();
+		}
+		this.offers.add(offer);
+	}
+
 	public void setExpansion(Set<Expansion> expansion) {
 		this.expansion = expansion;
 	}
@@ -128,6 +143,19 @@ public class Card {
 		this.expansion = expansion;
 		this.cardSales = cardSales;
 		this.offers = offers;
+	}
+
+	public Card(Integer id, String name, String rarity, Integer quantity, String image, Expansion expansion,
+			Sales cardSales, Offers offers) {
+		super();
+		this.id = id;
+		this.name = name;
+		this.rarity = rarity;
+		this.quantity = quantity;
+		this.image = image;
+		addExpansion(expansion);
+		addSales(cardSales);
+		addOffers(offers);
 	}
 
 	public Card() {

@@ -1,4 +1,4 @@
-package com.dam.placeholder.response.utils;
+package com.dam.placeholder.utils;
 
 public enum ErrorCodes {
 

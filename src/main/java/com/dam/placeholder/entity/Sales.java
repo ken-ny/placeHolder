@@ -12,6 +12,7 @@ import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 import jakarta.persistence.OneToMany;
+import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 import jakarta.persistence.Temporal;
 import jakarta.persistence.TemporalType;
@@ -26,7 +27,7 @@ public class Sales {
 
 	@Temporal(TemporalType.TIMESTAMP)
 	@Column(name = "SALE_DATE")
-	@DateTimeFormat(pattern = "yyyy-MM-dd")
+	@DateTimeFormat(pattern = "dd-MM-yyyy")
 	private Date saleDate;
 
 	@Column(name = "SALE_PRICE")
@@ -34,6 +35,9 @@ public class Sales {
 
 	@OneToMany(mappedBy = "sale", cascade = CascadeType.REMOVE)
 	private List<SaleDetails> details;
+
+	@OneToOne(mappedBy = "sale")
+	private CardMarketRelation cardMarketId;
 
 	@Column(name = "STATUS")
 	private String status;
@@ -80,6 +84,14 @@ public class Sales {
 
 	public void setStatus(String status) {
 		this.status = status;
+	}
+
+	public CardMarketRelation getCardMarketId() {
+		return cardMarketId;
+	}
+
+	public void setCardMarketId(CardMarketRelation cardMarketId) {
+		this.cardMarketId = cardMarketId;
 	}
 
 	public void addDetail(SaleDetails detail) {
