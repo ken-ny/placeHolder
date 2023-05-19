@@ -7,6 +7,7 @@ import java.util.Objects;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -40,6 +41,8 @@ import com.google.common.collect.Iterables;
 
 @Controller
 public class RestApiController {
+
+	private static final String SALE_DATE = "saleDate";
 
 	private static final String EXPANSION = "E";
 
@@ -86,7 +89,12 @@ public class RestApiController {
 		model.addAttribute("totalExpansions", expansionRepo.findAll().size());
 		model.addAttribute("totalCards", offersRepo.findAll().size());
 		model.addAttribute("totalSells", salesRepo.findAll().size());
+
+		List<Sales> salesSorted = salesRepo.findAll(Sort.by(Sort.Direction.DESC, SALE_DATE));
+		model.addAttribute("listSales", utils.extractSalesPrices(salesSorted));
+		model.addAttribute("listSalesDates", utils.extractFormatedDates(salesSorted));
 		return "index";
+
 	}
 
 	// GAMES

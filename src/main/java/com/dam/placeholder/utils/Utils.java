@@ -1,8 +1,13 @@
 package com.dam.placeholder.utils;
 
+import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.List;
+import java.util.stream.Collectors;
+
+import com.dam.placeholder.entity.Sales;
 
 public class Utils {
 
@@ -17,6 +22,28 @@ public class Utils {
 			e.printStackTrace();
 		}
 		return null;
+	}
+
+	public static String convertDateToString(Date date) {
+		DateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy");
+		return dateFormat.format(date);
+	}
+
+	/**
+	 * @param sales
+	 * @return
+	 */
+	public List<Double> extractSalesPrices(List<Sales> sales) {
+		return sales.stream().map(Sales::getSalePrice).collect(Collectors.toList());
+	}
+
+	/**
+	 * @param sales
+	 * @return
+	 */
+	public List<String> extractFormatedDates(List<Sales> sales) {
+		return sales.stream().map(Sales::getSaleDate).map(s -> Utils.convertDateToString(s))
+				.collect(Collectors.toList());
 	}
 
 }
