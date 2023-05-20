@@ -63,7 +63,7 @@
 				</a>
 			</li>
 
-			<li class="nav-item active">
+			<li class="nav-item ">
 				<a class="nav-link" th:href="@{/expansionMain}">
 					<i class="fas fa-fw fa-folder-open"></i>
 					<span>Expansiones</span>
@@ -75,7 +75,7 @@
 					<span>Cartas</span>
 				</a>
 			</li>
-			<li class="nav-item ">
+			<li class="nav-item">
 				<a class="nav-link" th:href="@{/saleMain}">
 					<i class="fas fa-fw fa-chart-line"></i>
 					<span>Ventas</span>
@@ -138,65 +138,35 @@
 				<div class="container-fluid">
 
 					<!-- Page Heading -->
-					<h1 class="h3 mb-2 text-gray-800">Expansiones</h1>
-					<p class="mb-4">
-						<a th:href="@{/createExpansion}" class="btn btn-success btn-icon-split">
-							<span class="icon text-white-50">
-								<i class="fas fa-check"></i>
-							</span>
-							<span class="text">Crear nueva Expansion</span>
-						</a>
-					</p>
+					<h1 class="h3 mb-2 text-gray-800">Ajustes</h1>
 
 					<!-- DataTales Example -->
 					<div class="card shadow mb-4">
-						<div class="card-header py-3">
-							<h6 class="m-0 font-weight-bold text-primary">Expansiones creadas</h6>
-						</div>
 						<div class="card-body">
-							<div class="table-responsive">
-								<table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
-									<thead>
-										<tr>
-											<th>Nombre</th>
-											<th>Abreviatura</th>
-											<th>&nbsp;</th>
-											<th>&nbsp;</th>
-										</tr>
-									</thead>
-									<tfoot>
-										<tr>
-											<th>Nombre</th>
-											<th>Abreviatura</th>
-											<th>&nbsp;</th>
-											<th>&nbsp;</th>
-										</tr>
-									</tfoot>
-									<tbody>
-										<tr th:each="expansion:${expansionList}">
-											<td th:text="${expansion.name}"></td>
-											<td th:text="${expansion.abbreviation}"></td>
-											<td>
-												<a th:href="@{/expansionEdit/{id}(id=${expansion.id})}" class="btn btn-info btn-icon-split">
-													<span class="icon text-white-50">
-														<i class="fas fa-info-circle"></i>
-													</span>
-													<span class="text">Actualizar</span>
-												</a>
-											</td>
-											<td>
-
-												<a th:href="@{/deleteExpansion/{id}(id=${expansion.id})}" class="btn btn-danger btn-icon-split">
-													<span class="icon text-white-50">
-														<i class="fas fa-trash"></i>
-													</span>
-													<span class="text">Borrar</span>
-												</a>
-											</td>
-										</tr>
-									</tbody>
-								</table>
-							</div>
+							<form class="user">
+								<div class="form-group row">
+									<div class="col-sm-6 mb-3 mb-sm-0">
+										<input type="text" class="form-control form-control-user" id="nombre" placeholder="Nombre">
+									</div>
+									<div class="col-sm-6">
+										<input type="text" class="form-control form-control-user" id="apellidos" placeholder="Apellidos">
+									</div>
+								</div>
+								<div class="form-group">
+									<input type="email" class="form-control form-control-user" id="email" placeholder="Email">
+								</div>
+								<div class="form-group row">
+									<div class="col-sm-6 mb-3 mb-sm-0">
+										<input type="password" class="form-control form-control-user" id="nuevaContraseña" placeholder="Nueva Contraseña">
+									</div>
+									<div class="col-sm-6">
+										<input type="password" class="form-control form-control-user" id="nuevaContraseñaRepetida"
+											placeholder="Repite la nueva contraseña">
+									</div>
+								</div>
+								<a th:href="@{/}" class="btn btn-primary btn-user btn-block"> Guardar Cambios </a>
+								
+							</form>
 						</div>
 					</div>
 

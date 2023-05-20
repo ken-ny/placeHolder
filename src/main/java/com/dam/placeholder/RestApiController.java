@@ -287,6 +287,21 @@ public class RestApiController {
 
 	}
 
+	// SETTINGS
+
+	@GetMapping("/settings")
+	public String settingsPage(Model model) {
+
+		return "settings";
+
+	}
+
+	@GetMapping("/user")
+	public String userPage(Model model) {
+		return "user";
+
+	}
+
 	private void createSale(Order order) {
 		Sales newSale = new Sales();
 
