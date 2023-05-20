@@ -140,9 +140,9 @@ public class RestApiController {
 
 	@GetMapping("/expansionEdit/{id}")
 	public String showExpansionUpdateForm(@PathVariable("id") Integer id, Model model) {
-		Expansion game = expansionRepo.findById(id)
+		Expansion expansion = expansionRepo.findById(id)
 				.orElseThrow(() -> new IllegalArgumentException("Invalid expansion Id:" + id));
-		model.addAttribute("expansion", game);
+		model.addAttribute("expansion", expansion);
 		List<Game> availableGames = gameRepo.findAll();
 		model.addAttribute("gameList", availableGames);
 		return "updateExpansion";
@@ -206,15 +206,15 @@ public class RestApiController {
 	public String postCreateOffer(@ModelAttribute Card card, Model model) {
 
 		Optional<Card> existingCard = cardRepo.findByNameAndRarity(card.getName(), card.getRarity());
-		Expansion inputExpansion = Iterables.getOnlyElement(card.getExpansion());
+		Expansion retrievedExpansion = Iterables.getOnlyElement(card.getExpansion());
 		if (existingCard.isPresent()) {
-			existingCard.get().getExpansion().addAll(card.getExpansion());
+			existingCard.get().addAllExpansions(card.getExpansion());
 			card = existingCard.get();
 		}
 
 		Card newCard = cardRepo.save(card);
 
-		model.addAttribute("offer", new Offers(newCard, inputExpansion, findNextAvailableId(OFFER)));
+		model.addAttribute("offer", new Offers(newCard, retrievedExpansion, findNextAvailableId(OFFER)));
 
 		return "createOffer";
 	}
@@ -266,28 +266,6 @@ public class RestApiController {
 		return "saleMain";
 	}
 
-	@GetMapping("/saleEdit/{id}")
-	public String showSaleUpdateForm(@PathVariable("id") Integer id, Model model) {
-		Sales sale = salesRepo.findById(id).orElseThrow(() -> new IllegalArgumentException("Invalid sale Id:" + id));
-
-		model.addAttribute("card", sale);
-		return "updateSale";
-	}
-
-	@PostMapping("/saveSale")
-	public String postUpdateSale(@ModelAttribute Sales game) {
-
-		salesRepo.save(game);
-		return "redirect:/saleMain";
-
-	}
-
-	@GetMapping("/deleteSale/{id}")
-	public String deleteSaleThroughId(@PathVariable(value = "id") Integer id) {
-		salesRepo.deleteById(id);
-		return "redirect:/saleMain";
-	}
-
 	@GetMapping("/saleDetail/{id}")
 	public String getSaleDetail(@PathVariable(value = "id") Integer id, Model model) {
 		Sales sale = salesRepo.findById(id).orElseThrow(() -> new IllegalArgumentException("Invalid sale Id:" + id));
@@ -299,7 +277,7 @@ public class RestApiController {
 
 	// UPDATE WITH CARDMARKET
 	@GetMapping("/update")
-	public String getSaleDetail(Model model) throws StreamReadException, DatabindException, IOException {
+	public String getCardMarketUpdate(Model model) throws StreamReadException, DatabindException, IOException {
 
 		List<Order> orders = retrieveCardMarketJson();
 
