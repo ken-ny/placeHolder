@@ -101,6 +101,13 @@ public class Card {
 		this.expansion.add(expansion);
 	}
 
+	public void addAllExpansions(Set<Expansion> expansions) {
+		if (CollectionUtils.isEmpty(this.expansion)) {
+			this.expansion = new HashSet<>();
+		}
+		this.expansion.addAll(expansions);
+	}
+
 	public void addSales(Sales sale) {
 		if (CollectionUtils.isEmpty(this.cardSales)) {
 			this.cardSales = new ArrayList<>();
@@ -156,6 +163,14 @@ public class Card {
 		addExpansion(expansion);
 		addSales(cardSales);
 		addOffers(offers);
+	}
+
+	public Card(int id, String name, String rarity, Expansion expansion) {
+		super();
+		this.id = id;
+		this.name = name;
+		this.rarity = rarity;
+		addExpansion(expansion);
 	}
 
 	public Card() {
