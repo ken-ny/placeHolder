@@ -91,9 +91,9 @@ class RestApiControllerNRETests {
 		assertNotNull(model.getAttribute("totalGames"));
 		assertEquals(model.getAttribute("totalGames"), 2);
 		assertNotNull(model.getAttribute("totalExpansions"));
-		assertEquals(model.getAttribute("totalExpansions"), 2);
+		assertEquals(model.getAttribute("totalExpansions"), 12);
 		assertNotNull(model.getAttribute("totalCards"));
-		assertEquals(model.getAttribute("totalCards"), 1);
+		assertEquals(model.getAttribute("totalCards"), 3);
 		assertNotNull(model.getAttribute("totalSells"));
 		assertEquals(model.getAttribute("totalSells"), 2);
 		assertNotNull(model.getAttribute("listSales"));
@@ -159,7 +159,7 @@ class RestApiControllerNRETests {
 		assertNotNull(model);
 		assertNotNull(model.getAttribute("expansionList"));
 		List<Expansion> expansionList = (List<Expansion>) model.getAttribute("expansionList");
-		assertEquals(expansionList.size(), 2);
+		assertEquals(expansionList.size(), 12);
 	}
 
 	@Test
@@ -198,7 +198,7 @@ class RestApiControllerNRETests {
 		Expansion expansion = (Expansion) model.getAttribute("expansion");
 		List<Game> gameList = (List<Game>) model.getAttribute("gameList");
 		assertNotNull(expansion.getId());
-		assertEquals(expansion.getId(), 3);
+		assertEquals(expansion.getId(), 13);
 		assertEquals(gameList.size(), 2);
 	}
 
@@ -211,7 +211,7 @@ class RestApiControllerNRETests {
 		assertNotNull(model);
 		assertNotNull(model.getAttribute("offersList"));
 		List<Offers> offerList = (List<Offers>) model.getAttribute("offersList");
-		assertEquals(offerList.size(), 1);
+		assertEquals(offerList.size(), 3);
 	}
 
 	@Test
@@ -229,7 +229,7 @@ class RestApiControllerNRETests {
 		assertEquals(offer.getCard().getRarity(), "RRR");
 		assertEquals(offer.getExpansion().getName(), "D Booster Set 08: Minerva Rising");
 		assertEquals(offer.getExpansion().getAbbreviation(), "DBT08");
-		assertEquals(expansionList.size(), 2);
+		assertEquals(expansionList.size(), 12);
 	}
 
 	@Test
@@ -253,7 +253,7 @@ class RestApiControllerNRETests {
 		List<Expansion> expansionList = (List<Expansion>) model.getAttribute("expansionList");
 		assertNotNull(card.getId());
 		assertEquals(card.getId(), 4);
-		assertEquals(expansionList.size(), 2);
+		assertEquals(expansionList.size(), 12);
 	}
 
 	@Test
@@ -267,7 +267,7 @@ class RestApiControllerNRETests {
 		Optional<Card> createdMockCard = cardRepo.findByNameAndRarity(MOCKED_NAME, MOCKED_RARITY);
 		assertTrue(createdMockCard.isPresent());
 		assertNotNull(offer.getId());
-		assertEquals(offer.getId(), 2);
+		assertEquals(offer.getId(), 4);
 		assertEquals(createdMockCard.get().getId(), 4);
 		assertEquals(createdMockCard.get().getName(), MOCKED_NAME);
 		assertEquals(createdMockCard.get().getRarity(), MOCKED_RARITY);
