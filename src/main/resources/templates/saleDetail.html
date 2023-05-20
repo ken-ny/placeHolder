@@ -143,7 +143,13 @@
 					<!-- DataTales Example -->
 					<div class="card shadow mb-4">
 						<div class="card-header py-3">
-							<h6 class="m-0 font-weight-bold text-primary">Detalles de la venta <h4 th:text="${sale.id}"></h4></h6>
+							<h6 class="m-0 font-weight-bold text-primary">Detalles de la venta</h6>
+						</div>
+						<div class="card-header py-3">
+							<h6 class="m-0 font-weight-bold text-primary">Id <h4 th:text="${sale.id}"></h4></h6>
+						</div>
+						<div class="card-header py-3">
+							<h6 class="m-0 font-weight-bold text-primary">Fecha de Venta <h4 th:text="${#dates.format(sale.saleDate, 'dd-MM-yyyy')}"></h4></h6>
 						</div>
 						<div class="card-header py-3">
 							<h6 class="m-0 font-weight-bold text-primary">Status <h4 th:text="${sale.status}"></h4></h6>

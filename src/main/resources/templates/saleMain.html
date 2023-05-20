@@ -166,7 +166,7 @@
 									</tfoot>
 									<tbody>
 										<tr th:each="sale:${salesList}">
-											<td th:text="${sale.saleDate}"></td>
+											<td th:text="${#dates.format(sale.saleDate, 'dd-MM-yyyy')}"></td>
 											<td th:text="${#numbers.formatCurrency(sale.salePrice)}"></td>
 											<td th:text="${sale.status}"></td>
 											<td>

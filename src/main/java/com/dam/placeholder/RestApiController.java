@@ -56,7 +56,7 @@ public class RestApiController {
 
 	private static final String OFFER = "O";
 
-	private static final String formatoCardMarket = "yyyy-MM.dd'T'HH:mm:ssZ";
+	private static final String formatoCardMarket = "yyyy-MM-dd";
 
 	@Autowired
 	CardRepository cardRepo;
@@ -90,7 +90,7 @@ public class RestApiController {
 		model.addAttribute("totalCards", offersRepo.findAll().size());
 		model.addAttribute("totalSells", salesRepo.findAll().size());
 
-		List<Sales> salesSorted = salesRepo.findAll(Sort.by(Sort.Direction.DESC, SALE_DATE));
+		List<Sales> salesSorted = salesRepo.findAll(Sort.by(Sort.Direction.ASC, SALE_DATE));
 		model.addAttribute("listSales", utils.extractSalesPrices(salesSorted));
 		model.addAttribute("listSalesDates", utils.extractFormatedDates(salesSorted));
 		return "index";
