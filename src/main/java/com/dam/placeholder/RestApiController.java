@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.thymeleaf.util.StringUtils;
 
 import com.dam.placeholder.cardmarket.Article;
 import com.dam.placeholder.cardmarket.Order;
@@ -25,6 +26,7 @@ import com.dam.placeholder.entity.Game;
 import com.dam.placeholder.entity.Offers;
 import com.dam.placeholder.entity.SaleDetails;
 import com.dam.placeholder.entity.Sales;
+import com.dam.placeholder.entity.User;
 import com.dam.placeholder.repo.CardMarketRelationRepository;
 import com.dam.placeholder.repo.CardRepository;
 import com.dam.placeholder.repo.ExpansionRepository;
@@ -32,6 +34,7 @@ import com.dam.placeholder.repo.GameRepository;
 import com.dam.placeholder.repo.OffersRepository;
 import com.dam.placeholder.repo.SaleDetailsRepository;
 import com.dam.placeholder.repo.SalesRepository;
+import com.dam.placeholder.repo.UserRepo;
 import com.dam.placeholder.utils.Utils;
 import com.fasterxml.jackson.core.exc.StreamReadException;
 import com.fasterxml.jackson.core.type.TypeReference;
@@ -79,11 +82,47 @@ public class RestApiController {
 	@Autowired
 	CardMarketRelationRepository marketRepo;
 
+	@Autowired
+	UserRepo userRepo;
+
 	Utils utils = new Utils();
 
 	// THYMELEAF
 	// MAIN
 	@GetMapping(value = "/")
+	public String intro(Model model) {
+		model.addAttribute("user", new User());
+		return "login";
+	}
+
+	@GetMapping(value = "/register")
+	public String register(Model model) {
+		model.addAttribute("user", new User());
+
+		return "register";
+	}
+
+	@PostMapping(value = "/register/process")
+	public String processRegistation(@ModelAttribute User user) {
+
+		userRepo.save(user);
+
+		return "redirect:/";
+	}
+
+	@PostMapping(value = "/login/process")
+	public String processLogin(@ModelAttribute User user) {
+		User userBd = userRepo.findByEmail(user.getEmail());
+
+		if (userBd != null && StringUtils.equals(user.getPassword(), userBd.getPassword())) {
+			return "redirect:/main";
+		} else {
+			return "redirect:/";
+		}
+
+	}
+
+	@GetMapping(value = "/main")
 	public String homePage(Model model) {
 		model.addAttribute("totalGames", gameRepo.findAll().size());
 		model.addAttribute("totalExpansions", expansionRepo.findAll().size());
@@ -283,7 +322,7 @@ public class RestApiController {
 
 		orders.stream().filter(Objects::nonNull).forEach(order -> createSale(order));
 
-		return "redirect:/";
+		return "redirect:/main";
 
 	}
 

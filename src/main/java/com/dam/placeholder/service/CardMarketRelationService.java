@@ -1,4 +1,4 @@
-package com.dam.placeholder.repo;
+package com.dam.placeholder.service;
 
 public class CardMarketRelationService {
 
