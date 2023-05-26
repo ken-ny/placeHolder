@@ -222,7 +222,7 @@ class RestApiControllerNRETests {
 
 	@Test
 	void shouldReturnASpecifiedExistingOfferWithExpansionList() {
-		String response = controller.showCardUpdateForm(1, model);
+		String response = controller.showCardOfferUpdateForm(1, model);
 		assertNotNull(response);
 		assertEquals(response, "updateOffer");
 		assertNotNull(model);
@@ -241,7 +241,7 @@ class RestApiControllerNRETests {
 	@Test
 	void shouldThrowErrorWhenTheOfferDoesNotExist() {
 		try {
-			String response = controller.showCardUpdateForm(10, model);
+			String response = controller.showCardOfferUpdateForm(10, model);
 		} catch (Exception e) {
 			assertEquals(e.getMessage(), "Invalid card Id:10");
 		}

@@ -12,16 +12,16 @@
 <title>SB Admin 2 - Tables</title>
 
 <!-- Custom fonts for this template -->
-<link href="../vendor/fontawesome-free/css/all.min.css" rel="stylesheet" type="text/css">
+<link href="vendor/fontawesome-free/css/all.min.css" rel="stylesheet" type="text/css">
 <link
 	href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i"
 	rel="stylesheet">
 
 <!-- Custom styles for this template -->
-<link href="../css/sb-admin-2.min.css" rel="stylesheet">
+<link href="css/sb-admin-2.min.css" rel="stylesheet">
 
 <!-- Custom styles for this page -->
-<link href="../vendor/datatables/dataTables.bootstrap4.min.css" rel="stylesheet">
+<link href="vendor/datatables/dataTables.bootstrap4.min.css" rel="stylesheet">
 
 </head>
 
@@ -34,7 +34,8 @@
 		<ul class="navbar-nav bg-gradient-primary sidebar sidebar-dark accordion" id="accordionSidebar">
 
 			<!-- Sidebar - Brand -->
-			<a class="sidebar-brand d-flex align-items-center justify-content-center" href="/main">				<div class="sidebar-brand-icon rotate-n-15">
+			<a class="sidebar-brand d-flex align-items-center justify-content-center" href="/main">
+				<div class="sidebar-brand-icon rotate-n-15">
 					<i class="fas fa-laugh-wink"></i>
 				</div>
 				<div class="sidebar-brand-text mx-3">PlaceHolder</div>
@@ -74,14 +75,14 @@
 					<i class="fas fa-fw fa-book"></i>
 					<span>Cartas</span>
 				</a>
-				<div id="collapseTwo" class="collapse" aria-labelledby="headingTwo" data-parent="#accordionSidebar">
+				<div id="collapseTwo" class="collapse show" aria-labelledby="headingTwo" data-parent="#accordionSidebar">
 					<div class="bg-white py-2 collapse-inner rounded">
 						<a class="collapse-item" th:href="@{/cardMain}">Cartas a la venta</a>
-						<a class="collapse-item" th:href="@{/cardList}">Base de datos de cartas</a>
+						<a class="collapse-item active" th:href="@{/cardList}">Base de datos de cartas</a>
 					</div>
 				</div>
 			</li>
-			<li class="nav-item active">
+			<li class="nav-item ">
 				<a class="nav-link" th:href="@{/saleMain}">
 					<i class="fas fa-fw fa-chart-line"></i>
 					<span>Ventas</span>
@@ -115,7 +116,7 @@
 							<a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button" data-toggle="dropdown"
 								aria-haspopup="true" aria-expanded="false">
 								<span class="mr-2 d-none d-lg-inline text-gray-600 small">Jaime Garcia</span>
-								<img class="img-profile rounded-circle" src="../img/undraw_profile.svg">
+								<img class="img-profile rounded-circle" src="img/undraw_profile.svg">
 							</a>
 							<!-- Dropdown - User Information -->
 							<div class="dropdown-menu dropdown-menu-right shadow animated--grow-in" aria-labelledby="userDropdown">
@@ -144,47 +145,76 @@
 				<div class="container-fluid">
 
 					<!-- Page Heading -->
-					<h1 class="h3 mb-2 text-gray-800">Ventas</h1>
+					<h1 class="h3 mb-2 text-gray-800">Cartas</h1>
+					<p class="mb-4">
+						<a th:href="@{/card/create}" class="btn btn-success btn-icon-split">
+							<span class="icon text-white-50">
+								<i class="fas fa-check"></i>
+							</span>
+							<span class="text">Dar de alta Nueva Carta</span>
+						</a>
+					</p>
 
 					<!-- DataTales Example -->
 					<div class="card shadow mb-4">
 						<div class="card-header py-3">
-							<h6 class="m-0 font-weight-bold text-primary">Detalles de la venta</h6>
-						</div>
-						<div class="card-header py-3">
-							<h6 class="m-0 font-weight-bold text-primary">Id <h4 th:text="${sale.id}"></h4></h6>
-						</div>
-						<div class="card-header py-3">
-							<h6 class="m-0 font-weight-bold text-primary">Fecha de Venta <h4 th:text="${#dates.format(sale.saleDate, 'dd-MM-yyyy')}"></h4></h6>
-						</div>
-						<div class="card-header py-3">
-							<h6 class="m-0 font-weight-bold text-primary">Status <h4 th:text="${sale.status}"></h4></h6>
+							<h6 class="m-0 font-weight-bold text-primary">Cartas dadas de alta</h6>
 						</div>
 						<div class="card-body">
 							<div class="table-responsive">
 								<table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
 									<thead>
 										<tr>
-											<th>Nombre de carta</th>
-											<th>Expansion</th>
-											<th>Precio</th>
-											<th>Cantidad</th>
+											<th>Nombre</th>
+											<th>Rareza</th>
+											<th>&nbsp;</th>
+											<th>&nbsp;</th>
+											<th>&nbsp;</th>
 										</tr>
 									</thead>
 									<tfoot>
 										<tr>
-											<th>Nombre de carta</th>
-											<th>Expansion</th>
-											<th>Precio</th>
-											<th>Cantidad</th>
+											<th>Nombre</th>
+											<th>Rareza</th>
+											<th>&nbsp;</th>
+											<th>&nbsp;</th>
+											<th>&nbsp;</th>
 										</tr>
 									</tfoot>
 									<tbody>
-										<tr th:each="detail:${sale.details}">
-											<td th:text="${detail.card.name}"></td>
-											<td th:text="${detail.expansion.name}"></td>
-											<td th:text="${#numbers.formatCurrency(detail.unitaryPrice)}"></td>
-											<td th:text="${detail.quantity}"></td>
+										<tr th:each="card:${cardsList}">
+											<td th:text="${card.name}"></td>
+											<td th:text="${card.rarity}"></td>
+											<td>
+												<div class="dropdown no-arrow mb-4">
+													<button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton"
+														data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Listado de Expansiones</button>
+													<div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+														<div th:each="expansion:${card.expansion}">
+															<a class="dropdown-item" href="#" th:text="${expansion.name}"></a>
+														</div>
+
+													</div>
+												</div>
+											</td>
+
+											<td>
+												<a th:href="@{/cardEdit/{id}(id=${card.id})}" class="btn btn-info btn-icon-split">
+													<span class="icon text-white-50">
+														<i class="fas fa-info-circle"></i>
+													</span>
+													<span class="text">Actualizar</span>
+												</a>
+											</td>
+											<td>
+
+												<a th:href="@{/deleteCard/{id}(id=${card.id})}" class="btn btn-danger btn-icon-split">
+													<span class="icon text-white-50">
+														<i class="fas fa-trash"></i>
+													</span>
+													<span class="text">Borrar</span>
+												</a>
+											</td>
 										</tr>
 									</tbody>
 								</table>
@@ -240,21 +270,21 @@
 	</div>
 
 	<!-- Bootstrap core JavaScript-->
-	<script src="../vendor/jquery/jquery.min.js"></script>
-	<script src="../vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+	<script src="vendor/jquery/jquery.min.js"></script>
+	<script src="vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
 
 	<!-- Core plugin JavaScript-->
-	<script src="../vendor/jquery-easing/jquery.easing.min.js"></script>
+	<script src="vendor/jquery-easing/jquery.easing.min.js"></script>
 
 	<!-- Custom scripts for all pages-->
-	<script src="../js/sb-admin-2.min.js"></script>
+	<script src="js/sb-admin-2.min.js"></script>
 
 	<!-- Page level plugins -->
-	<script src="../vendor/datatables/jquery.dataTables.min.js"></script>
-	<script src="../vendor/datatables/dataTables.bootstrap4.min.js"></script>
+	<script src="vendor/datatables/jquery.dataTables.min.js"></script>
+	<script src="vendor/datatables/dataTables.bootstrap4.min.js"></script>
 
 	<!-- Page level custom scripts -->
-	<script src="../js/demo/datatables-demo.js"></script>
+	<script src="js/demo/datatables-demo.js"></script>
 
 </body>
 

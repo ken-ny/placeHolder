@@ -69,11 +69,18 @@
 					<span>Expansiones</span>
 				</a>
 			</li>
-			<li class="nav-item ">
-				<a class="nav-link" th:href="@{/cardMain}">
+			<li class="nav-item">
+				<a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseTwo" aria-expanded="true"
+					aria-controls="collapseTwo">
 					<i class="fas fa-fw fa-book"></i>
 					<span>Cartas</span>
 				</a>
+				<div id="collapseTwo" class="collapse" aria-labelledby="headingTwo" data-parent="#accordionSidebar">
+					<div class="bg-white py-2 collapse-inner rounded">
+						<a class="collapse-item" th:href="@{/cardMain}">Cartas a la venta</a>
+						<a class="collapse-item" th:href="@{/cardList}">Base de datos de cartas</a>
+					</div>
+				</div>
 			</li>
 			<li class="nav-item ">
 				<a class="nav-link" th:href="@{/saleMain}">
@@ -140,11 +147,11 @@
 					<!-- Page Heading -->
 					<h1 class="h3 mb-2 text-gray-800">Juegos</h1>
 					<p class="mb-4">
-						<a th:href="@{/createGame}" class="btn btn-success btn-icon-split">
+						<a th:href="@{/game/create}" class="btn btn-success btn-icon-split">
 							<span class="icon text-white-50">
 								<i class="fas fa-check"></i>
 							</span>
-							<span class="text">Crear nuevo Juego</span>
+							<span class="text">Dar de alta nuevo juego</span>
 						</a>
 					</p>
 

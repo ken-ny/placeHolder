@@ -68,11 +68,18 @@
 					<span>Expansiones</span>
 				</a>
 			</li>
-			<li class="nav-item ">
-				<a class="nav-link" th:href="@{/cardMain}">
+			<li class="nav-item">
+				<a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseTwo" aria-expanded="true"
+					aria-controls="collapseTwo">
 					<i class="fas fa-fw fa-book"></i>
 					<span>Cartas</span>
 				</a>
+				<div id="collapseTwo" class="collapse" aria-labelledby="headingTwo" data-parent="#accordionSidebar">
+					<div class="bg-white py-2 collapse-inner rounded">
+						<a class="collapse-item" th:href="@{/cardMain}">Cartas a la venta</a>
+						<a class="collapse-item" th:href="@{/cardList}">Base de datos de cartas</a>
+					</div>
+				</div>
 			</li>
 			<li class="nav-item">
 				<a class="nav-link" th:href="@{/saleMain}">
