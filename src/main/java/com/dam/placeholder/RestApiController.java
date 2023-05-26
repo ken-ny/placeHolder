@@ -226,12 +226,14 @@ public class RestApiController {
 		return "cardMain";
 	}
 
+	// TODO Crear JUnit
 	@GetMapping("/cardList")
 	public String cardsList(Model model) {
 		model.addAttribute("cardsList", cardRepo.findAll());
 		return "cardList";
 	}
 
+	// TODO Crear JUnit
 	@GetMapping("/cardEdit/{id}")
 	public String showCardUpdateForm(@PathVariable("id") Integer id, Model model) {
 		Card card = cardRepo.findById(id).orElseThrow(() -> new IllegalArgumentException("Invalid card Id:" + id));
@@ -242,6 +244,7 @@ public class RestApiController {
 		return "updateCard";
 	}
 
+	// TODO Crear JUnit
 	@GetMapping("/card/create")
 	public String showCardCreateForm(Model model) {
 		model.addAttribute("card", new Card(findNextAvailableId(CARD)));
@@ -249,6 +252,7 @@ public class RestApiController {
 		return "updateCard";
 	}
 
+	// TODO Crear JUnit
 	@PostMapping("/updateCard")
 	public String postUpdateCard(@ModelAttribute Card card, Model model) {
 
@@ -257,6 +261,7 @@ public class RestApiController {
 		return "redirect:/cardList";
 	}
 
+	// TODO Crear JUnit
 	@GetMapping("/deleteCard/{id}")
 	public String deleteCardThroughId(@PathVariable(value = "id") Integer id) {
 		cardRepo.deleteById(id);
@@ -289,12 +294,14 @@ public class RestApiController {
 		return "createCard";
 	}
 
+	// TODO Crear JUnit
 	@GetMapping("/selectCard")
 	public String showCardSelectList(Model model) {
 		model.addAttribute("cardsList", cardRepo.findAll());
 		return "cardSelect";
 	}
 
+	// TODO Crear JUnit
 	@GetMapping("/cardSelected/{cardId}/{expansionId}")
 	public String cardSelectedForOffer(@PathVariable("cardId") Integer idCard,
 			@PathVariable("expansionId") Integer idExpansion, Model model) {
