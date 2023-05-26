@@ -87,11 +87,11 @@ public class RestApiController {
 
 	Utils utils = new Utils();
 
-	// THYMELEAF
-	// MAIN
+	// LOGIN
 	@GetMapping(value = "/")
 	public String intro(Model model) {
 		model.addAttribute("user", new User());
+
 		return "login";
 	}
 
@@ -117,11 +117,20 @@ public class RestApiController {
 		if (userBd != null && StringUtils.equals(user.getPassword(), userBd.getPassword())) {
 			return "redirect:/main";
 		} else {
-			return "redirect:/";
+			return "redirect:/loginError";
 		}
 
 	}
 
+	@GetMapping(value = "/loginError")
+	public String errorLogin(Model model) {
+		model.addAttribute("user", new User());
+		model.addAttribute("error", "ERROR");
+		model.addAttribute("details", "Usuario y/o contraseña incorrecto");
+		return "login";
+	}
+
+	// MAIN
 	@GetMapping(value = "/main")
 	public String homePage(Model model) {
 		model.addAttribute("totalGames", gameRepo.findAll().size());

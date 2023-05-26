@@ -34,7 +34,7 @@
 					<div class="col-lg-7">
 						<div class="p-5">
 							<div class="text-center">
-								<h1 class="h4 text-gray-900 mb-4">Create an Account!</h1>
+								<h1 class="h4 text-gray-900 mb-4">¡Vamos a crear una cuenta!</h1>
 							</div>
 							<form class="user" th:action="@{/register/process}" th:object="${user}" method="POST">
 								<input type="hidden" th:field="*{id}" />
@@ -54,11 +54,11 @@
 									<input type="password" class="form-control form-control-user" th:field="*{password}" id="password"
 										placeholder="Contraseña">
 								</div>
-								<button type="submit" class="btn btn-primary btn-user btn-block">Crear Cuenta</button>
+								<button type="submit" class="btn btn-primary btn-user btn-block">¡Créala!</button>
 
 							</form>
 							<div class="text-center">
-								<a class="small" th:href="@{/}">Already have an account? Login!</a>
+								<a class="small" th:href="@{/}">¿Ya tienes una cuenta? ¡Logueate!</a>
 							</div>
 						</div>
 					</div>
