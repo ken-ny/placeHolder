@@ -22,6 +22,7 @@ import com.dam.placeholder.entity.Expansion;
 import com.dam.placeholder.entity.Game;
 import com.dam.placeholder.entity.Offers;
 import com.dam.placeholder.entity.Sales;
+import com.dam.placeholder.entity.User;
 import com.dam.placeholder.repo.CardMarketRelationRepository;
 import com.dam.placeholder.repo.CardRepository;
 import com.dam.placeholder.repo.ExpansionRepository;
@@ -29,6 +30,7 @@ import com.dam.placeholder.repo.GameRepository;
 import com.dam.placeholder.repo.OffersRepository;
 import com.dam.placeholder.repo.SaleDetailsRepository;
 import com.dam.placeholder.repo.SalesRepository;
+import com.dam.placeholder.repo.UserRepo;
 import com.dam.placeholder.utils.Utils;
 
 @DirtiesContext(classMode = ClassMode.AFTER_EACH_TEST_METHOD)
@@ -63,6 +65,9 @@ class RestApiControllerNRETests {
 	@Autowired
 	CardMarketRelationRepository marketRepo;
 
+	@Autowired
+	UserRepo userRepo;
+
 	Model model = new ConcurrentModel();
 
 	Utils utils = new Utils();
@@ -78,6 +83,7 @@ class RestApiControllerNRETests {
 		controller.offersRepo = offersRepo;
 		controller.salesRepo = salesRepo;
 		controller.utils = utils;
+		controller.userRepo = userRepo;
 		utils = utils;
 	}
 
@@ -353,4 +359,30 @@ class RestApiControllerNRETests {
 		}
 	}
 
+	// -------------------------LOGIN TESTS--------------------------
+	@Test
+	void shouldNotReturnErrorWhenUserAndPasswordExists() {
+
+		User newUser = new User();
+		newUser.setEmail("prueba@email.com");
+		newUser.setPassword("1");
+
+		String response = controller.processLogin(newUser);
+
+		assertEquals(response, "redirect:/main");
+
+	}
+
+	@Test
+	void shouldReturnErrorWhenUserAndPasswordNotExists() {
+
+		User newUser = new User();
+		newUser.setEmail("prueba@email.com");
+		newUser.setPassword("2");
+
+		String response = controller.processLogin(newUser);
+
+		assertEquals(response, "redirect:/loginError");
+
+	}
 }
