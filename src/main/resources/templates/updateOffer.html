@@ -9,7 +9,7 @@
 <meta name="description" content="">
 <meta name="author" content="">
 
-<title>SB Admin 2 - Register</title>
+<title>PlaceHolder</title>
 
 <!-- Custom fonts for this template-->
 <link href="vendor/fontawesome-free/css/all.min.css" rel="stylesheet" type="text/css">
@@ -34,9 +34,9 @@
 					<div class="col-lg-12">
 						<div class="p-5">
 							<div class="text-center">
-								<h1 class="h4 text-gray-900 mb-4">Actualizar Informacion</h1>
+								<h1 class="h4 text-gray-900 mb-4">Actualizar Informacion de Venta</h1>
 							</div>
-							<form class="user" action="#" th:action="@{/saveOffer}" th:object="${offer}" method="POST">
+							<form class="user" action="#" th:action="@{/offer/save}" th:object="${offer}" method="POST">
 								<input type="hidden" th:field="*{id}" />
 								<input type="hidden" th:field="*{card.id}" />
 								<input type="hidden" th:field="*{expansion.id}" />
@@ -67,7 +67,7 @@
 								<button type="submit" class="btn btn-primary btn-user btn-block">Actualizar carta</button>
 							</form>
 							<div class="text-center">
-								<a class="medium" th:href="@{/cardMain}">Cancelar</a>
+								<a class="medium" th:href="@{/offers}">Cancelar</a>
 							</div>
 						</div>
 					</div>

@@ -12,6 +12,8 @@ import com.dam.placeholder.entity.Sales;
 public class Utils {
 
 	/**
+	 * Convierte la fecha que se le pase a un objeto Date
+	 * 
 	 * @return
 	 * @throws ParseException
 	 */
@@ -24,12 +26,21 @@ public class Utils {
 		return null;
 	}
 
-	public static String convertDateToString(Date date) {
+	/**
+	 * Convierte el objeto date que se le pase un string con formato dd-MM-yyyy
+	 * 
+	 * @param date
+	 * @return
+	 */
+	private static String convertDateToString(Date date) {
 		DateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy");
 		return dateFormat.format(date);
 	}
 
 	/**
+	 * Devuelve una lista con los precios de venta de los objetos Sales que se le
+	 * pasen
+	 * 
 	 * @param sales
 	 * @return
 	 */
@@ -38,6 +49,9 @@ public class Utils {
 	}
 
 	/**
+	 * Devuelve una lista de string de las fechas de cada uno de los objetos sales
+	 * que se le informen formateadas dd-MM-yyyy
+	 * 
 	 * @param sales
 	 * @return
 	 */

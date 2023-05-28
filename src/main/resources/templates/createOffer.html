@@ -9,7 +9,7 @@
 <meta name="description" content="">
 <meta name="author" content="">
 
-<title>SB Admin 2 - Register</title>
+<title>PlaceHolder</title>
 
 <!-- Custom fonts for this template-->
 <link href="vendor/fontawesome-free/css/all.min.css" rel="stylesheet" type="text/css">
@@ -33,9 +33,19 @@
 					<div class="col-lg-12">
 						<div class="p-5">
 							<div class="text-center">
-								<h1 class="h4 text-gray-900 mb-4">Paso 2. Informacion de la oferta</h1>
+								<h1 class="h4 text-gray-900 mb-4">Información de la oferta</h1>
 							</div>
-							<form class="user" action="#" th:action="@{/saveOffer}" th:object="${offer}" method="POST">
+
+							<form class="user" action="#" th:action="@{/offer/save}" th:object="${offer}" method="POST">
+								<div class="form-group row">
+									<div class="col-sm-6 mb-3 mb-sm-0">
+										<div th:text=*{card.name}></div>
+									</div>
+									<div class="col-sm-6 mb-3 mb-sm-0">
+										<div th:text=*{expansion.name}></div>
+									</div>
+
+								</div>
 								<input type="hidden" th:field="*{id}" />
 								<input type="hidden" th:field="*{card.id}" />
 								<input type="hidden" th:field="*{expansion.id}" />
@@ -52,7 +62,7 @@
 								<button type="submit" class="btn btn-primary btn-user btn-block">Crear Oferta</button>
 							</form>
 							<div class="text-center">
-								<a class="medium" th:href="@{/cardMain}">Cancelar</a>
+								<a class="medium" th:href="@{/offers}">Cancelar</a>
 							</div>
 						</div>
 					</div>
