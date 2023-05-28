@@ -33,7 +33,8 @@
 		<ul class="navbar-nav bg-gradient-primary sidebar sidebar-dark accordion" id="accordionSidebar">
 
 			<!-- Sidebar - Brand -->
-			<a class="sidebar-brand d-flex align-items-center justify-content-center" href="/main">				<div class="sidebar-brand-icon rotate-n-15">
+			<a class="sidebar-brand d-flex align-items-center justify-content-center" href="/main">
+				<div class="sidebar-brand-icon rotate-n-15">
 					<i class="fas fa-laugh-wink"></i>
 				</div>
 				<div class="sidebar-brand-text mx-3">PlaceHolder</div>
@@ -67,11 +68,18 @@
 					<span>Expansiones</span>
 				</a>
 			</li>
-			<li class="nav-item ">
-				<a class="nav-link" th:href="@{/cardMain}">
+			<li class="nav-item">
+				<a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseTwo" aria-expanded="true"
+					aria-controls="collapseTwo">
 					<i class="fas fa-fw fa-book"></i>
 					<span>Cartas</span>
 				</a>
+				<div id="collapseTwo" class="collapse" aria-labelledby="headingTwo" data-parent="#accordionSidebar">
+					<div class="bg-white py-2 collapse-inner rounded">
+						<a class="collapse-item" th:href="@{/cardMain}">Cartas a la venta</a>
+						<a class="collapse-item" th:href="@{/cardList}">Base de datos de cartas</a>
+					</div>
+				</div>
 			</li>
 			<li class="nav-item ">
 				<a class="nav-link" th:href="@{/saleMain}">
@@ -286,7 +294,7 @@
 
 		<!-- Page level plugins -->
 		<script src="vendor/chart.js/Chart.min.js"></script>
-		<script  type="text/javascript" th:inline="javascript">
+		<script type="text/javascript" th:inline="javascript">
 			// Set new default font family and font color to mimic Bootstrap's default styling
 					Chart.defaults.global.defaultFontFamily = 'Nunito',
 					'-apple-system,system-ui,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif';
@@ -323,7 +331,7 @@
 					{
 						type : 'line',
 						data : {
-							labels : /*[[${listSalesDates}]]*/ null,
+							labels : /*[[${listSalesDates}]]*/null,
 							datasets : [ {
 								label : "Earnings",
 								lineTension : 0.3,
@@ -337,7 +345,7 @@
 								pointHoverBorderColor : "rgba(78, 115, 223, 1)",
 								pointHitRadius : 10,
 								pointBorderWidth : 2,
-								data : /*[[${listSales}]]*/ null,
+								data : /*[[${listSales}]]*/null,
 							} ],
 						},
 						options : {

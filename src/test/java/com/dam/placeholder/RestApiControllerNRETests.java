@@ -2,6 +2,7 @@ package com.dam.placeholder;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.util.List;
@@ -210,7 +211,7 @@ class RestApiControllerNRETests {
 
 	// -------------------------CARDS TESTS---------------------
 	@Test
-	void shouldReturnListOfAllCards() {
+	void shouldReturnListOfAllOffers() {
 		String response = controller.cardsMain(model);
 		assertNotNull(response);
 		assertEquals(response, "cardMain");
@@ -222,7 +223,7 @@ class RestApiControllerNRETests {
 
 	@Test
 	void shouldReturnASpecifiedExistingOfferWithExpansionList() {
-		String response = controller.showCardUpdateForm(1, model);
+		String response = controller.showCardOfferUpdateForm(1, model);
 		assertNotNull(response);
 		assertEquals(response, "updateOffer");
 		assertNotNull(model);
@@ -241,7 +242,7 @@ class RestApiControllerNRETests {
 	@Test
 	void shouldThrowErrorWhenTheOfferDoesNotExist() {
 		try {
-			String response = controller.showCardUpdateForm(10, model);
+			String response = controller.showCardOfferUpdateForm(10, model);
 		} catch (Exception e) {
 			assertEquals(e.getMessage(), "Invalid card Id:10");
 		}
@@ -318,10 +319,80 @@ class RestApiControllerNRETests {
 
 	}
 
-	private Card mockNewCard() {
-		Optional<Expansion> existingExpansion = expansionRepo.findById(1);
+	@Test
+	void shouldReturnListOfAllCards() {
+		String response = controller.cardsList(model);
+		assertNotNull(response);
+		assertEquals(response, "cardList");
+		assertNotNull(model);
+		assertNotNull(model.getAttribute("cardsList"));
+		List<Card> cardList = (List<Card>) model.getAttribute("cardsList");
+		assertEquals(cardList.size(), 3);
+	}
 
-		return new Card(4, MOCKED_NAME, MOCKED_RARITY, existingExpansion.get());
+	@Test
+	void shouldReturnAnEmptyCardObjectWithNewIdAndExpansionListForCardList() {
+		String response = controller.showCardCreateForm(model);
+		assertNotNull(response);
+		assertEquals(response, "updateCard");
+		assertNotNull(model);
+		assertNotNull(model.getAttribute("card"));
+		assertNotNull(model.getAttribute("expansionList"));
+		Card card = (Card) model.getAttribute("card");
+		List<Expansion> expansionList = (List<Expansion>) model.getAttribute("expansionList");
+		assertNotNull(card.getId());
+		assertEquals(card.getId(), 4);
+		assertEquals(expansionList.size(), 12);
+	}
+
+	@Test
+	void shouldReturnListOfAllCardsForSelect() {
+		String response = controller.showCardSelectList(model);
+		assertNotNull(response);
+		assertEquals(response, "cardSelect");
+		assertNotNull(model);
+		assertNotNull(model.getAttribute("cardsList"));
+		List<Card> cardList = (List<Card>) model.getAttribute("cardsList");
+		assertEquals(cardList.size(), 3);
+	}
+
+	@Test
+	void shouldReturnANewOfferWithNextIdIfCardAndExpansionExists() {
+		String response = controller.cardSelectedForOffer(1, 1, model);
+
+		assertNotNull(response);
+		assertEquals(response, "createOffer");
+		assertNotNull(model);
+		assertNotNull(model.getAttribute("offer"));
+		Offers offer = (Offers) model.getAttribute("offer");
+		assertNotNull(offer.getId());
+		assertEquals(offer.getId(), 4);
+		assertNotNull(offer.getExpansion());
+		assertEquals(offer.getExpansion().getName(), "D Booster Set 08: Minerva Rising");
+		assertEquals(offer.getExpansion().getAbbreviation(), "DBT08");
+
+	}
+
+	@Test
+	void shouldGoBackToCardSelectScreenWhenCardIdIsIncorrect() {
+		String response = controller.cardSelectedForOffer(10, 1, model);
+
+		assertNotNull(response);
+		assertEquals(response, "cardSelect");
+		assertNotNull(model);
+		assertNull(model.getAttribute("offer"));
+
+	}
+
+	@Test
+	void shouldGoBackToCardSelectScreenWhenExpansionIdIsIncorrect() {
+		String response = controller.cardSelectedForOffer(1, 15, model);
+
+		assertNotNull(response);
+		assertEquals(response, "cardSelect");
+		assertNotNull(model);
+		assertNull(model.getAttribute("offer"));
+
 	}
 
 	// -------------------------SALES TESTS--------------------------
@@ -385,4 +456,11 @@ class RestApiControllerNRETests {
 		assertEquals(response, "redirect:/loginError");
 
 	}
+
+	private Card mockNewCard() {
+		Optional<Expansion> existingExpansion = expansionRepo.findById(1);
+
+		return new Card(4, MOCKED_NAME, MOCKED_RARITY, existingExpansion.get());
+	}
+
 }

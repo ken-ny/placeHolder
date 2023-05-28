@@ -166,7 +166,7 @@ public class RestApiController {
 		return "redirect:/gameMain";
 	}
 
-	@GetMapping("/createGame")
+	@GetMapping("/game/create")
 	public String showGameUpdateForm(Model model) {
 		model.addAttribute("game", new Game(findNextAvailableId(GAME)));
 		return "createGame";
@@ -210,7 +210,7 @@ public class RestApiController {
 		return "redirect:/expansionMain";
 	}
 
-	@GetMapping("/createExpansion")
+	@GetMapping("/expansion/create")
 	public String showExpansionUpdateForm(Model model) {
 		List<Game> availableGames = gameRepo.findAll();
 		model.addAttribute("gameList", availableGames);
@@ -226,11 +226,50 @@ public class RestApiController {
 		return "cardMain";
 	}
 
-	@GetMapping("/offerEdit/{id}")
-	public String showCardUpdateForm(@PathVariable("id") Integer id, Model model) {
-		Offers game = offersRepo.findById(id).orElseThrow(() -> new IllegalArgumentException("Invalid card Id:" + id));
+	@GetMapping("/cardList")
+	public String cardsList(Model model) {
+		model.addAttribute("cardsList", cardRepo.findAll());
+		return "cardList";
+	}
 
-		model.addAttribute("offer", game);
+	@GetMapping("/cardEdit/{id}")
+	public String showCardUpdateForm(@PathVariable("id") Integer id, Model model) {
+		Card card = cardRepo.findById(id).orElseThrow(() -> new IllegalArgumentException("Invalid card Id:" + id));
+
+		model.addAttribute("card", card);
+		model.addAttribute("expansionList", expansionRepo.findAll());
+
+		return "updateCard";
+	}
+
+	@GetMapping("/card/create")
+	public String showCardCreateForm(Model model) {
+		model.addAttribute("card", new Card(findNextAvailableId(CARD)));
+		model.addAttribute("expansionList", expansionRepo.findAll());
+		return "updateCard";
+	}
+
+	@PostMapping("/updateCard")
+	public String postUpdateCard(@ModelAttribute Card card, Model model) {
+
+		cardRepo.save(card);
+
+		return "redirect:/cardList";
+	}
+
+	@GetMapping("/deleteCard/{id}")
+	public String deleteCardThroughId(@PathVariable(value = "id") Integer id) {
+		cardRepo.deleteById(id);
+		return "redirect:/cardList";
+	}
+
+	// OFFERS
+
+	@GetMapping("/offerEdit/{id}")
+	public String showCardOfferUpdateForm(@PathVariable("id") Integer id, Model model) {
+		Offers offer = offersRepo.findById(id).orElseThrow(() -> new IllegalArgumentException("Invalid card Id:" + id));
+
+		model.addAttribute("offer", offer);
 		model.addAttribute("expansionList", expansionRepo.findAll());
 
 		return "updateOffer";
@@ -243,14 +282,34 @@ public class RestApiController {
 
 	}
 
-	@GetMapping("/createCard")
+	@GetMapping("/offer/card")
 	public String showCardUpdateForm(Model model) {
 		model.addAttribute("card", new Card(findNextAvailableId(CARD)));
 		model.addAttribute("expansionList", expansionRepo.findAll());
 		return "createCard";
 	}
 
-	@PostMapping("/createOffer")
+	@GetMapping("/selectCard")
+	public String showCardSelectList(Model model) {
+		model.addAttribute("cardsList", cardRepo.findAll());
+		return "cardSelect";
+	}
+
+	@GetMapping("/cardSelected/{cardId}/{expansionId}")
+	public String cardSelectedForOffer(@PathVariable("cardId") Integer idCard,
+			@PathVariable("expansionId") Integer idExpansion, Model model) {
+		Optional<Card> cardSelected = cardRepo.findById(idCard);
+		Optional<Expansion> selectedExpansion = expansionRepo.findById(idExpansion);
+		if (cardSelected.isPresent() && selectedExpansion.isPresent()) {
+			model.addAttribute("offer",
+					new Offers(cardSelected.get(), selectedExpansion.get(), findNextAvailableId(OFFER)));
+			return "createOffer";
+		} else {
+			return "cardSelect";
+		}
+	}
+
+	@PostMapping("/offer/create")
 	public String postCreateOffer(@ModelAttribute Card card, Model model) {
 
 		Optional<Card> existingCard = cardRepo.findByNameAndRarity(card.getName(), card.getRarity());
@@ -302,7 +361,7 @@ public class RestApiController {
 	}
 
 	@GetMapping("/deleteOffer/{id}")
-	public String deleteCardThroughId(@PathVariable(value = "id") Integer id) {
+	public String deleteOfferThroughId(@PathVariable(value = "id") Integer id) {
 		offersRepo.deleteById(id);
 		return "redirect:/cardMain";
 	}
