@@ -9,7 +9,7 @@
 <meta name="description" content="">
 <meta name="author" content="">
 
-<title>SB Admin 2 - Register</title>
+<title>PlaceHolder</title>
 
 <!-- Custom fonts for this template-->
 <link href="vendor/fontawesome-free/css/all.min.css" rel="stylesheet" type="text/css">
@@ -34,9 +34,9 @@
 					<div class="col-lg-12">
 						<div class="p-5">
 							<div class="text-center">
-								<h1 class="h4 text-gray-900 mb-4">Informacion de la nueva Expansion</h1>
+								<h1 class="h4 text-gray-900 mb-4">Información de la nueva Expansión</h1>
 							</div>
-							<form class="user" action="#" th:action="@{/saveExpansion}" th:object="${expansion}" method="POST">
+							<form class="user" action="#" th:action="@{/expansion/save}" th:object="${expansion}" method="POST">
 								<input type="hidden" th:field="*{id}" />
 								<div class="form-group row">
 									<div class="col-sm-6 mb-3 mb-sm-0">
@@ -57,10 +57,10 @@
 									</div>
 								</div>
 
-								<button type="submit" class="btn btn-primary btn-user btn-block">Crear Expansion</button>
+								<button type="submit" class="btn btn-primary btn-user btn-block">Crear Expansión</button>
 							</form>
 							<div class="text-center">
-								<a class="medium" th:href="@{/expansionMain}">Cancelar</a>
+								<a class="medium" th:href="@{/expansion}">Cancelar</a>
 							</div>
 						</div>
 					</div>

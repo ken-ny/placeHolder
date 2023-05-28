@@ -9,7 +9,7 @@
 <meta name="description" content="">
 <meta name="author" content="">
 
-<title>SB Admin 2 - Register</title>
+<title>PlaceHolder</title>
 
 <!-- Custom fonts for this template-->
 <link href="vendor/fontawesome-free/css/all.min.css" rel="stylesheet" type="text/css">
@@ -36,7 +36,7 @@
 							<div class="text-center">
 								<h1 class="h4 text-gray-900 mb-4">Actualizar Informacion</h1>
 							</div>
-							<form class="user" action="#" th:action="@{/saveExpansion}" th:object="${expansion}" method="POST">
+							<form class="user" action="#" th:action="@{/expansion/save}" th:object="${expansion}" method="POST">
 								<input type="hidden" th:field="*{id}" />
 								<div class="form-group row">
 									<div class="col-sm-6 mb-3 mb-sm-0">
@@ -49,7 +49,7 @@
 								<div class="form-group row">
 									<div class="col-sm-12 mb-6 mb-sm-0">
 										<div class="col-sm-12 mb-6 mb-sm-0">
-											Si deseas modificar el juego, selecciona el nuevo juego:
+											Si deseas modificar a que juego pertenece, por favor, selecciona el nuevo juego en el listado:
 											<select class="js-example-basic-single form-control" name="state" th:field="*{game}">
 												<div th:each="game:${gameList}">
 													<option th:value="${game.id}" th:text="${game.name}"></option>
@@ -59,10 +59,10 @@
 									</div>
 								</div>
 
-								<button type="submit" class="btn btn-primary btn-user btn-block">Actualizar expansion</button>
+								<button type="submit" class="btn btn-primary btn-user btn-block">Actualizar la información</button>
 							</form>
 							<div class="text-center">
-								<a class="medium" th:href="@{/expansionMain}">Cancelar</a>
+								<a class="medium" th:href="@{/expansion}">Cancelar</a>
 							</div>
 						</div>
 					</div>

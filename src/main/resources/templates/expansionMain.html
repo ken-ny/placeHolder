@@ -9,7 +9,7 @@
 <meta name="description" content="">
 <meta name="author" content="">
 
-<title>SB Admin 2 - Tables</title>
+<title>PlaceHolder</title>
 
 <!-- Custom fonts for this template -->
 <link href="vendor/fontawesome-free/css/all.min.css" rel="stylesheet" type="text/css">
@@ -34,7 +34,7 @@
 		<ul class="navbar-nav bg-gradient-primary sidebar sidebar-dark accordion" id="accordionSidebar">
 
 			<!-- Sidebar - Brand -->
-			<a class="sidebar-brand d-flex align-items-center justify-content-center" href="/main">				<div class="sidebar-brand-icon rotate-n-15">
+			<a class="sidebar-brand d-flex align-items-center justify-content-center" href="/dashboard">				<div class="sidebar-brand-icon rotate-n-15">
 					<i class="fas fa-laugh-wink"></i>
 				</div>
 				<div class="sidebar-brand-text mx-3">PlaceHolder</div>
@@ -45,7 +45,7 @@
 
 			<!-- Nav Item - Dashboard -->
 			<li class="nav-item">
-				<a class="nav-link" th:href="@{/main}">
+				<a class="nav-link" th:href="@{/dashboard}">
 					<i class="fas fa-fw fa-tachometer-alt"></i>
 					<span>Dashboard</span>
 				</a>
@@ -56,14 +56,14 @@
 
 			<!-- Nav Item - Pages Collapse Menu -->
 			<li class="nav-item">
-				<a class="nav-link" th:href="@{/gameMain}">
+				<a class="nav-link" th:href="@{/games}">
 					<i class="fas fa-fw fa-city"></i>
 					<span>Juegos</span>
 				</a>
 			</li>
 
 			<li class="nav-item active">
-				<a class="nav-link" th:href="@{/expansionMain}">
+				<a class="nav-link" th:href="@{/expansion}">
 					<i class="fas fa-fw fa-folder-open"></i>
 					<span>Expansiones</span>
 				</a>
@@ -76,13 +76,13 @@
 				</a>
 				<div id="collapseTwo" class="collapse" aria-labelledby="headingTwo" data-parent="#accordionSidebar">
 					<div class="bg-white py-2 collapse-inner rounded">
-						<a class="collapse-item" th:href="@{/cardMain}">Cartas a la venta</a>
-						<a class="collapse-item" th:href="@{/cardList}">Base de datos de cartas</a>
+						<a class="collapse-item" th:href="@{/offers}">Cartas a la venta</a>
+						<a class="collapse-item" th:href="@{/cards}">Base de datos de cartas</a>
 					</div>
 				</div>
 			</li>
 			<li class="nav-item ">
-				<a class="nav-link" th:href="@{/saleMain}">
+				<a class="nav-link" th:href="@{/sales}">
 					<i class="fas fa-fw fa-chart-line"></i>
 					<span>Ventas</span>
 				</a>
@@ -143,14 +143,12 @@
 				<!-- Begin Page Content -->
 				<div class="container-fluid">
 
-					<!-- Page Heading -->
-					<h1 class="h3 mb-2 text-gray-800">Expansiones</h1>
 					<p class="mb-4">
 						<a th:href="@{/expansion/create}" class="btn btn-success btn-icon-split">
 							<span class="icon text-white-50">
 								<i class="fas fa-check"></i>
 							</span>
-							<span class="text">Dar de alta nueva expansion</span>
+							<span class="text">Dar de alta una nueva expansion</span>
 						</a>
 					</p>
 
@@ -183,7 +181,7 @@
 											<td th:text="${expansion.name}"></td>
 											<td th:text="${expansion.abbreviation}"></td>
 											<td>
-												<a th:href="@{/expansionEdit/{id}(id=${expansion.id})}" class="btn btn-info btn-icon-split">
+												<a th:href="@{/expansion/edit/{id}(id=${expansion.id})}" class="btn btn-info btn-icon-split">
 													<span class="icon text-white-50">
 														<i class="fas fa-info-circle"></i>
 													</span>
@@ -192,7 +190,7 @@
 											</td>
 											<td>
 
-												<a th:href="@{/deleteExpansion/{id}(id=${expansion.id})}" class="btn btn-danger btn-icon-split">
+												<a th:href="@{/expansion/delete/{id}(id=${expansion.id})}" class="btn btn-danger btn-icon-split">
 													<span class="icon text-white-50">
 														<i class="fas fa-trash"></i>
 													</span>
@@ -239,15 +237,15 @@
 		<div class="modal-dialog" role="document">
 			<div class="modal-content">
 				<div class="modal-header">
-					<h5 class="modal-title" id="exampleModalLabel">Ready to Leave?</h5>
+					<h5 class="modal-title" id="exampleModalLabel">¿Ya te vas?</h5>
 					<button class="close" type="button" data-dismiss="modal" aria-label="Close">
 						<span aria-hidden="true">×</span>
 					</button>
 				</div>
-				<div class="modal-body">Select "Logout" below if you are ready to end your current session.</div>
+				<div class="modal-body">Pincha en "Logout" para salir de la sesión y volver a la pagina de login.</div>
 				<div class="modal-footer">
-					<button class="btn btn-secondary" type="button" data-dismiss="modal">Cancel</button>
-					<a class="btn btn-primary" href="login.html">Logout</a>
+					<button class="btn btn-secondary" type="button" data-dismiss="modal">Cancelar</button>
+					<a class="btn btn-primary" th:href="@{/}">Logout</a>
 				</div>
 			</div>
 		</div>

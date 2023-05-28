@@ -115,7 +115,7 @@ public class RestApiController {
 		User userBd = userRepo.findByEmail(user.getEmail());
 
 		if (userBd != null && StringUtils.equals(user.getPassword(), userBd.getPassword())) {
-			return "redirect:/main";
+			return "redirect:/dashboard";
 		} else {
 			return "redirect:/loginError";
 		}
@@ -131,7 +131,7 @@ public class RestApiController {
 	}
 
 	// MAIN
-	@GetMapping(value = "/main")
+	@GetMapping(value = "/dashboard")
 	public String homePage(Model model) {
 		model.addAttribute("totalGames", gameRepo.findAll().size());
 		model.addAttribute("totalExpansions", expansionRepo.findAll().size());
@@ -146,13 +146,13 @@ public class RestApiController {
 	}
 
 	// GAMES
-	@GetMapping("/gameMain")
+	@GetMapping("/games")
 	public String gameMain(Model model) {
 		model.addAttribute("gameList", gameRepo.findAll());
 		return "gameMain";
 	}
 
-	@GetMapping("/gameEdit/{id}")
+	@GetMapping("/game/edit/{id}")
 	public String showGameUpdateForm(@PathVariable("id") Integer id, Model model) {
 		Game game = gameRepo.findById(id).orElseThrow(() -> new IllegalArgumentException("Invalid game Id:" + id));
 
@@ -160,10 +160,10 @@ public class RestApiController {
 		return "updateGame";
 	}
 
-	@PostMapping("/saveGame")
+	@PostMapping("/game/save")
 	public String postSaveGame(@ModelAttribute Game game) {
 		gameRepo.save(game);
-		return "redirect:/gameMain";
+		return "redirect:/games";
 	}
 
 	@GetMapping("/game/create")
@@ -172,21 +172,21 @@ public class RestApiController {
 		return "createGame";
 	}
 
-	@GetMapping("/deleteGame/{id}")
+	@GetMapping("/game/delete/{id}")
 	public String deleteGameThroughId(@PathVariable(value = "id") Integer id) {
 		gameRepo.deleteById(id);
-		return "redirect:/gameMain";
+		return "redirect:/games";
 
 	}
 
 	// EXPANSIONS
-	@GetMapping("/expansionMain")
+	@GetMapping("/expansion")
 	public String expansionMain(Model model) {
 		model.addAttribute("expansionList", expansionRepo.findAll());
 		return "expansionMain";
 	}
 
-	@GetMapping("/expansionEdit/{id}")
+	@GetMapping("/expansion/edit/{id}")
 	public String showExpansionUpdateForm(@PathVariable("id") Integer id, Model model) {
 		Expansion expansion = expansionRepo.findById(id)
 				.orElseThrow(() -> new IllegalArgumentException("Invalid expansion Id:" + id));
@@ -196,18 +196,18 @@ public class RestApiController {
 		return "updateExpansion";
 	}
 
-	@PostMapping("/saveExpansion")
+	@PostMapping("/expansion/save")
 	public String postUpdateExpansion(@ModelAttribute Expansion game) {
 
 		expansionRepo.save(game);
-		return "redirect:/expansionMain";
+		return "redirect:/expansion";
 
 	}
 
-	@GetMapping("/deleteExpansion/{id}")
+	@GetMapping("/expansion/delete/{id}")
 	public String deleteExpansionThroughId(@PathVariable(value = "id") Integer id) {
 		expansionRepo.deleteById(id);
-		return "redirect:/expansionMain";
+		return "redirect:/expansion";
 	}
 
 	@GetMapping("/expansion/create")
@@ -220,19 +220,14 @@ public class RestApiController {
 	}
 
 	// CARDS
-	@GetMapping("/cardMain")
-	public String cardsMain(Model model) {
-		model.addAttribute("offersList", offersRepo.findAll());
-		return "cardMain";
-	}
 
-	@GetMapping("/cardList")
+	@GetMapping("/cards")
 	public String cardsList(Model model) {
 		model.addAttribute("cardsList", cardRepo.findAll());
 		return "cardList";
 	}
 
-	@GetMapping("/cardEdit/{id}")
+	@GetMapping("/card/edit/{id}")
 	public String showCardUpdateForm(@PathVariable("id") Integer id, Model model) {
 		Card card = cardRepo.findById(id).orElseThrow(() -> new IllegalArgumentException("Invalid card Id:" + id));
 
@@ -249,23 +244,29 @@ public class RestApiController {
 		return "updateCard";
 	}
 
-	@PostMapping("/updateCard")
+	@PostMapping("/card/update")
 	public String postUpdateCard(@ModelAttribute Card card, Model model) {
 
 		cardRepo.save(card);
 
-		return "redirect:/cardList";
+		return "redirect:/cards";
 	}
 
-	@GetMapping("/deleteCard/{id}")
+	@GetMapping("/card/delete/{id}")
 	public String deleteCardThroughId(@PathVariable(value = "id") Integer id) {
 		cardRepo.deleteById(id);
-		return "redirect:/cardList";
+		return "redirect:/cards";
 	}
 
 	// OFFERS
 
-	@GetMapping("/offerEdit/{id}")
+	@GetMapping("/offers")
+	public String cardsMain(Model model) {
+		model.addAttribute("offersList", offersRepo.findAll());
+		return "offerMain";
+	}
+
+	@GetMapping("/offers/edit/{id}")
 	public String showCardOfferUpdateForm(@PathVariable("id") Integer id, Model model) {
 		Offers offer = offersRepo.findById(id).orElseThrow(() -> new IllegalArgumentException("Invalid card Id:" + id));
 
@@ -275,10 +276,10 @@ public class RestApiController {
 		return "updateOffer";
 	}
 
-	@PostMapping("/saveOffer")
+	@PostMapping("/offer/save")
 	public String postUpdateCard(@ModelAttribute Offers offer) {
 		offersRepo.save(offer);
-		return "redirect:/cardMain";
+		return "redirect:/offers";
 
 	}
 
@@ -289,13 +290,13 @@ public class RestApiController {
 		return "createCard";
 	}
 
-	@GetMapping("/selectCard")
+	@GetMapping("/offer/select")
 	public String showCardSelectList(Model model) {
 		model.addAttribute("cardsList", cardRepo.findAll());
 		return "cardSelect";
 	}
 
-	@GetMapping("/cardSelected/{cardId}/{expansionId}")
+	@GetMapping("/offer/selected/{cardId}/{expansionId}")
 	public String cardSelectedForOffer(@PathVariable("cardId") Integer idCard,
 			@PathVariable("expansionId") Integer idExpansion, Model model) {
 		Optional<Card> cardSelected = cardRepo.findById(idCard);
@@ -326,7 +327,7 @@ public class RestApiController {
 		return "createOffer";
 	}
 
-	@GetMapping("/offerDecreaseQuantity/{id}")
+	@GetMapping("/offer/decrease/{id}")
 	public String postDecreaseQuantity(@PathVariable(value = "id") Integer offerId) {
 
 		Optional<Offers> foundOffer = offersRepo.findById(offerId);
@@ -335,7 +336,7 @@ public class RestApiController {
 			foundOffer.get().decreaseQuantity();
 
 			offersRepo.save(foundOffer.get());
-			return "redirect:/cardMain";
+			return "redirect:/offers";
 
 		} else {
 			return "redirect:/errorPage";
@@ -343,7 +344,7 @@ public class RestApiController {
 
 	}
 
-	@GetMapping("/offerIncreaseQuantity/{id}")
+	@GetMapping("/offer/increase/{id}")
 	public String postIncreaseQuantity(@PathVariable(value = "id") Integer offerId) {
 
 		Optional<Offers> foundOffer = offersRepo.findById(offerId);
@@ -352,7 +353,7 @@ public class RestApiController {
 			foundOffer.get().increaseQuantity();
 
 			offersRepo.save(foundOffer.get());
-			return "redirect:/cardMain";
+			return "redirect:/offers";
 
 		} else {
 			return "redirect:/errorPage";
@@ -360,20 +361,20 @@ public class RestApiController {
 
 	}
 
-	@GetMapping("/deleteOffer/{id}")
+	@GetMapping("/offer/delete/{id}")
 	public String deleteOfferThroughId(@PathVariable(value = "id") Integer id) {
 		offersRepo.deleteById(id);
-		return "redirect:/cardMain";
+		return "redirect:/offers";
 	}
 
 	// SALES
-	@GetMapping("/saleMain")
+	@GetMapping("/sales")
 	public String saleMain(Model model) {
 		model.addAttribute("salesList", salesRepo.findAll());
 		return "saleMain";
 	}
 
-	@GetMapping("/saleDetail/{id}")
+	@GetMapping("/sale/detail/{id}")
 	public String getSaleDetail(@PathVariable(value = "id") Integer id, Model model) {
 		Sales sale = salesRepo.findById(id).orElseThrow(() -> new IllegalArgumentException("Invalid sale Id:" + id));
 
@@ -390,7 +391,7 @@ public class RestApiController {
 
 		orders.stream().filter(Objects::nonNull).forEach(order -> createSale(order));
 
-		return "redirect:/main";
+		return "redirect:/dashboard";
 
 	}
 
@@ -409,6 +410,14 @@ public class RestApiController {
 
 	}
 
+	/**
+	 * Crea una nueva venta en la bd con la información del order que se le pasa. En
+	 * caso de que la venta ya exista, actualiza la información. Crea un nuevo
+	 * registro en la tabla CardMarketRelation relacionando el numero de order de
+	 * cardmarket con el id de la venta para futuras referencias
+	 * 
+	 * @param order
+	 */
 	private void createSale(Order order) {
 		Sales newSale = new Sales();
 
@@ -430,6 +439,8 @@ public class RestApiController {
 	}
 
 	/**
+	 * Guarda el detalle de la venta y lo con el objeto Sales que se le informa
+	 * 
 	 * @param order
 	 * @param newSale
 	 */
@@ -438,6 +449,9 @@ public class RestApiController {
 	}
 
 	/**
+	 * Recupera el archivo json de cardmarket y lo devuelve como una lista de Order
+	 * para trabajar con el
+	 * 
 	 * @return
 	 * @throws IOException
 	 * @throws StreamReadException

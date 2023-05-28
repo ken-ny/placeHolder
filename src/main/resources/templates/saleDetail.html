@@ -9,19 +9,19 @@
 <meta name="description" content="">
 <meta name="author" content="">
 
-<title>SB Admin 2 - Tables</title>
+<title>PlaceHolder</title>
 
 <!-- Custom fonts for this template -->
-<link href="../vendor/fontawesome-free/css/all.min.css" rel="stylesheet" type="text/css">
+<link href="../../vendor/fontawesome-free/css/all.min.css" rel="stylesheet" type="text/css">
 <link
 	href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i"
 	rel="stylesheet">
 
 <!-- Custom styles for this template -->
-<link href="../css/sb-admin-2.min.css" rel="stylesheet">
+<link href="../../css/sb-admin-2.min.css" rel="stylesheet">
 
 <!-- Custom styles for this page -->
-<link href="../vendor/datatables/dataTables.bootstrap4.min.css" rel="stylesheet">
+<link href="../../vendor/datatables/dataTables.bootstrap4.min.css" rel="stylesheet">
 
 </head>
 
@@ -34,7 +34,8 @@
 		<ul class="navbar-nav bg-gradient-primary sidebar sidebar-dark accordion" id="accordionSidebar">
 
 			<!-- Sidebar - Brand -->
-			<a class="sidebar-brand d-flex align-items-center justify-content-center" href="/main">				<div class="sidebar-brand-icon rotate-n-15">
+			<a class="sidebar-brand d-flex align-items-center justify-content-center" href="/dashboard">
+				<div class="sidebar-brand-icon rotate-n-15">
 					<i class="fas fa-laugh-wink"></i>
 				</div>
 				<div class="sidebar-brand-text mx-3">PlaceHolder</div>
@@ -45,7 +46,7 @@
 
 			<!-- Nav Item - Dashboard -->
 			<li class="nav-item">
-				<a class="nav-link" th:href="@{/main}">
+				<a class="nav-link" th:href="@{/dashboard}">
 					<i class="fas fa-fw fa-tachometer-alt"></i>
 					<span>Dashboard</span>
 				</a>
@@ -56,14 +57,14 @@
 
 			<!-- Nav Item - Pages Collapse Menu -->
 			<li class="nav-item">
-				<a class="nav-link" th:href="@{/gameMain}">
+				<a class="nav-link" th:href="@{/games}">
 					<i class="fas fa-fw fa-city"></i>
 					<span>Juegos</span>
 				</a>
 			</li>
 
 			<li class="nav-item ">
-				<a class="nav-link" th:href="@{/expansionMain}">
+				<a class="nav-link" th:href="@{/expansion}">
 					<i class="fas fa-fw fa-folder-open"></i>
 					<span>Expansiones</span>
 				</a>
@@ -76,13 +77,13 @@
 				</a>
 				<div id="collapseTwo" class="collapse" aria-labelledby="headingTwo" data-parent="#accordionSidebar">
 					<div class="bg-white py-2 collapse-inner rounded">
-						<a class="collapse-item" th:href="@{/cardMain}">Cartas a la venta</a>
-						<a class="collapse-item" th:href="@{/cardList}">Base de datos de cartas</a>
+						<a class="collapse-item" th:href="@{/offers}">Cartas a la venta</a>
+						<a class="collapse-item" th:href="@{/cards}">Base de datos de cartas</a>
 					</div>
 				</div>
 			</li>
 			<li class="nav-item active">
-				<a class="nav-link" th:href="@{/saleMain}">
+				<a class="nav-link" th:href="@{/sales}">
 					<i class="fas fa-fw fa-chart-line"></i>
 					<span>Ventas</span>
 				</a>
@@ -115,7 +116,7 @@
 							<a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button" data-toggle="dropdown"
 								aria-haspopup="true" aria-expanded="false">
 								<span class="mr-2 d-none d-lg-inline text-gray-600 small">Jaime Garcia</span>
-								<img class="img-profile rounded-circle" src="../img/undraw_profile.svg">
+								<img class="img-profile rounded-circle" src="../../img/undraw_profile.svg">
 							</a>
 							<!-- Dropdown - User Information -->
 							<div class="dropdown-menu dropdown-menu-right shadow animated--grow-in" aria-labelledby="userDropdown">
@@ -143,22 +144,28 @@
 				<!-- Begin Page Content -->
 				<div class="container-fluid">
 
-					<!-- Page Heading -->
-					<h1 class="h3 mb-2 text-gray-800">Ventas</h1>
-
 					<!-- DataTales Example -->
 					<div class="card shadow mb-4">
 						<div class="card-header py-3">
 							<h6 class="m-0 font-weight-bold text-primary">Detalles de la venta</h6>
 						</div>
 						<div class="card-header py-3">
-							<h6 class="m-0 font-weight-bold text-primary">Id <h4 th:text="${sale.id}"></h4></h6>
+							<h6 class="m-0 font-weight-bold text-primary">
+								Id
+								<h4 th:text="${sale.id}"></h4>
+							</h6>
 						</div>
 						<div class="card-header py-3">
-							<h6 class="m-0 font-weight-bold text-primary">Fecha de Venta <h4 th:text="${#dates.format(sale.saleDate, 'dd-MM-yyyy')}"></h4></h6>
+							<h6 class="m-0 font-weight-bold text-primary">
+								Fecha de Venta
+								<h4 th:text="${#dates.format(sale.saleDate, 'dd-MM-yyyy')}"></h4>
+							</h6>
 						</div>
 						<div class="card-header py-3">
-							<h6 class="m-0 font-weight-bold text-primary">Status <h4 th:text="${sale.status}"></h4></h6>
+							<h6 class="m-0 font-weight-bold text-primary">
+								Status
+								<h4 th:text="${sale.status}"></h4>
+							</h6>
 						</div>
 						<div class="card-body">
 							<div class="table-responsive">
@@ -225,36 +232,36 @@
 		<div class="modal-dialog" role="document">
 			<div class="modal-content">
 				<div class="modal-header">
-					<h5 class="modal-title" id="exampleModalLabel">Ready to Leave?</h5>
+					<h5 class="modal-title" id="exampleModalLabel">¿Ya te vas?</h5>
 					<button class="close" type="button" data-dismiss="modal" aria-label="Close">
 						<span aria-hidden="true">×</span>
 					</button>
 				</div>
-				<div class="modal-body">Select "Logout" below if you are ready to end your current session.</div>
+				<div class="modal-body">Pincha en "Logout" para salir de la sesión y volver a la pagina de login.</div>
 				<div class="modal-footer">
-					<button class="btn btn-secondary" type="button" data-dismiss="modal">Cancel</button>
-					<a class="btn btn-primary" href="login.html">Logout</a>
+					<button class="btn btn-secondary" type="button" data-dismiss="modal">Cancelar</button>
+					<a class="btn btn-primary" th:href="@{/}">Logout</a>
 				</div>
 			</div>
 		</div>
 	</div>
 
 	<!-- Bootstrap core JavaScript-->
-	<script src="../vendor/jquery/jquery.min.js"></script>
-	<script src="../vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+	<script src="../../vendor/jquery/jquery.min.js"></script>
+	<script src="../../vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
 
 	<!-- Core plugin JavaScript-->
-	<script src="../vendor/jquery-easing/jquery.easing.min.js"></script>
+	<script src="../../vendor/jquery-easing/jquery.easing.min.js"></script>
 
 	<!-- Custom scripts for all pages-->
-	<script src="../js/sb-admin-2.min.js"></script>
+	<script src="../../js/sb-admin-2.min.js"></script>
 
 	<!-- Page level plugins -->
-	<script src="../vendor/datatables/jquery.dataTables.min.js"></script>
-	<script src="../vendor/datatables/dataTables.bootstrap4.min.js"></script>
+	<script src="../../vendor/datatables/jquery.dataTables.min.js"></script>
+	<script src="../../vendor/datatables/dataTables.bootstrap4.min.js"></script>
 
 	<!-- Page level custom scripts -->
-	<script src="../js/demo/datatables-demo.js"></script>
+	<script src="../../js/demo/datatables-demo.js"></script>
 
 </body>
 

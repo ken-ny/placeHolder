@@ -214,7 +214,7 @@ class RestApiControllerNRETests {
 	void shouldReturnListOfAllOffers() {
 		String response = controller.cardsMain(model);
 		assertNotNull(response);
-		assertEquals(response, "cardMain");
+		assertEquals(response, "offerMain");
 		assertNotNull(model);
 		assertNotNull(model.getAttribute("offersList"));
 		List<Offers> offerList = (List<Offers>) model.getAttribute("offersList");
@@ -285,7 +285,7 @@ class RestApiControllerNRETests {
 	void shouldDecreaseQuantityTo3() {
 		String response = controller.postDecreaseQuantity(1);
 		assertNotNull(response);
-		assertEquals(response, "redirect:/cardMain");
+		assertEquals(response, "redirect:/offers");
 		Optional<Offers> foundOffer = offersRepo.findById(1);
 		assertTrue(foundOffer.isPresent());
 		assertEquals(foundOffer.get().getQuantity(), 3);
@@ -304,7 +304,7 @@ class RestApiControllerNRETests {
 	void shouldIncreaseQuantityTo5() {
 		String response = controller.postIncreaseQuantity(1);
 		assertNotNull(response);
-		assertEquals(response, "redirect:/cardMain");
+		assertEquals(response, "redirect:/offers");
 		Optional<Offers> foundOffer = offersRepo.findById(1);
 		assertTrue(foundOffer.isPresent());
 		assertEquals(foundOffer.get().getQuantity(), 5);
@@ -440,7 +440,7 @@ class RestApiControllerNRETests {
 
 		String response = controller.processLogin(newUser);
 
-		assertEquals(response, "redirect:/main");
+		assertEquals(response, "redirect:/dashboard");
 
 	}
 
