@@ -164,6 +164,7 @@
 										<tr>
 											<th>Nombre</th>
 											<th>Abreviatura</th>
+											<th>Juego</th>
 											<th>&nbsp;</th>
 											<th>&nbsp;</th>
 										</tr>
@@ -172,6 +173,7 @@
 										<tr>
 											<th>Nombre</th>
 											<th>Abreviatura</th>
+											<th>Juego</th>
 											<th>&nbsp;</th>
 											<th>&nbsp;</th>
 										</tr>
@@ -180,6 +182,7 @@
 										<tr th:each="expansion:${expansionList}">
 											<td th:text="${expansion.name}"></td>
 											<td th:text="${expansion.abbreviation}"></td>
+											<td th:text="${expansion.game.name}"></td>
 											<td>
 												<a th:href="@{/expansion/edit/{id}(id=${expansion.id})}" class="btn btn-info btn-icon-split">
 													<span class="icon text-white-50">
