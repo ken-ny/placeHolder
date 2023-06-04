@@ -27,8 +27,6 @@ public class Card {
 	private String name;
 	@Column(name = "RARITY")
 	private String rarity;
-	@Column(name = "QUANTITY")
-	private Integer quantity;
 	@Column(name = "IMAGE")
 	private String image;
 
@@ -64,14 +62,6 @@ public class Card {
 
 	public void setRarity(String rarity) {
 		this.rarity = rarity;
-	}
-
-	public Integer getQuantity() {
-		return quantity;
-	}
-
-	public void setQuantity(Integer quantity) {
-		this.quantity = quantity;
 	}
 
 	public String getImage() {
@@ -139,26 +129,24 @@ public class Card {
 		this.id = id;
 	}
 
-	public Card(Integer id, String name, String rarity, Integer quantity, String image, Set<Expansion> expansion,
-			List<Sales> cardSales, List<Offers> offers) {
+	public Card(Integer id, String name, String rarity, String image, Set<Expansion> expansion, List<Sales> cardSales,
+			List<Offers> offers) {
 		super();
 		this.id = id;
 		this.name = name;
 		this.rarity = rarity;
-		this.quantity = quantity;
 		this.image = image;
 		this.expansion = expansion;
 		this.cardSales = cardSales;
 		this.offers = offers;
 	}
 
-	public Card(Integer id, String name, String rarity, Integer quantity, String image, Expansion expansion,
-			Sales cardSales, Offers offers) {
+	public Card(Integer id, String name, String rarity, String image, Expansion expansion, Sales cardSales,
+			Offers offers) {
 		super();
 		this.id = id;
 		this.name = name;
 		this.rarity = rarity;
-		this.quantity = quantity;
 		this.image = image;
 		addExpansion(expansion);
 		addSales(cardSales);

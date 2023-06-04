@@ -519,7 +519,7 @@ public class RestApiController {
 		SaleDetails newDetail = new SaleDetails(findNextAvailableId(SALE_DETAILS));
 
 		if (!foundCard.isPresent()) {
-			Card newCard = new Card(findNextAvailableId(CARD), product.getName(), product.getRarity(), null,
+			Card newCard = new Card(findNextAvailableId(CARD), product.getName(), product.getRarity(),
 					product.getImage(), foundExpansion.get(), null, null);
 
 			Card card = cardRepo.save(newCard);
