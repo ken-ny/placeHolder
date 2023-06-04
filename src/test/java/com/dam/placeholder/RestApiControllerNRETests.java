@@ -31,7 +31,7 @@ import com.dam.placeholder.repo.GameRepository;
 import com.dam.placeholder.repo.OffersRepository;
 import com.dam.placeholder.repo.SaleDetailsRepository;
 import com.dam.placeholder.repo.SalesRepository;
-import com.dam.placeholder.repo.UserRepo;
+import com.dam.placeholder.repo.UserRepository;
 import com.dam.placeholder.utils.Utils;
 
 @DirtiesContext(classMode = ClassMode.AFTER_EACH_TEST_METHOD)
@@ -67,7 +67,7 @@ class RestApiControllerNRETests {
 	CardMarketRelationRepository marketRepo;
 
 	@Autowired
-	UserRepo userRepo;
+	UserRepository userRepo;
 
 	Model model = new ConcurrentModel();
 

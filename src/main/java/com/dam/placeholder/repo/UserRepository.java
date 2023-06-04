@@ -4,7 +4,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 import com.dam.placeholder.entity.User;
 
-public interface UserRepo extends JpaRepository<User, Integer> {
+public interface UserRepository extends JpaRepository<User, Integer> {
 
 	User findByEmail(String email);
 

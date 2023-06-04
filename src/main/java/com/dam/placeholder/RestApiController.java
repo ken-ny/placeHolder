@@ -34,7 +34,7 @@ import com.dam.placeholder.repo.GameRepository;
 import com.dam.placeholder.repo.OffersRepository;
 import com.dam.placeholder.repo.SaleDetailsRepository;
 import com.dam.placeholder.repo.SalesRepository;
-import com.dam.placeholder.repo.UserRepo;
+import com.dam.placeholder.repo.UserRepository;
 import com.dam.placeholder.utils.Utils;
 import com.fasterxml.jackson.core.exc.StreamReadException;
 import com.fasterxml.jackson.core.type.TypeReference;
@@ -83,7 +83,7 @@ public class RestApiController {
 	CardMarketRelationRepository marketRepo;
 
 	@Autowired
-	UserRepo userRepo;
+	UserRepository userRepo;
 
 	Utils utils = new Utils();
 
