@@ -41,15 +41,16 @@
 								<input type="hidden" th:field="*{card.id}" />
 								<input type="hidden" th:field="*{expansion.id}" />
 								<div class="form-group row">
-									<div class="col-sm-5 mb-3 mb-sm-0">
-										<h1 class="h5 text-gray-900 mb-4" th:text="*{card.name}"></h1>
+									<div class="col-sm-4 mb-3 mb-sm-0">
+										<div th:text=*{card.name}></div>
 									</div>
-									<div class="col-sm-2">
-										<h1 class="h5 text-gray-900 mb-4" th:text="*{card.rarity}"></h1>
+									<div class="col-sm-4 mb-3 mb-sm-0">
+										<div th:text=*{card.rarity}></div>
 									</div>
-									<div class="col-sm-5">
-										<h1 class="h5 text-gray-900 mb-4" th:text="*{expansion.name}"></h1>
+									<div class="col-sm-4 mb-3 mb-sm-0">
+										<div th:text=*{expansion.name}></div>
 									</div>
+
 								</div>
 								<div class="form-group row">
 									<div class="col-sm-6 mb-3 mb-sm-0">
@@ -64,7 +65,7 @@
 									</div>
 								</div>
 
-								<button type="submit" class="btn btn-primary btn-user btn-block">Actualizar carta</button>
+								<button type="submit" class="btn btn-primary btn-user btn-block">Actualizar Oferta</button>
 							</form>
 							<div class="text-center">
 								<a class="medium" th:href="@{/offers}">Cancelar</a>
